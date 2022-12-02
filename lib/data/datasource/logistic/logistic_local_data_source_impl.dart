@@ -1,15 +1,20 @@
+import 'package:injectable/injectable.dart';
 import 'package:kexcel/data/datasource/logistic/logistic_local_data_source.dart';
 import 'package:kexcel/data/local/model/logistic_data.dart';
 import 'package:kexcel/data/local/model/mapper.dart';
 import 'package:kexcel/data/local/secure_storage.dart';
 import 'package:kexcel/domain/entity/logistic_entity.dart';
 
-class LogisticLocalDataSourceImpl extends LogisticLocalDataSource {
+@Singleton(as: LogisticLocalDataSource)
+class LogisticLocalDataSourceImpl extends LogisticLocalDataSource<LogisticData> {
+
+  @override
+  final String tableName = 'logistics';
 
   @override
   SecureStorage<LogisticData> storage;
 
-  LogisticLocalDataSourceImpl(this.storage) : super('logistics');
+  LogisticLocalDataSourceImpl(this.storage);
 
   @override
   Future<List<LogisticEntity>?> getLogistics(String? search) async {

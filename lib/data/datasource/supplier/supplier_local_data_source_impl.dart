@@ -1,26 +1,37 @@
+import 'package:injectable/injectable.dart';
 import 'package:kexcel/data/datasource/supplier/supplier_local_data_source.dart';
 import 'package:kexcel/data/local/model/mapper.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/secure_storage.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 
-class SupplierLocalDataSourceImpl extends SupplierLocalDataSource {
+@Singleton(as: SupplierLocalDataSource)
+class SupplierLocalDataSourceImpl extends SupplierLocalDataSource<SupplierData> {
+
+  @override
+  final String tableName = 'suppliers';
 
   @override
   SecureStorage<SupplierData> storage;
 
-  SupplierLocalDataSourceImpl(this.storage) : super('suppliers');
+  SupplierLocalDataSourceImpl(this.storage);
 
   @override
-  Future<SupplierEntity?> getSupplierById(int id) {
-    // TODO: implement getSupplierById
-    throw UnimplementedError();
+  Future<SupplierEntity?> getSupplierById(int id) async {
+    return (await storage.getById(id))?.mapToEntity;
   }
 
   @override
-  Future<List<SupplierEntity>?> getSuppliers(String? search) {
-    // TODO: implement getSuppliers
-    throw UnimplementedError();
+  Future<List<SupplierEntity>?> getSuppliers(String? search) async {
+    if (search == null || search.isEmpty) {
+      final allClientData = await storage.getAll();
+      final allClientEntity = allClientData?.map((e) => e.mapToEntity).toList();
+      return Future.value(allClientEntity);
+    } else {
+      final allClientData = await storage.findAll(search);
+      final allClientEntity = allClientData?.map((e) => e.mapToEntity).toList();
+      return Future.value(allClientEntity);
+    }
   }
 
   @override

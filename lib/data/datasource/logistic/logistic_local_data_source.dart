@@ -1,11 +1,7 @@
-import 'package:injectable/injectable.dart';
 import '../../../domain/entity/logistic_entity.dart';
 import '../base_local_data_source.dart';
 
-@Singleton()
-abstract class LogisticLocalDataSource extends BaseLocalDataSource {
-  LogisticLocalDataSource(super.tableName);
-
+abstract class LogisticLocalDataSource<T> extends BaseLocalDataSource<T> {
 
   Future<bool?> saveLogistic(LogisticEntity projectItem);
 

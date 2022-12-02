@@ -1,12 +1,7 @@
-import 'package:injectable/injectable.dart';
-
-import '../../../domain/entity/supplier_entity.dart';
+import 'package:kexcel/domain/entity/supplier_entity.dart';
 import '../base_local_data_source.dart';
 
-@Singleton()
-abstract class SupplierLocalDataSource extends BaseLocalDataSource {
-
-  SupplierLocalDataSource(super.tableName);
+abstract class SupplierLocalDataSource<T> extends BaseLocalDataSource<T> {
 
   Future<bool?> saveSupplier(SupplierEntity supplier);
 

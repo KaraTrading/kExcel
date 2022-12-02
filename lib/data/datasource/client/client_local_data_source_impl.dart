@@ -6,12 +6,15 @@ import 'package:kexcel/data/local/secure_storage.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 
 @Singleton(as: ClientLocalDataSource)
-class ClientLocalDataSourceImpl extends ClientLocalDataSource {
+class ClientLocalDataSourceImpl extends ClientLocalDataSource<ClientData> {
+
+  @override
+  final String tableName = 'clients';
 
   @override
   SecureStorage<ClientData> storage;
 
-  ClientLocalDataSourceImpl(this.storage) : super('clients');
+  ClientLocalDataSourceImpl(this.storage);
 
   @override
   Future<List<ClientEntity>?> getClients(String? search) async {

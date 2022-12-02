@@ -4,7 +4,7 @@ import 'package:kexcel/data/local/secure_storage.dart';
 
 class SecureStorageImpl<T extends BaseData> extends SecureStorage<T> {
 
-  SecureStorageImpl(super.tableName);
+  SecureStorageImpl(String tableName): super(tableName);
 
   @override
   Future<T?> add(T data) async {
