@@ -1,8 +1,9 @@
+import 'base_entity.dart';
 import 'logistic_entity.dart';
 import 'client_entity.dart';
 import 'supplier_entity.dart';
 
-class ProjectItemEntity {
+class ProjectItemEntity extends BaseEntity {
   final int projectId;
   final int id;
   final String name;

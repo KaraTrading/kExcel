@@ -4,7 +4,7 @@ import 'package:kexcel/domain/repository/supplier_repository.dart';
 
 import '../datasource/supplier/supplier_local_data_source.dart';
 
-@Singleton(as: SupplierRepository)
+@Injectable(as: SupplierRepository)
 class SupplierRepositoryImpl extends SupplierRepository {
 
   final SupplierLocalDataSource localDataSource;

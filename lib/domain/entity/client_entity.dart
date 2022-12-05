@@ -1,4 +1,6 @@
-class ClientEntity {
+import 'base_entity.dart';
+
+class ClientEntity extends BaseEntity {
   final int id;
   final String name;
   final String code;

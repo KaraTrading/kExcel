@@ -10,6 +10,7 @@ class SupplierData extends BaseData {
   String name;
 
   SupplierData({
+    super.id = 0,
     required this.name,
   });
 }

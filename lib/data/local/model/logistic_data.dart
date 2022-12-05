@@ -10,6 +10,7 @@ class LogisticData extends BaseData {
   String name;
 
   LogisticData({
+    super.id = 0,
     required this.name,
   });
 }

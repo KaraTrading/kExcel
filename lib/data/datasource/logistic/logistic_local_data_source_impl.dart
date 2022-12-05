@@ -5,11 +5,8 @@ import 'package:kexcel/data/local/model/mapper.dart';
 import 'package:kexcel/data/local/secure_storage.dart';
 import 'package:kexcel/domain/entity/logistic_entity.dart';
 
-@Singleton(as: LogisticLocalDataSource)
-class LogisticLocalDataSourceImpl extends LogisticLocalDataSource<LogisticData> {
-
-  @override
-  final String tableName = 'logistics';
+@Injectable(as: LogisticLocalDataSource)
+class LogisticLocalDataSourceImpl extends LogisticLocalDataSource {
 
   @override
   SecureStorage<LogisticData> storage;

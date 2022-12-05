@@ -5,11 +5,8 @@ import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/secure_storage.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 
-@Singleton(as: SupplierLocalDataSource)
-class SupplierLocalDataSourceImpl extends SupplierLocalDataSource<SupplierData> {
-
-  @override
-  final String tableName = 'suppliers';
+@Injectable(as: SupplierLocalDataSource)
+class SupplierLocalDataSourceImpl extends SupplierLocalDataSource {
 
   @override
   SecureStorage<SupplierData> storage;

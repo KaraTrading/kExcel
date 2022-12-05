@@ -5,11 +5,8 @@ import 'package:kexcel/data/local/model/mapper.dart';
 import 'package:kexcel/data/local/secure_storage.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 
-@Singleton(as: ClientLocalDataSource)
-class ClientLocalDataSourceImpl extends ClientLocalDataSource<ClientData> {
-
-  @override
-  final String tableName = 'clients';
+@Injectable(as: ClientLocalDataSource)
+class ClientLocalDataSourceImpl extends ClientLocalDataSource {
 
   @override
   SecureStorage<ClientData> storage;

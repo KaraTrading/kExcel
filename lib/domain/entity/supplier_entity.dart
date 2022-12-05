@@ -1,4 +1,6 @@
-class SupplierEntity {
+import 'base_entity.dart';
+
+class SupplierEntity extends BaseEntity {
   final int id;
   final String name;
 

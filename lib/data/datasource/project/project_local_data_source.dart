@@ -1,7 +1,9 @@
 import 'package:kexcel/data/datasource/base_local_data_source.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 
-abstract class ProjectLocalDataSource<T> extends BaseLocalDataSource<T> {
+import '../../local/model/project_item_data.dart';
+
+abstract class ProjectLocalDataSource extends BaseLocalDataSource<ProjectItemData> {
 
   Future<bool?> saveProjectItem(ProjectItemEntity projectItem);
 

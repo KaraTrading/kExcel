@@ -8,11 +8,8 @@ import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/secure_storage.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 
-@Singleton(as: ProjectLocalDataSource)
-class ProjectLocalDataSourceImpl extends ProjectLocalDataSource<ProjectItemData> {
-
-  @override
-  final String tableName = 'projects';
+@Injectable(as: ProjectLocalDataSource)
+class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
 
   @override
   SecureStorage<ProjectItemData> storage;
@@ -21,12 +18,12 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource<ProjectItemData>
   SecureStorage<SupplierData> supplierStorage;
   SecureStorage<LogisticData> logisticStorage;
 
-  ProjectLocalDataSourceImpl(
-    this.storage,
-    this.clientStorage,
-    this.supplierStorage,
-    this.logisticStorage,
-  );
+  ProjectLocalDataSourceImpl({
+    required this.storage,
+    required this.clientStorage,
+    required this.supplierStorage,
+    required this.logisticStorage,
+  });
 
   @override
   Future<List<ProjectItemEntity>?> getProjectsItems(String? search) async {

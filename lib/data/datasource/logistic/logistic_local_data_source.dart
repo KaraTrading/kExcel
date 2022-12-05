@@ -1,7 +1,8 @@
 import '../../../domain/entity/logistic_entity.dart';
+import '../../local/model/logistic_data.dart';
 import '../base_local_data_source.dart';
 
-abstract class LogisticLocalDataSource<T> extends BaseLocalDataSource<T> {
+abstract class LogisticLocalDataSource extends BaseLocalDataSource<LogisticData> {
 
   Future<bool?> saveLogistic(LogisticEntity projectItem);
 

@@ -1,7 +1,8 @@
 import 'package:kexcel/domain/entity/supplier_entity.dart';
+import '../../local/model/supplier_data.dart';
 import '../base_local_data_source.dart';
 
-abstract class SupplierLocalDataSource<T> extends BaseLocalDataSource<T> {
+abstract class SupplierLocalDataSource extends BaseLocalDataSource<SupplierData> {
 
   Future<bool?> saveSupplier(SupplierEntity supplier);
 

@@ -4,7 +4,7 @@ import 'package:kexcel/domain/usecase/base_use_case.dart';
 
 import '../repository/client_repository.dart';
 
-@Singleton()
+@Injectable()
 class GetClientsUseCase extends BaseUseCase<List<ClientEntity>, String?> {
 
   final ClientRepository repository;

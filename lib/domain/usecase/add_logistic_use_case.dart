@@ -4,7 +4,7 @@ import 'package:kexcel/domain/usecase/base_use_case.dart';
 import '../entity/logistic_entity.dart';
 import '../repository/logistic_repository.dart';
 
-@Singleton()
+@Injectable()
 class AddLogisticUseCase extends BaseUseCase<bool, LogisticEntity> {
 
   final LogisticRepository repository;

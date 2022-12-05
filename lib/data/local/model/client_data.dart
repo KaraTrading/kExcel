@@ -10,6 +10,7 @@ class ClientData extends BaseData {
   String name;
 
   ClientData({
+    super.id = 0,
     required this.name,
   });
 }

@@ -1,10 +1,14 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
 import 'package:kexcel/data/local/secure_storage.dart';
 
 class SecureStorageImpl<T extends BaseData> extends SecureStorage<T> {
+  final String tableName;
 
-  SecureStorageImpl(String tableName): super(tableName);
+  SecureStorageImpl(this.tableName) {
+    checkTable();
+  }
 
   @override
   Future<T?> add(T data) async {
@@ -28,13 +32,18 @@ class SecureStorageImpl<T extends BaseData> extends SecureStorage<T> {
 
   @override
   Future<List<T>?> findAll(String query) async {
-    final res = Hive.box<T>(tableName).values.where((element) => element.toString().contains(query)).toList();
+    final res = Hive.box<T>(tableName)
+        .values
+        .where((element) => element.toString().contains(query))
+        .toList();
     return Future.value(res);
   }
 
   @override
   Future<T?> findFirst(String query) async {
-    final res = Hive.box<T>(tableName).values.firstWhere((element) => element.toString().contains(query));
+    final res = Hive.box<T>(tableName)
+        .values
+        .firstWhere((element) => element.toString().contains(query));
     return Future.value(res);
   }
 
@@ -52,8 +61,15 @@ class SecureStorageImpl<T extends BaseData> extends SecureStorage<T> {
 
   @override
   Future<T?> put(T data) async {
-   Hive.box<T>(tableName).put(data.id, data);
+    Hive.box<T>(tableName).put(data.id, data);
     return Future.value(data);
   }
 
+  void checkTable() async {
+    try {
+      await Hive.openBox<T>(tableName);
+    } on BaseException {
+
+    }
+  }
 }

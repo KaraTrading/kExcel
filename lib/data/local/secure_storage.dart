@@ -1,9 +1,5 @@
 abstract class SecureStorage<T> {
 
-  final String tableName;
-
-  SecureStorage(this.tableName);
-
   Future<bool> delete(T data);
 
   Future<bool> deleteById(int id);

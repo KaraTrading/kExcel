@@ -3,7 +3,7 @@ import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/domain/usecase/base_use_case.dart';
 import '../repository/supplier_repository.dart';
 
-@Singleton()
+@Injectable()
 class GetSuppliersUseCase extends BaseUseCase<List<SupplierEntity>, String?> {
 
   final SupplierRepository repository;

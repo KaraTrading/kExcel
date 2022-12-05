@@ -2,7 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:kexcel/domain/entity/logistic_entity.dart';
 import 'package:kexcel/domain/repository/logistic_repository.dart';
 
-@Singleton(as: LogisticRepository)
+@Injectable(as: LogisticRepository)
 class ClientRepositoryImpl extends LogisticRepository {
 
   @override

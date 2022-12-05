@@ -33,6 +33,7 @@ class ProjectItemData extends BaseData {
   DateTime? deliveryDate;
 
   ProjectItemData({
+    super.id = 0,
     required this.projectId,
     required this.name,
     required this.clientId,
