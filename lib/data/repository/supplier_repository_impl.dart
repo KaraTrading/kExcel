@@ -18,6 +18,12 @@ class SupplierRepositoryImpl extends SupplierRepository {
   }
 
   @override
+  Future<bool?> updateSupplier(SupplierEntity supplier) async {
+    final res = localDataSource.updateSupplier(supplier);
+    return res;
+  }
+
+  @override
   Future<SupplierEntity?> getSupplier(int id) async {
     final res = localDataSource.getSupplierById(id);
     return res;

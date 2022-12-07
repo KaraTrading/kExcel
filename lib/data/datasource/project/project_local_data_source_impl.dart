@@ -50,6 +50,12 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
   }
 
   @override
+  Future<bool?> updateProjectItem(ProjectItemEntity projectItem) async {
+    final res = storage.put(projectItem.mapToData);
+    return ((await res)?.id ?? 0) > 0;
+  }
+
+  @override
   Future<ProjectItemEntity?> getProjectsItemsById(int id) async {
     final data = await storage.getById(id);
     if (data != null) {

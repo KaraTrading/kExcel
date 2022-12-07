@@ -20,13 +20,15 @@ class ClientBloc extends BaseBloc<ClientBlocEvent> {
     on<ClientEventEditingDone>(_updateClient);
   }
 
+  late List<ClientEntity> clients;
+
   _getClients(event, emit) async {
     try {
       emit(LoadingState());
       final getClientsUseCase = dependencyResolver<GetClientsUseCase>();
-      final data = await getClientsUseCase
+      clients = await getClientsUseCase
           .call(event is ClientEventSearch ? event.query : null);
-      emit(ResponseState<List<ClientEntity>>(data: data));
+      emit(ResponseState<List<ClientEntity>>(data: clients));
     } on BaseNetworkException catch (e) {
       emit(ErrorState(error: e));
     } on BaseException catch (e) {

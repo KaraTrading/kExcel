@@ -9,4 +9,6 @@ abstract class SupplierRepository extends BaseRepository {
 
   Future<bool?> addSupplier(SupplierEntity supplier);
 
+  Future<bool?> updateSupplier(SupplierEntity supplier);
+
 }

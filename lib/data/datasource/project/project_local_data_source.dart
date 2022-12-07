@@ -7,6 +7,8 @@ abstract class ProjectLocalDataSource extends BaseLocalDataSource<ProjectItemDat
 
   Future<bool?> saveProjectItem(ProjectItemEntity projectItem);
 
+  Future<bool?> updateProjectItem(ProjectItemEntity projectItem);
+
   Future<List<ProjectItemEntity>?> getProjectsItems(String? search);
 
   Future<ProjectItemEntity?> getProjectsItemsById(int id);

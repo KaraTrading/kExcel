@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/domain/usecase/base_use_case.dart';
-import '../repository/supplier_repository.dart';
+import '../../repository/supplier_repository.dart';
 
 @Injectable()
 class GetSuppliersUseCase extends BaseUseCase<List<SupplierEntity>, String?> {

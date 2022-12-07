@@ -37,5 +37,11 @@ class SupplierLocalDataSourceImpl extends SupplierLocalDataSource {
     return ((await res)?.id ?? 0) > 0;
   }
 
+  @override
+  Future<bool?> updateSupplier(SupplierEntity supplier) async {
+    final res = storage.put(supplier.mapToData);
+    return ((await res)?.id ?? 0) > 0;
+  }
+
 
 }

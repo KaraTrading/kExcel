@@ -13,7 +13,12 @@ class ClientEventAddingDone extends ClientBlocEvent {
   final ClientEntity client;
   ClientEventAddingDone(this.client);
 }
+class ClientEventDelete extends ClientBlocEvent {
+  final ClientEntity client;
+  ClientEventDelete(this.client);
+}
 class ClientEventEditingDone extends ClientBlocEvent {
   final ClientEntity client;
   ClientEventEditingDone(this.client);
 }
+class ClientEventExport extends ClientBlocEvent {}

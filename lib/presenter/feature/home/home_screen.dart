@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:kexcel/presenter/feature/project/item/project_item_screen.dart';
+import 'package:kexcel/presenter/feature/supplier/supplier_screen.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart' show getApplicationDocumentsDirectory;
 import 'package:flutter/material.dart';
 import 'package:kexcel/presenter/feature/client/client_screen.dart';
@@ -33,12 +36,12 @@ class HomeScreen extends StatelessWidget {
                     child: const SizedBox(
                         width: 170, child: Center(child: Text('Supplier'))),
                   ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () => _routeLogistic(context),
-                    child: const SizedBox(
-                        width: 170, child: Center(child: Text('Logistic'))),
-                  ),
+                  // const SizedBox(height: 20),
+                  // ElevatedButton(
+                  //   onPressed: () => _routeLogistic(context),
+                  //   child: const SizedBox(
+                  //       width: 170, child: Center(child: Text('Logistic'))),
+                  // ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     style: const ButtonStyle(
@@ -88,9 +91,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   _routeSupplier(BuildContext context) {
-    // Navigator.of(context).push(MaterialPageRoute(
-    //   builder: (context) => const ClientScreen(),
-    // ));
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const SupplierScreen(),
+    ));
   }
 
   _routeLogistic(BuildContext context) {
@@ -100,9 +103,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   _routeProjectsItem(BuildContext context) {
-    // Navigator.of(context).push(MaterialPageRoute(
-    //   builder: (context) => const ClientScreen(),
-    // ));
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const ProjectItemScreen(),
+    ));
   }
 
   _exportExcel() async {
@@ -119,8 +122,10 @@ class HomeScreen extends StatelessWidget {
     // Save the document.
     final List<int> bytes = workbook.saveAsStream();
     final directory = await getApplicationDocumentsDirectory();
-    File('${directory.path}/a.xlsx').writeAsBytes(bytes);
+    final file = await File('${directory.path}/a.xlsx').writeAsBytes(bytes);
     //Dispose the workbook.
     workbook.dispose();
+
+    OpenFile.open(file.path);
   }
 }

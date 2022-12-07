@@ -8,7 +8,13 @@ abstract class ProjectRepository extends BaseRepository {
     String? search,
   });
 
+  Future<ProjectItemEntity?> getProjectItem(int id);
+
   Future<bool?> addProjectItem({
+    required ProjectItemEntity projectItem,
+  });
+
+  Future<bool?> updateProjectItem({
     required ProjectItemEntity projectItem,
   });
 }
