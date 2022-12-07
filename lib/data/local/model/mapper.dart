@@ -8,11 +8,33 @@ import 'project_item_data.dart';
 import 'supplier_data.dart';
 
 extension ClientDataMapper on ClientData {
-  ClientEntity get mapToEntity => ClientEntity(id: id, name: name, code: '');
+  ClientEntity get mapToEntity => ClientEntity(
+        id: id,
+        name: name,
+        code: code,
+        nationalId: nationalId,
+        address: address,
+        bafaId: bafaId,
+        bafaEmail: bafaEmail,
+        bafaSite: bafaSite,
+        contact: contact,
+        bank: bank,
+      );
 }
 
 extension ClientEntityMapper on ClientEntity {
-  ClientData get mapToData => ClientData(name: name);
+  ClientData get mapToData => ClientData(
+        id: id,
+        name: name,
+        code: code,
+        nationalId: nationalId,
+        address: address,
+        bafaId: bafaId,
+        bafaEmail: bafaEmail,
+        bafaSite: bafaSite,
+        contact: contact,
+        bank: bank,
+      );
 }
 
 extension SupplierDataMapper on SupplierData {

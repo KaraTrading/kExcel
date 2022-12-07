@@ -33,6 +33,12 @@ class ClientLocalDataSourceImpl extends ClientLocalDataSource {
   }
 
   @override
+  Future<bool?> updateClient(ClientEntity client) async {
+    final res = storage.put(client.mapToData);
+    return ((await res)?.id ?? 0) > 0;
+  }
+
+  @override
   Future<ClientEntity?> getClientById(int id) async {
     return (await storage.getById(id))?.mapToEntity;
   }

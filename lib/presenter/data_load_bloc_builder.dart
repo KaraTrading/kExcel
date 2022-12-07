@@ -20,10 +20,10 @@ class DataLoadBlocBuilder<B extends BaseBloc, T>
           buildWhen: buildWhen,
           builder: (context, state) {
             if (state is InitState) {
-              return initView ?? const CircularProgressIndicator();
+              return initView ?? const Center(child: CircularProgressIndicator());
             }
             if (state is LoadingState) {
-              return loadingView ?? const CircularProgressIndicator();
+              return loadingView ?? const Center(child: CircularProgressIndicator());
             }
             if (state is ErrorState) {
               return errorViewBuilder?.call(state.error) ??

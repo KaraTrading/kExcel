@@ -5,8 +5,8 @@ import 'data/local/database_configuration.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await configureDependencies();
   await databaseConfiguration();
+  await configureDependencies();
   runApp(const MyApp());
 }
 

@@ -1,10 +1,6 @@
 abstract class BaseBlocState {}
 
-class InitState extends BaseBlocState {
-  final dynamic value;
-
-  InitState({this.value});
-}
+class InitState extends BaseBlocState {}
 
 class LoadingState extends BaseBlocState {}
 

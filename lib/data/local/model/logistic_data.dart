@@ -3,7 +3,7 @@ import 'package:kexcel/data/local/model/base_data.dart';
 
 part 'logistic_data.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 2)
 class LogisticData extends BaseData {
 
   @HiveField(1)

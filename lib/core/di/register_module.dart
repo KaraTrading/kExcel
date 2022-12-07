@@ -22,22 +22,22 @@ abstract class RegisterModule {
 
   @Singleton()
   SecureStorage<ClientData> clientStorage() {
-    return SecureStorageImpl<ClientData>(clientTableName);
+    return SecureStorageImpl<ClientData>(clientBox);
   }
 
   @Singleton()
   SecureStorage<SupplierData> supplierStorage() {
-    return SecureStorageImpl<SupplierData>(supplierTableName);
+    return SecureStorageImpl<SupplierData>(supplierBox);
   }
 
   @Singleton()
   SecureStorage<LogisticData> logisticStorage() {
-    return SecureStorageImpl<LogisticData>(logisticTableName);
+    return SecureStorageImpl<LogisticData>(logisticBox);
   }
 
   @Singleton()
   SecureStorage<ProjectItemData> projectStorage() {
-    return SecureStorageImpl<ProjectItemData>(projectsItemTableName);
+    return SecureStorageImpl<ProjectItemData>(projectItemBox);
   }
 
 // @Singleton()

@@ -9,4 +9,6 @@ abstract class ClientRepository extends BaseRepository {
 
   Future<bool?> addClient(ClientEntity client);
 
+  Future<bool?> updateClient(ClientEntity client);
+
 }

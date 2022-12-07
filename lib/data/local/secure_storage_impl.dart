@@ -1,38 +1,35 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
 import 'package:kexcel/data/local/secure_storage.dart';
 
 class SecureStorageImpl<T extends BaseData> extends SecureStorage<T> {
-  final String tableName;
+  final Box<T> box;
 
-  SecureStorageImpl(this.tableName) {
-    checkTable();
-  }
+  SecureStorageImpl(this.box);
 
   @override
   Future<T?> add(T data) async {
-    Hive.box<T>(tableName).add(data);
+    box.add(data);
     data.id = data.key;
-    Hive.box(tableName).putAt(data.key, data);
+    box.putAt(data.key, data);
     return Future.value(data);
   }
 
   @override
   Future<bool> delete(T data) async {
-    Hive.box<T>(tableName).delete(data.id);
+    box.delete(data.id);
     return Future.value(true);
   }
 
   @override
   Future<bool> deleteById(int id) async {
-    Hive.box<T>(tableName).delete(id);
+    box.delete(id);
     return Future.value(true);
   }
 
   @override
   Future<List<T>?> findAll(String query) async {
-    final res = Hive.box<T>(tableName)
+    final res = box
         .values
         .where((element) => element.toString().contains(query))
         .toList();
@@ -41,7 +38,7 @@ class SecureStorageImpl<T extends BaseData> extends SecureStorage<T> {
 
   @override
   Future<T?> findFirst(String query) async {
-    final res = Hive.box<T>(tableName)
+    final res = box
         .values
         .firstWhere((element) => element.toString().contains(query));
     return Future.value(res);
@@ -49,27 +46,19 @@ class SecureStorageImpl<T extends BaseData> extends SecureStorage<T> {
 
   @override
   Future<List<T>?> getAll() async {
-    final res = Hive.box<T>(tableName).values.toList();
+    final res = box.values.toList();
     return Future.value(res);
   }
 
   @override
   Future<T?> getById(int id) async {
-    final res = Hive.box<T>(tableName).get(id);
+    final res = box.get(id);
     return Future.value(res);
   }
 
   @override
   Future<T?> put(T data) async {
-    Hive.box<T>(tableName).put(data.id, data);
+    box.put(data.id, data);
     return Future.value(data);
-  }
-
-  void checkTable() async {
-    try {
-      await Hive.openBox<T>(tableName);
-    } on BaseException {
-
-    }
   }
 }
