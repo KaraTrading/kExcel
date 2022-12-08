@@ -16,6 +16,11 @@ class ClientRepositoryImpl extends ClientRepository {
   }
 
   @override
+  Future<bool?> deleteClient(ClientEntity client) async {
+    return await localDataSource.deleteClient(client);
+  }
+
+  @override
   Future<bool?> addClients(List<ClientEntity> clients) async {
     return await localDataSource.saveClients(clients);
   }

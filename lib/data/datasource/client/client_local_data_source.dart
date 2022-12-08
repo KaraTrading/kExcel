@@ -6,6 +6,8 @@ abstract class ClientLocalDataSource extends BaseLocalDataSource<ClientData> {
 
   Future<bool?> saveClient(ClientEntity client);
 
+  Future<bool?> deleteClient(ClientEntity client);
+
   Future<bool?> saveClients(List<ClientEntity> clients);
 
   Future<bool?> updateClient(ClientEntity client);

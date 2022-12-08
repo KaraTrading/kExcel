@@ -33,6 +33,12 @@ class ClientLocalDataSourceImpl extends ClientLocalDataSource {
   }
 
   @override
+  Future<bool?> deleteClient(ClientEntity client) async {
+    final res = storage.delete(client.mapToData);
+    return res;
+  }
+
+  @override
   Future<bool?> saveClients(List<ClientEntity> clients) async {
     await storage.deleteAll();
     bool allAdded = true;

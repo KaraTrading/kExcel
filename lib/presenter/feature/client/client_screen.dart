@@ -14,26 +14,22 @@ class ClientScreen extends BaseScreen<ClientBloc> {
   AppBar? get appBar => AppBar(
         title: const Text('Client Management'),
         actions: [
-          GestureDetector(
-            onTap: () => _import(),
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.input_rounded,
-                color: Colors.white,
-                size: 20,
-              ),
+          IconButton(
+            tooltip: 'Import From Excel',
+            onPressed: () => _import(),
+            icon: const Icon(
+              Icons.input_rounded,
+              color: Colors.white,
+              size: 20,
             ),
           ),
-          GestureDetector(
-            onTap: () => _export(),
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.output_rounded,
-                color: Colors.white,
-                size: 20,
-              ),
+          IconButton(
+            tooltip: 'Export To Excel',
+            onPressed: () => _export(),
+            icon: const Icon(
+              Icons.output_rounded,
+              color: Colors.white,
+              size: 20,
             ),
           ),
         ],
@@ -49,29 +45,94 @@ class ClientScreen extends BaseScreen<ClientBloc> {
         return ListView.builder(
           itemCount: entities?.length ?? 0,
           itemBuilder: (context, index) {
-            return GestureDetector(
-              onLongPress: () =>
-                  showClientDetails(context, entity: entities?[index]),
-              child: Card(
-                margin: const EdgeInsets.all(8),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FittedBox(child: Text('${entities?[index].code ?? ''} Name: ${entities?[index].name ?? ''}')),
-                      const SizedBox(height: 10,),
-                      FittedBox(child: Text('Address: ${entities?[index].address ?? ''}')),
-                      const SizedBox(height: 10,),
-                      FittedBox(child: Text('BAFA ID: ${entities?[index].bafaId ?? ''}')),
-                      FittedBox(child: Text('BAFA Email: ${entities?[index].bafaEmail ?? ''}')),
-                      FittedBox(child: Text('BAFA Site: ${entities?[index].bafaSite ?? ''}')),
-                      FittedBox(child: Text('National ID: ${entities?[index].nationalId ?? ''}')),
-                      FittedBox(child: Text('Bank: ${entities?[index].bank ?? ''}')),
-                      FittedBox(child: Text('Contact: ${entities?[index].contact ?? ''}')),
-                    ],
+            return Card(
+              margin: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 6,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FittedBox(
+                              child: Text(
+                                  '${entities?[index].code ?? ''} Name: ${entities?[index].name ?? ''}')),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          FittedBox(
+                              child: Text(
+                                  'Address: ${entities?[index].address ?? ''}')),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          FittedBox(
+                              child: Text(
+                                  'BAFA ID: ${entities?[index].bafaId ?? ''}')),
+                          FittedBox(
+                              child: Text(
+                                  'BAFA Email: ${entities?[index].bafaEmail ?? ''}')),
+                          FittedBox(
+                              child: Text(
+                                  'BAFA Site: ${entities?[index].bafaSite ?? ''}')),
+                          FittedBox(
+                              child: Text(
+                                  'National ID: ${entities?[index].nationalId ?? ''}')),
+                          FittedBox(
+                              child:
+                                  Text('Bank: ${entities?[index].bank ?? ''}')),
+                          FittedBox(
+                              child: Text(
+                                  'Contact: ${entities?[index].contact ?? ''}')),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  Expanded(
+                    flex: 1,
+                    child: Flex(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      direction: Axis.vertical,
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () => _showClientDetails(context,
+                              entity: entities?[index]),
+                          child: Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(5)),
+                              ),
+                              height: 112,
+                              child: const Center(
+                                  child: Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ))),
+                        ),
+                        GestureDetector(
+                          onTap: () => _showDeleteConfirmation(
+                              context, entities![index]),
+                          child: Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(5)),
+                              ),
+                              height: 112,
+                              child: const Center(
+                                  child: Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ))),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             );
           },
@@ -83,11 +144,11 @@ class ClientScreen extends BaseScreen<ClientBloc> {
   @override
   FloatingActionButton? floatingActionButton(BuildContext context) =>
       FloatingActionButton(
-        onPressed: () => showClientDetails(context),
+        onPressed: () => _showClientDetails(context),
         child: const Icon(Icons.add),
       );
 
-  void showClientDetails(BuildContext context, {ClientEntity? entity}) {
+  void _showClientDetails(BuildContext context, {ClientEntity? entity}) {
     final TextEditingController codeController =
         TextEditingController(text: entity?.code ?? '');
     final TextEditingController nameController =
@@ -111,7 +172,12 @@ class ClientScreen extends BaseScreen<ClientBloc> {
       isScrollControlled: true,
       context: context,
       builder: (context) => Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          top: 16,
+          right: 16,
+          left: 16,
+        ),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -270,7 +336,7 @@ class ClientScreen extends BaseScreen<ClientBloc> {
             code: item?[0] ?? '',
             address: item?[2],
             nationalId: item?[3],
-                // : item?[2],
+            // : item?[2],
             bafaEmail: item?[4],
             bafaSite: item?[5],
             bafaId: item?[6],
@@ -281,5 +347,46 @@ class ClientScreen extends BaseScreen<ClientBloc> {
       }
     }
     callEvent(ClientEventImport(clients));
+  }
+
+  void _showDeleteConfirmation(BuildContext context, ClientEntity entity) {
+    showModalBottomSheet(
+      isScrollControlled: false,
+      context: context,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('You can not return deleted item, Are you sure?'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: const ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(Colors.grey),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    style: const ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll(Colors.redAccent),
+                    ),
+                    onPressed: () {
+                      callEvent(ClientEventDelete(entity));
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Delete'),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
