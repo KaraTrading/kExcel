@@ -5,6 +5,7 @@ import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/core/exception/network_exception.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/domain/usecase/client/add_client_use_case.dart';
+import 'package:kexcel/domain/usecase/client/add_clients_use_case.dart';
 import 'package:kexcel/domain/usecase/client/get_clients_use_case.dart';
 import 'package:kexcel/domain/usecase/client/update_client_use_case.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
@@ -18,6 +19,7 @@ class ClientBloc extends BaseBloc<ClientBlocEvent> {
     on<ClientEventSearch>(_getClients);
     on<ClientEventAddingDone>(_addNewClient);
     on<ClientEventEditingDone>(_updateClient);
+    on<ClientEventImport>(_addNewClients);
   }
 
   late List<ClientEntity> clients;
@@ -45,6 +47,19 @@ class ClientBloc extends BaseBloc<ClientBlocEvent> {
       emit(LoadingState());
       final addClientsUseCase = dependencyResolver<AddClientUseCase>();
       await addClientsUseCase.call(event.client);
+      return _getClients(event, emit);
+    } on BaseNetworkException catch (e) {
+      emit.call(ErrorState(error: e));
+    } on BaseException catch (e) {
+      emit.call(ErrorState(error: e));
+    }
+  }
+
+  _addNewClients(ClientEventImport event, Emitter<BaseBlocState> emit) async {
+    try {
+      emit(LoadingState());
+      final addClientsUseCase = dependencyResolver<AddClientsUseCase>();
+      await addClientsUseCase.call(event.clients);
       return _getClients(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));

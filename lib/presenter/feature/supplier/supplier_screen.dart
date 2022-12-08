@@ -1,15 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
+import 'package:kexcel/presenter/utils/excel_utils.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 import 'supplier_bloc.dart';
 import 'supplier_bloc_event.dart';
-import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xl;
-import 'package:path_provider/path_provider.dart'
-    show getApplicationDocumentsDirectory;
 
 class SupplierScreen extends BaseScreen<SupplierBloc> {
   const SupplierScreen({super.key});
@@ -145,6 +141,7 @@ class SupplierScreen extends BaseScreen<SupplierBloc> {
                     } else {
                       callEvent(SupplierEventEditingDone(newEntity));
                     }
+                    Navigator.pop(context);
                   },
                   child: const Text('Save'))
             ],
@@ -155,25 +152,19 @@ class SupplierScreen extends BaseScreen<SupplierBloc> {
   }
 
   void _export() async {
-    // callEvent(SupplierEventExport());
-
-    // Create a new Excel document.
-    final xl.Workbook workbook = xl.Workbook();
-    // Accessing worksheet via index.
-    final xl.Worksheet sheet = workbook.worksheets[0];
-    // Add Text.
-
-    sheet.getRangeByIndex(1, 1).setText('ID');
-    sheet.getRangeByIndex(1, 2).setText('Name');
-    for (int i = 0; i < getBloc.suppliers.length; i++) {
-      final supplier = getBloc.suppliers[i];
-      sheet.getRangeByIndex(i + 2, 1).setText(supplier.id.toString());
-      sheet.getRangeByIndex(i + 2, 2).setText(supplier.name);
-    }
-    final List<int> bytes = workbook.saveAsStream();
-    final directory = await getApplicationDocumentsDirectory();
-    File('${directory.path}/export_suppliers.xlsx').writeAsBytes(bytes);
-    //Dispose the workbook.
-    workbook.dispose();
+    exportListToFile(
+        [
+          'Id',
+          'Name',
+        ],
+        getBloc.suppliers
+            .map(
+              (e) => [
+                e.id.toString(),
+                e.name,
+              ],
+            )
+            .toList(),
+        'export_suppliers.xlsx');
   }
 }

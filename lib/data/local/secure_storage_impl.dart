@@ -9,15 +9,21 @@ class SecureStorageImpl<T extends BaseData> extends SecureStorage<T> {
 
   @override
   Future<T?> add(T data) async {
-    box.add(data);
-    data.id = data.key;
-    box.putAt(data.key, data);
+    final key = await box.add(data);
+    data.id = key;
+    await box.put(key, data);
     return Future.value(data);
   }
 
   @override
   Future<bool> delete(T data) async {
     box.delete(data.id);
+    return Future.value(true);
+  }
+
+  @override
+  Future<bool> deleteAll() async {
+    box.clear();
     return Future.value(true);
   }
 

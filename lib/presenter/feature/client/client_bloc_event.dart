@@ -22,3 +22,7 @@ class ClientEventEditingDone extends ClientBlocEvent {
   ClientEventEditingDone(this.client);
 }
 class ClientEventExport extends ClientBlocEvent {}
+class ClientEventImport extends ClientBlocEvent {
+  final List<ClientEntity> clients;
+  ClientEventImport(this.clients);
+}

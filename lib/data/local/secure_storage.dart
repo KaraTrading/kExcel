@@ -4,6 +4,8 @@ abstract class SecureStorage<T> {
 
   Future<bool> deleteById(int id);
 
+  Future<bool> deleteAll();
+
   Future<T?> getById(int id);
 
   Future<List<T>?> getAll();

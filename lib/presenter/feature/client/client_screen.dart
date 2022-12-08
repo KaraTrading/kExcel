@@ -1,15 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
 import 'package:kexcel/presenter/feature/client/client_bloc.dart';
 import 'package:kexcel/presenter/feature/client/client_bloc_event.dart';
+import 'package:kexcel/presenter/utils/excel_utils.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
-import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xl;
-import 'package:path_provider/path_provider.dart'
-    show getApplicationDocumentsDirectory;
 
 class ClientScreen extends BaseScreen<ClientBloc> {
   const ClientScreen({super.key});
@@ -18,6 +14,17 @@ class ClientScreen extends BaseScreen<ClientBloc> {
   AppBar? get appBar => AppBar(
         title: const Text('Client Management'),
         actions: [
+          GestureDetector(
+            onTap: () => _import(),
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.input_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+          ),
           GestureDetector(
             onTap: () => _export(),
             child: const Padding(
@@ -50,36 +57,18 @@ class ClientScreen extends BaseScreen<ClientBloc> {
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Code: ${entities?[index].code ?? ''}'),
-                          Text('Name: ${entities?[index].name ?? ''}'),
-                          Text('Address: ${entities?[index].address ?? ''}'),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('BAFA ID: ${entities?[index].bafaId ?? ''}'),
-                          Text(
-                              'BAFA Email: ${entities?[index].bafaEmail ?? ''}'),
-                          Text('BAFA Site: ${entities?[index].bafaSite ?? ''}'),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                              'National ID: ${entities?[index].nationalId ?? ''}'),
-                          Text('Bank: ${entities?[index].bank ?? ''}'),
-                          Text('Contact: ${entities?[index].contact ?? ''}'),
-                        ],
-                      ),
+                      FittedBox(child: Text('${entities?[index].code ?? ''} Name: ${entities?[index].name ?? ''}')),
+                      const SizedBox(height: 10,),
+                      FittedBox(child: Text('Address: ${entities?[index].address ?? ''}')),
+                      const SizedBox(height: 10,),
+                      FittedBox(child: Text('BAFA ID: ${entities?[index].bafaId ?? ''}')),
+                      FittedBox(child: Text('BAFA Email: ${entities?[index].bafaEmail ?? ''}')),
+                      FittedBox(child: Text('BAFA Site: ${entities?[index].bafaSite ?? ''}')),
+                      FittedBox(child: Text('National ID: ${entities?[index].nationalId ?? ''}')),
+                      FittedBox(child: Text('Bank: ${entities?[index].bank ?? ''}')),
+                      FittedBox(child: Text('Contact: ${entities?[index].contact ?? ''}')),
                     ],
                   ),
                 ),
@@ -218,6 +207,7 @@ class ClientScreen extends BaseScreen<ClientBloc> {
                     } else {
                       callEvent(ClientEventEditingDone(newEntity));
                     }
+                    Navigator.pop(context);
                   },
                   child: const Text('Save'))
             ],
@@ -228,43 +218,68 @@ class ClientScreen extends BaseScreen<ClientBloc> {
   }
 
   void _export() async {
-    // callEvent(ClientEventExport());
+    exportListToFile(
+      [
+        'ID',
+        'Code',
+        'Name',
+        'Address',
+        'National ID',
+        'BAFA ID',
+        'BAFA Email',
+        'BAFA Site',
+        'Contact',
+        'Bank',
+      ],
+      getBloc.clients
+          .map(
+            (e) => [
+              e.id.toString(),
+              e.code,
+              e.name,
+              e.address,
+              e.nationalId,
+              e.bafaId,
+              e.bafaEmail,
+              e.bafaSite,
+              e.contact,
+              e.bank,
+            ],
+          )
+          .toList(),
+      'export_clients.xlsx',
+    );
+  }
 
-    // Create a new Excel document.
-    final xl.Workbook workbook = xl.Workbook();
-    // Accessing worksheet via index.
-    final xl.Worksheet sheet = workbook.worksheets[0];
-    // Add Text.
+  void _import() async {
+    final importedData = await importFromFile();
 
+    List<ClientEntity> clients = [];
 
-    sheet.getRangeByIndex(1, 1).setText('ID');
-    sheet.getRangeByIndex(1, 2).setText('Code');
-    sheet.getRangeByIndex(1, 3).setText('Name');
-    sheet.getRangeByIndex(1, 4).setText('Address');
-    sheet.getRangeByIndex(1, 5).setText('National ID');
-    sheet.getRangeByIndex(1, 6).setText('BAFA ID');
-    sheet.getRangeByIndex(1, 7).setText('BAFA Email');
-    sheet.getRangeByIndex(1, 8).setText('BAFA Site');
-    sheet.getRangeByIndex(1, 9).setText('Contact');
-    sheet.getRangeByIndex(1, 10).setText('Bank');
-
-    for (int i = 0; i < getBloc.clients.length; i++) {
-      final client = getBloc.clients[i];
-      sheet.getRangeByIndex(i + 2, 1).setText(client.id.toString());
-      sheet.getRangeByIndex(i + 2, 2).setText(client.code);
-      sheet.getRangeByIndex(i + 2, 3).setText(client.name);
-      sheet.getRangeByIndex(i + 2, 4).setText(client.address);
-      sheet.getRangeByIndex(i + 2, 5).setText(client.nationalId);
-      sheet.getRangeByIndex(i + 2, 6).setText(client.bafaId);
-      sheet.getRangeByIndex(i + 2, 7).setText(client.bafaEmail);
-      sheet.getRangeByIndex(i + 2, 8).setText(client.bafaSite);
-      sheet.getRangeByIndex(i + 2, 9).setText(client.contact);
-      sheet.getRangeByIndex(i + 2, 10).setText(client.bank);
+    if (importedData != null && importedData.length > 1) {
+      for (int i = 0; i < importedData.length; i++) {
+        if (i == 0 || importedData[i] == null) {
+        } else {
+          final item = importedData[i];
+          if (item?[1] == null || item?[1]?.isEmpty == true) {
+            break;
+          }
+          clients.add(ClientEntity(
+            id: 0,
+            name: item?[1] ?? '',
+            code: item?[0] ?? '',
+            address: item?[2],
+            nationalId: item?[3],
+                // : item?[2],
+            bafaEmail: item?[4],
+            bafaSite: item?[5],
+            bafaId: item?[6],
+            contact: item?[7],
+            bank: item?[8],
+          ));
+        }
+      }
     }
-    final List<int> bytes = workbook.saveAsStream();
-    final directory = await getApplicationDocumentsDirectory();
-    File('${directory.path}/export_clients.xlsx').writeAsBytes(bytes);
-    //Dispose the workbook.
-    workbook.dispose();
+    callEvent(ClientEventImport(clients));
   }
 }
