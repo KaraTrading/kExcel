@@ -1,0 +1,215 @@
+import 'package:flutter/material.dart';
+import 'package:kexcel/core/exception/base_exception.dart';
+import 'package:kexcel/domain/entity/supplier_entity.dart';
+import 'package:kexcel/presenter/base_bloc_event.dart';
+import 'package:kexcel/presenter/feature/information/base_information_screen.dart';
+import 'package:kexcel/presenter/utils/excel_utils.dart';
+import 'package:kexcel/presenter/utils/text_styles.dart';
+import 'package:kexcel/presenter/widget/app_modal_bottom_sheet.dart';
+import 'supplier_bloc.dart';
+import 'supplier_bloc_event.dart';
+
+class SupplierScreen
+    extends BaseInformationScreen<SupplierBloc, SupplierEntity> {
+  const SupplierScreen({super.key});
+
+  @override
+  String get title => 'Suppliers Management';
+
+  @override
+  BaseBlocEvent deleteEvent(SupplierEntity entity) => SupplierEventDelete(entity);
+
+  @override
+  BaseBlocEvent get initEvent => SupplierEventInit();
+
+  @override
+  Widget itemDetails(SupplierEntity entity) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '${entity.code} ${entity.name}',
+          softWrap: true,
+          maxLines: 2,
+          style: primaryTextStyle.large,
+        ),
+        const SizedBox(height: 10),
+        Text(
+          'Address: ${entity.address}',
+          softWrap: true,
+          maxLines: 2,
+          style: primaryTextStyle.medium,
+        ),
+        const SizedBox(height: 10),
+        FittedBox(
+          child: Text(
+            'Symbol: ${entity.symbol}',
+            style: captionTextStyle.medium,
+          ),
+        ),
+        const SizedBox(height: 10),
+        FittedBox(
+          child: Text(
+            'Vat ID: ${entity.vatId ?? ''}',
+            style: captionTextStyle.medium,
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void editItemDetails(BuildContext context, {SupplierEntity? entity}) {
+    String newCode = 'S000';
+    if (getBloc.suppliers.isNotEmpty) {
+      try {
+        newCode =
+        'S${((int.tryParse((getBloc.suppliers.last.code).substring(1)) ?? -1) + 1)
+            .toString()
+            .padLeft(3, "0")}';
+      } on BaseException {
+        newCode = '';
+      }
+    }
+
+    final TextEditingController codeController =
+    TextEditingController(text: entity?.code ?? newCode);
+    final TextEditingController nameController =
+    TextEditingController(text: entity?.name ?? '');
+    final TextEditingController addressController =
+    TextEditingController(text: entity?.address ?? '');
+    final TextEditingController vatIdController =
+    TextEditingController(text: entity?.vatId ?? '');
+    final TextEditingController symbolController =
+    TextEditingController(text: entity?.symbol ?? '');
+
+    showAppBottomSheet(
+      isDismissible: false,
+      enableDrag: false,
+      showCloseIcon: true,
+      context: context,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: codeController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Code',
+            ),
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: nameController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Name',
+            ),
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: addressController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Address',
+            ),
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: symbolController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Symbol',
+            ),
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: vatIdController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Vat ID',
+            ),
+          ),
+          const SizedBox(height: 25),
+          ElevatedButton(
+            onPressed: () {
+              final newEntity = SupplierEntity(
+                id: entity?.id ?? -1,
+                name: nameController.text,
+                code: codeController.text,
+                vatId: vatIdController.text,
+                address: addressController.text,
+                symbol: symbolController.text,
+              );
+              if (entity == null) {
+                callEvent(SupplierEventAddingDone(newEntity));
+              } else {
+                callEvent(SupplierEventEditingDone(newEntity));
+              }
+              Navigator.pop(context);
+            },
+            child: const SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: Center(child: Text('Save')),
+            ),
+          ),
+          const SizedBox(height: 25),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void import() async {
+    final importedData = await importFromFile();
+
+    List<SupplierEntity> entities = [];
+
+    if (importedData != null && importedData.length > 1) {
+      for (int i = 0; i < importedData.length; i++) {
+        if (i == 0 || importedData[i] == null) {} else {
+          final item = importedData[i];
+          if (item?[1] == null || item?[1]?.isEmpty == true) {
+            break;
+          }
+          entities.add(SupplierEntity(
+            id: 0,
+            code: item?[0] ?? '',
+            name: item?[1] ?? '',
+            address: item?[2] ?? '',
+            symbol: item?[3] ?? '',
+            vatId: item?[4] ?? '',
+          ));
+        }
+      }
+    }
+    callEvent(SupplierEventImport(entities));
+  }
+
+  @override
+  void export() async {
+    exportListToFile(
+        [
+          'Code',
+          'Name',
+          'Address',
+          'Symbol',
+          'Vat ID',
+        ],
+        getBloc.suppliers
+            .map(
+              (e) => [
+                e.code,
+                e.name,
+                e.address,
+                e.symbol,
+                e.vatId,
+              ],
+            )
+            .toList(),
+        'export_suppliers.xlsx');
+  }
+}

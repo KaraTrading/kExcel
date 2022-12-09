@@ -22,3 +22,7 @@ class SupplierEventEditingDone extends SupplierBlocEvent {
   SupplierEventEditingDone(this.entity);
 }
 class SupplierEventExport extends SupplierBlocEvent {}
+class SupplierEventImport extends SupplierBlocEvent {
+  final List<SupplierEntity> entities;
+  SupplierEventImport(this.entities);
+}

@@ -16,6 +16,16 @@ class SupplierRepositoryImpl extends SupplierRepository {
     final res = localDataSource.saveSupplier(supplier);
     return res;
   }
+  @override
+  Future<bool?> addSuppliers(List<SupplierEntity> suppliers) async {
+    final res = localDataSource.saveSuppliers(suppliers);
+    return res;
+  }
+  @override
+  Future<bool?> deleteSupplier(SupplierEntity supplier) async {
+    final res = localDataSource.deleteSupplier(supplier);
+    return res;
+  }
 
   @override
   Future<bool?> updateSupplier(SupplierEntity supplier) async {

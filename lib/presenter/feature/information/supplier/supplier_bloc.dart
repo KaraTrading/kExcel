@@ -5,6 +5,8 @@ import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/core/exception/network_exception.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/domain/usecase/supplier/add_supplier_use_case.dart';
+import 'package:kexcel/domain/usecase/supplier/add_suppliers_use_case.dart';
+import 'package:kexcel/domain/usecase/supplier/delete_supplier_use_case.dart';
 import 'package:kexcel/domain/usecase/supplier/get_suppliers_use_case.dart';
 import 'package:kexcel/domain/usecase/supplier/update_supplier_use_case.dart';
 
@@ -20,6 +22,8 @@ class SupplierBloc extends BaseBloc<SupplierBlocEvent> {
     on<SupplierEventSearch>(_getAll);
     on<SupplierEventAddingDone>(_addNew);
     on<SupplierEventEditingDone>(_update);
+    on<SupplierEventImport>(_importNewItems);
+    on<SupplierEventDelete>(_delete);
   }
 
   late List<SupplierEntity> suppliers;
@@ -27,8 +31,7 @@ class SupplierBloc extends BaseBloc<SupplierBlocEvent> {
   _getAll(event, emit) async {
     try {
       emit(LoadingState());
-      final getClientsUseCase = dependencyResolver<GetSuppliersUseCase>();
-      suppliers = await getClientsUseCase
+      suppliers = await dependencyResolver<GetSuppliersUseCase>()
           .call(event is SupplierEventSearch ? event.query : null);
       emit(ResponseState<List<SupplierEntity>>(data: suppliers));
     } on BaseNetworkException catch (e) {
@@ -45,8 +48,7 @@ class SupplierBloc extends BaseBloc<SupplierBlocEvent> {
         return;
       }
       emit(LoadingState());
-      final addUseCase = dependencyResolver<AddSupplierUseCase>();
-      await addUseCase.call(event.entity);
+      await dependencyResolver<AddSupplierUseCase>().call(event.entity);
       return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
@@ -62,8 +64,33 @@ class SupplierBloc extends BaseBloc<SupplierBlocEvent> {
         return;
       }
       emit(LoadingState());
-      final updateUseCase = dependencyResolver<UpdateSupplierUseCase>();
-      await updateUseCase.call(event.entity);
+      await dependencyResolver<UpdateSupplierUseCase>().call(event.entity);
+      return _getAll(event, emit);
+    } on BaseNetworkException catch (e) {
+      emit.call(ErrorState(error: e));
+    } on BaseException catch (e) {
+      emit.call(ErrorState(error: e));
+    }
+  }
+
+  _importNewItems(
+      SupplierEventImport event, Emitter<BaseBlocState> emit) async {
+    try {
+      emit(LoadingState());
+      await dependencyResolver<AddSuppliersUseCase>().call(event.entities);
+      return _getAll(event, emit);
+    } on BaseNetworkException catch (e) {
+      emit.call(ErrorState(error: e));
+    } on BaseException catch (e) {
+      emit.call(ErrorState(error: e));
+    }
+  }
+
+
+  _delete(SupplierEventDelete event, Emitter<BaseBlocState> emit) async {
+    try {
+      emit(LoadingState());
+      await dependencyResolver<DeleteSupplierUseCase>().call(event.entity);
       return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));

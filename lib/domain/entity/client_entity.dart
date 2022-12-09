@@ -6,6 +6,7 @@ class ClientEntity extends BaseEntity {
   final String code;
   final String? address;
   final String? nationalId;
+  final String? symbol;
   final String? bafaId;
   final String? bafaEmail;
   final String? bafaSite;
@@ -18,6 +19,7 @@ class ClientEntity extends BaseEntity {
     required this.code,
     this.address,
     this.nationalId,
+    this.symbol,
     this.bafaId,
     this.bafaEmail,
     this.bafaSite,

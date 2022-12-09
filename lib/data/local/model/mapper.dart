@@ -13,6 +13,7 @@ extension ClientDataMapper on ClientData {
         name: name,
         code: code,
         nationalId: nationalId,
+        symbol: symbol,
         address: address,
         bafaId: bafaId,
         bafaEmail: bafaEmail,
@@ -28,6 +29,7 @@ extension ClientEntityMapper on ClientEntity {
         name: name,
         code: code,
         nationalId: nationalId,
+        symbol: symbol,
         address: address,
         bafaId: bafaId,
         bafaEmail: bafaEmail,
@@ -38,11 +40,25 @@ extension ClientEntityMapper on ClientEntity {
 }
 
 extension SupplierDataMapper on SupplierData {
-  SupplierEntity get mapToEntity => SupplierEntity(id: id, name: name);
+  SupplierEntity get mapToEntity => SupplierEntity(
+        id: id,
+        code: code ?? '',
+        name: name,
+        address: address,
+        symbol: symbol,
+        vatId: vatId,
+      );
 }
 
 extension SupplierEntityMapper on SupplierEntity {
-  SupplierData get mapToData => SupplierData(name: name);
+  SupplierData get mapToData => SupplierData(
+        id: id,
+        code: code,
+        name: name,
+        address: address,
+        symbol: symbol,
+        vatId: vatId,
+      );
 }
 
 extension LogisticDataMapper on LogisticData {

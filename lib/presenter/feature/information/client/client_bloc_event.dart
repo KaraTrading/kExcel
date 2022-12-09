@@ -10,19 +10,19 @@ class ClientEventSearch extends ClientBlocEvent {
   ClientEventSearch(this.query);
 }
 class ClientEventAddingDone extends ClientBlocEvent {
-  final ClientEntity client;
-  ClientEventAddingDone(this.client);
+  final ClientEntity entity;
+  ClientEventAddingDone(this.entity);
 }
 class ClientEventDelete extends ClientBlocEvent {
-  final ClientEntity client;
-  ClientEventDelete(this.client);
+  final ClientEntity entity;
+  ClientEventDelete(this.entity);
 }
 class ClientEventEditingDone extends ClientBlocEvent {
-  final ClientEntity client;
-  ClientEventEditingDone(this.client);
+  final ClientEntity entity;
+  ClientEventEditingDone(this.entity);
 }
 class ClientEventExport extends ClientBlocEvent {}
 class ClientEventImport extends ClientBlocEvent {
-  final List<ClientEntity> clients;
-  ClientEventImport(this.clients);
+  final List<ClientEntity> entities;
+  ClientEventImport(this.entities);
 }

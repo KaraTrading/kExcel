@@ -15,14 +15,16 @@ class ClientData extends BaseData {
   @HiveField(4)
   String? nationalId;
   @HiveField(5)
-  String? bafaId;
+  String? symbol;
   @HiveField(6)
-  String? bafaEmail;
+  String? bafaId;
   @HiveField(7)
-  String? bafaSite;
+  String? bafaEmail;
   @HiveField(8)
-  String? contact;
+  String? bafaSite;
   @HiveField(9)
+  String? contact;
+  @HiveField(10)
   String? bank;
 
   ClientData({
@@ -31,6 +33,7 @@ class ClientData extends BaseData {
     required this.name,
     this.address,
     this.nationalId,
+    this.symbol,
     this.bafaId,
     this.bafaEmail,
     this.bafaSite,

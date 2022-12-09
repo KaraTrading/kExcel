@@ -16,21 +16,20 @@ import 'client_bloc_event.dart';
 @Singleton()
 class ClientBloc extends BaseBloc<ClientBlocEvent> {
   ClientBloc() {
-    on<ClientEventInit>(_getClients);
-    on<ClientEventSearch>(_getClients);
-    on<ClientEventAddingDone>(_addNewClient);
-    on<ClientEventEditingDone>(_updateClient);
-    on<ClientEventImport>(_addNewClients);
-    on<ClientEventDelete>(_deleteClient);
+    on<ClientEventInit>(_getAll);
+    on<ClientEventSearch>(_getAll);
+    on<ClientEventAddingDone>(_addNew);
+    on<ClientEventEditingDone>(_update);
+    on<ClientEventImport>(_importNewItems);
+    on<ClientEventDelete>(_delete);
   }
 
   late List<ClientEntity> clients;
 
-  _getClients(event, emit) async {
+  _getAll(event, emit) async {
     try {
       emit(LoadingState());
-      final getClientsUseCase = dependencyResolver<GetClientsUseCase>();
-      clients = await getClientsUseCase
+      clients = await dependencyResolver<GetClientsUseCase>()
           .call(event is ClientEventSearch ? event.query : null);
       emit(ResponseState<List<ClientEntity>>(data: clients));
     } on BaseNetworkException catch (e) {
@@ -40,16 +39,15 @@ class ClientBloc extends BaseBloc<ClientBlocEvent> {
     }
   }
 
-  _addNewClient(ClientEventAddingDone event, Emitter<BaseBlocState> emit) async {
+  _addNew(ClientEventAddingDone event, Emitter<BaseBlocState> emit) async {
     try {
-      if (event.client.name.isEmpty || event.client.code.isEmpty) {
+      if (event.entity.name.isEmpty || event.entity.code.isEmpty) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
         return;
       }
       emit(LoadingState());
-      final addClientsUseCase = dependencyResolver<AddClientUseCase>();
-      await addClientsUseCase.call(event.client);
-      return _getClients(event, emit);
+      await dependencyResolver<AddClientUseCase>().call(event.entity);
+      return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
     } on BaseException catch (e) {
@@ -57,12 +55,11 @@ class ClientBloc extends BaseBloc<ClientBlocEvent> {
     }
   }
 
-  _deleteClient(ClientEventDelete event, Emitter<BaseBlocState> emit) async {
+  _delete(ClientEventDelete event, Emitter<BaseBlocState> emit) async {
     try {
       emit(LoadingState());
-      final deleteUseCase = dependencyResolver<DeleteClientUseCase>();
-      await deleteUseCase.call(event.client);
-      return _getClients(event, emit);
+      await dependencyResolver<DeleteClientUseCase>().call(event.entity);
+      return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
     } on BaseException catch (e) {
@@ -70,12 +67,11 @@ class ClientBloc extends BaseBloc<ClientBlocEvent> {
     }
   }
 
-  _addNewClients(ClientEventImport event, Emitter<BaseBlocState> emit) async {
+  _importNewItems(ClientEventImport event, Emitter<BaseBlocState> emit) async {
     try {
       emit(LoadingState());
-      final addClientsUseCase = dependencyResolver<AddClientsUseCase>();
-      await addClientsUseCase.call(event.clients);
-      return _getClients(event, emit);
+      await dependencyResolver<AddClientsUseCase>().call(event.entities);
+      return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
     } on BaseException catch (e) {
@@ -83,16 +79,15 @@ class ClientBloc extends BaseBloc<ClientBlocEvent> {
     }
   }
 
-  _updateClient(ClientEventEditingDone event, Emitter<BaseBlocState> emit) async {
+  _update(ClientEventEditingDone event, Emitter<BaseBlocState> emit) async {
     try {
-      if (event.client.id < 0 || event.client.name.isEmpty || event.client.code.isEmpty) {
+      if (event.entity.id < 0 || event.entity.name.isEmpty || event.entity.code.isEmpty) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
         return;
       }
       emit(LoadingState());
-      final addClientsUseCase = dependencyResolver<UpdateClientUseCase>();
-      await addClientsUseCase.call(event.client);
-      return _getClients(event, emit);
+      await dependencyResolver<UpdateClientUseCase>().call(event.entity);
+      return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
     } on BaseException catch (e) {
