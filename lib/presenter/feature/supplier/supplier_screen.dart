@@ -12,7 +12,7 @@ class SupplierScreen extends BaseScreen<SupplierBloc> {
 
   @override
   AppBar? get appBar => AppBar(
-        title: const Text('Supplier Management'),
+        title: const Text('Suppliers Management'),
         actions: [
           GestureDetector(
             onTap: () => _export(),
@@ -126,7 +126,7 @@ class SupplierScreen extends BaseScreen<SupplierBloc> {
                 controller: nameController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Name',
+                  labelText: 'Name',
                 ),
               ),
               const SizedBox(height: 25),

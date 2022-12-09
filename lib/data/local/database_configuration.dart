@@ -16,12 +16,12 @@ late final Box<ProjectItemData> projectItemBox;
 
 Future<void> databaseConfiguration() async {
   await Hive.initFlutter();
+  Hive.registerAdapter<ClientData>(ClientDataAdapter());
   clientBox = await Hive.openBox<ClientData>(clientTableName);
-  Hive.registerAdapter(ClientDataAdapter());
+  Hive.registerAdapter<SupplierData>(SupplierDataAdapter());
   supplierBox = await Hive.openBox<SupplierData>(supplierTableName);
-  Hive.registerAdapter(SupplierDataAdapter());
+  Hive.registerAdapter<LogisticData>(LogisticDataAdapter());
   logisticBox = await Hive.openBox<LogisticData>(logisticTableName);
-  Hive.registerAdapter(LogisticDataAdapter());
+  Hive.registerAdapter<ProjectItemData>(ProjectItemDataAdapter());
   projectItemBox = await Hive.openBox<ProjectItemData>(projectsItemTableName);
-  Hive.registerAdapter(ProjectItemDataAdapter());
 }

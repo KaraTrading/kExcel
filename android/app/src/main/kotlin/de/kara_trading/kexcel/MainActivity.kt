@@ -1,4 +1,4 @@
-package com.example.kexcel
+package de.kara_trading.kexcel
 
 import io.flutter.embedding.android.FlutterActivity
 

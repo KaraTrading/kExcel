@@ -8,53 +8,65 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final features = [
+      featureItem(
+        onPressed: () => _routeClient(context),
+        title: 'Clients',
+        icon: Icons.contact_mail_rounded,
+        // color: Colors.yellow,
+      ),
+      featureItem(
+        onPressed: () => _routeSupplier(context),
+        title: 'Suppliers',
+        icon: Icons.precision_manufacturing,
+        // color: Colors.blue,
+      ),
+      featureItem(
+        onPressed: () => _routeProjectsItem(context),
+        title: 'Projects Items',
+        icon: Icons.format_list_numbered_rounded,
+        // color: Colors.black,
+      ),
+    ];
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('kExcel'),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () => _routeClient(context),
-                      child: const SizedBox(
-                          width: 170, child: Center(child: Text('Clients'))),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () => _routeSupplier(context),
-                      child: const SizedBox(
-                          width: 170, child: Center(child: Text('Supplier'))),
-                    ),
-                    // const SizedBox(height: 20),
-                    // ElevatedButton(
-                    //   onPressed: () => _routeLogistic(context),
-                    //   child: const SizedBox(
-                    //       width: 170, child: Center(child: Text('Logistic'))),
-                    // ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      style: const ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.green)),
-                      onPressed: () => _routeProjectsItem(context),
-                      child: const SizedBox(
-                          width: 170,
-                          child: Center(child: Text('Projects Item'))),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+        body: GridView(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
           ),
+          children: features,
         ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+    );
+  }
+
+  Widget featureItem({
+    required Function() onPressed,
+    required String title,
+    Color color = Colors.white,
+    IconData? icon,
+  }) {
+    return GestureDetector(
+      onTap: () => onPressed.call(),
+      child: Card(
+        color: color,
+        margin: const EdgeInsets.all(8.0),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(icon),
+              Text(title),
+            ],
+          )),
+        ),
       ),
     );
   }

@@ -14,7 +14,7 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
   @override
   AppBar? get appBar =>
       AppBar(
-        title: const Text('ProjectItem Management'),
+        title: const Text('Projects Items Management'),
         actions: [
           GestureDetector(
             onTap: () => _export(),
@@ -97,7 +97,7 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
                     controller: nameController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Name',
+                      labelText: 'Name',
                     ),
                   ),
                   const SizedBox(height: 25),
@@ -106,7 +106,7 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 0, horizontal: 4),
                       border: OutlineInputBorder(gapPadding: 1),
-                      hintText: "Client..",
+                      labelText: "Client..",
                     ),
                     child: Autocomplete(
                       onSelected: (ClientEntity entity) => client = entity,
@@ -134,7 +134,7 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
                       contentPadding:
                       EdgeInsets.symmetric(vertical: 0, horizontal: 4),
                       border: OutlineInputBorder(gapPadding: 1),
-                      hintText: "Winner..",
+                      labelText: "Winner..",
                     ),
                     child: Autocomplete(
                       onSelected: (SupplierEntity entity) => winner = entity,

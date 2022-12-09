@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
 import 'package:kexcel/presenter/feature/client/client_bloc.dart';
 import 'package:kexcel/presenter/feature/client/client_bloc_event.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
+import 'package:kexcel/presenter/utils/text_styles.dart';
+import 'package:kexcel/presenter/widget/app_modal_bottom_sheet.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 
 class ClientScreen extends BaseScreen<ClientBloc> {
@@ -12,7 +15,7 @@ class ClientScreen extends BaseScreen<ClientBloc> {
 
   @override
   AppBar? get appBar => AppBar(
-        title: const Text('Client Management'),
+        title: const Text('Clients Management'),
         actions: [
           IconButton(
             tooltip: 'Import From Excel',
@@ -54,38 +57,60 @@ class ClientScreen extends BaseScreen<ClientBloc> {
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(
+                            '${entities?[index].code ?? ''} Name: ${entities?[index].name ?? ''}',
+                            softWrap: true,
+                            maxLines: 2,
+                            style: primaryTextStyle.large,
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Address: ${entities?[index].address ?? ''}',
+                            softWrap: true,
+                            maxLines: 2,
+                            style: primaryTextStyle.medium,
+                          ),
+                          const SizedBox(height: 10),
                           FittedBox(
-                              child: Text(
-                                  '${entities?[index].code ?? ''} Name: ${entities?[index].name ?? ''}')),
-                          const SizedBox(
-                            height: 10,
+                            child: Text(
+                              'BAFA ID: ${entities?[index].bafaId ?? ''}',
+                              style: captionTextStyle.medium,
+                            ),
                           ),
                           FittedBox(
-                              child: Text(
-                                  'Address: ${entities?[index].address ?? ''}')),
-                          const SizedBox(
-                            height: 10,
+                            child: Text(
+                              'BAFA Email: ${entities?[index].bafaEmail ?? ''}',
+                              style: captionTextStyle.medium,
+                            ),
                           ),
                           FittedBox(
-                              child: Text(
-                                  'BAFA ID: ${entities?[index].bafaId ?? ''}')),
+                            child: Text(
+                              'BAFA Site: ${entities?[index].bafaSite ?? ''}',
+                              style: captionTextStyle.medium,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           FittedBox(
-                              child: Text(
-                                  'BAFA Email: ${entities?[index].bafaEmail ?? ''}')),
+                            child: Text(
+                              'National ID: ${entities?[index].nationalId ?? ''}',
+                              style: captionTextStyle.medium,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           FittedBox(
-                              child: Text(
-                                  'BAFA Site: ${entities?[index].bafaSite ?? ''}')),
+                            child: Text(
+                              'Bank: ${entities?[index].bank ?? ''}',
+                            ),
+                          ),
                           FittedBox(
-                              child: Text(
-                                  'National ID: ${entities?[index].nationalId ?? ''}')),
-                          FittedBox(
-                              child:
-                                  Text('Bank: ${entities?[index].bank ?? ''}')),
-                          FittedBox(
-                              child: Text(
-                                  'Contact: ${entities?[index].contact ?? ''}')),
+                            child: Text(
+                              'Contact: ${entities?[index].contact ?? ''}',
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -149,8 +174,18 @@ class ClientScreen extends BaseScreen<ClientBloc> {
       );
 
   void _showClientDetails(BuildContext context, {ClientEntity? entity}) {
+    String newCode = 'C000';
+    if (getBloc.clients.isNotEmpty) {
+      try {
+        newCode =
+            'C${((int.tryParse((getBloc.clients.last.code).substring(1)) ?? -1) + 1).toString().padLeft(3, "0")}';
+      } on BaseException {
+        newCode = '';
+      }
+    }
+
     final TextEditingController codeController =
-        TextEditingController(text: entity?.code ?? '');
+        TextEditingController(text: entity?.code ?? newCode);
     final TextEditingController nameController =
         TextEditingController(text: entity?.name ?? '');
     final TextEditingController addressController =
@@ -168,117 +203,115 @@ class ClientScreen extends BaseScreen<ClientBloc> {
     final TextEditingController contactController =
         TextEditingController(text: entity?.contact ?? '');
 
-    showModalBottomSheet(
-      isScrollControlled: true,
+    showAppBottomSheet(
+      isDismissible: false,
+      enableDrag: false,
+      showCloseIcon: true,
       context: context,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-          top: 16,
-          right: 16,
-          left: 16,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: codeController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Code',
-                ),
-              ),
-              const SizedBox(height: 25),
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Name',
-                ),
-              ),
-              const SizedBox(height: 25),
-              TextField(
-                controller: addressController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Address',
-                ),
-              ),
-              const SizedBox(height: 25),
-              TextField(
-                controller: bafaIdController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'BAFA ID',
-                ),
-              ),
-              const SizedBox(height: 25),
-              TextField(
-                controller: bafaEmailController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'BAFA Email',
-                ),
-              ),
-              const SizedBox(height: 25),
-              TextField(
-                controller: bafaSiteController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'BAFA Site',
-                ),
-              ),
-              const SizedBox(height: 25),
-              TextField(
-                controller: nationalIdController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'National ID',
-                ),
-              ),
-              const SizedBox(height: 25),
-              TextField(
-                controller: bankController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Bank',
-                ),
-              ),
-              const SizedBox(height: 25),
-              TextField(
-                controller: contactController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Contact',
-                ),
-              ),
-              const SizedBox(height: 25),
-              ElevatedButton(
-                  onPressed: () {
-                    final newEntity = ClientEntity(
-                      id: entity?.id ?? -1,
-                      name: nameController.text,
-                      code: codeController.text,
-                      nationalId: nationalIdController.text,
-                      address: addressController.text,
-                      bafaId: bafaIdController.text,
-                      bafaEmail: bafaEmailController.text,
-                      bafaSite: bafaSiteController.text,
-                      bank: bankController.text,
-                      contact: contactController.text,
-                    );
-                    if (entity == null) {
-                      callEvent(ClientEventAddingDone(newEntity));
-                    } else {
-                      callEvent(ClientEventEditingDone(newEntity));
-                    }
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Save'))
-            ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: codeController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Code',
+            ),
           ),
-        ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: nameController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Name',
+            ),
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: addressController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Address',
+            ),
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: bafaIdController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'BAFA ID',
+            ),
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: bafaEmailController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'BAFA Email',
+            ),
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: bafaSiteController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'BAFA Site',
+            ),
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: nationalIdController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'National ID',
+            ),
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: bankController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Bank',
+            ),
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            controller: contactController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Contact',
+            ),
+          ),
+          const SizedBox(height: 25),
+          ElevatedButton(
+            onPressed: () {
+              final newEntity = ClientEntity(
+                id: entity?.id ?? -1,
+                name: nameController.text,
+                code: codeController.text,
+                nationalId: nationalIdController.text,
+                address: addressController.text,
+                bafaId: bafaIdController.text,
+                bafaEmail: bafaEmailController.text,
+                bafaSite: bafaSiteController.text,
+                bank: bankController.text,
+                contact: contactController.text,
+              );
+              if (entity == null) {
+                callEvent(ClientEventAddingDone(newEntity));
+              } else {
+                callEvent(ClientEventEditingDone(newEntity));
+              }
+              Navigator.pop(context);
+            },
+            child: const SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: Center(child: Text('Save')),
+            ),
+          ),
+          const SizedBox(height: 25),
+        ],
       ),
     );
   }
@@ -359,7 +392,10 @@ class ClientScreen extends BaseScreen<ClientBloc> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('You can not return deleted item, Are you sure?'),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Text('You can not return deleted item, Are you sure?'),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
