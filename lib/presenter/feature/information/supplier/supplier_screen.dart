@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/presenter/base_bloc_event.dart';
+import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/feature/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
 import 'package:kexcel/presenter/utils/text_styles.dart';
@@ -37,7 +38,7 @@ class SupplierScreen
         ),
         const SizedBox(height: 10),
         Text(
-          'Address: ${entity.address}',
+          '${'address'.translate}: ${entity.address}',
           softWrap: true,
           maxLines: 2,
           style: primaryTextStyle.medium,
@@ -45,14 +46,14 @@ class SupplierScreen
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
-            'Symbol: ${entity.symbol}',
+            '${'symbol'.translate}: ${entity.symbol}',
             style: captionTextStyle.medium,
           ),
         ),
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
-            'Vat ID: ${entity.vatId ?? ''}',
+            '${'vatId'.translate}: ${entity.vatId ?? ''}',
             style: captionTextStyle.medium,
           ),
         ),
@@ -95,41 +96,41 @@ class SupplierScreen
         children: [
           TextField(
             controller: codeController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Code',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'code'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: nameController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Name',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'name'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: addressController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Address',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'address'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: symbolController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Symbol',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'symbol'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: vatIdController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Vat ID',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'vatId'.translate,
             ),
           ),
           const SizedBox(height: 25),
@@ -150,10 +151,10 @@ class SupplierScreen
               }
               Navigator.pop(context);
             },
-            child: const SizedBox(
+            child: SizedBox(
               width: double.infinity,
               height: 50,
-              child: Center(child: Text('Save')),
+              child: Center(child: Text('save'.translate)),
             ),
           ),
           const SizedBox(height: 25),
@@ -193,11 +194,11 @@ class SupplierScreen
   void export() async {
     exportListToFile(
         [
-          'Code',
-          'Name',
-          'Address',
-          'Symbol',
-          'Vat ID',
+          'code'.translate,
+          'name'.translate,
+          'address'.translate,
+          'symbol'.translate,
+          'vatId'.translate,
         ],
         getBloc.suppliers
             .map(

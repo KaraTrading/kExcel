@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/base_entity.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/base_screen.dart';
+import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 
@@ -29,7 +31,7 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
         title: Text(title),
         actions: [
           IconButton(
-            tooltip: 'Import From Excel',
+            tooltip: 'importFromExcel'.translate,
             onPressed: () => import(),
             icon: const Icon(
               Icons.input_rounded,
@@ -38,7 +40,7 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
             ),
           ),
           IconButton(
-            tooltip: 'Export To Excel',
+            tooltip: 'exportToExcel'.translate,
             onPressed: () => export(),
             icon: const Icon(
               Icons.output_rounded,
@@ -133,9 +135,9 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: Text('You can not return deleted item, Are you sure?'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Text('deleteConfirmation'.translate),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -145,7 +147,7 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
                       backgroundColor: MaterialStatePropertyAll(Colors.grey),
                     ),
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                    child: Text('cancel'.translate),
                   ),
                   ElevatedButton(
                     style: const ButtonStyle(
@@ -156,7 +158,7 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
                       callEvent(deleteEvent(entity));
                       Navigator.pop(context);
                     },
-                    child: const Text('Delete'),
+                    child: Text('delete'.translate),
                   )
                 ],
               )

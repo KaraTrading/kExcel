@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' as localization;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kexcel/core/di/dependency_injector.dart';
@@ -10,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await databaseConfiguration();
   await configureDependencies();
+  await localization.EasyLocalization.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -18,39 +20,49 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'kExcel',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          primarySwatch: Colors.green,
-          appBarTheme: AppBarTheme(
-            titleTextStyle: headerTextStyle.large.onPrimary,
-            backgroundColor: primaryColor,
-            foregroundColor: onPrimaryColor,
-            elevation: 1,
-            centerTitle: true,
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: primaryDarkerColor,
+    return localization.EasyLocalization(
+      supportedLocales: const [
+        Locale('en', 'US'),
+        // Locale('en', 'US'),
+      ],
+      fallbackLocale: const Locale('en', 'US'),
+      useOnlyLangCode: true,
+      saveLocale: true,
+      path: 'assets/translations',
+      child: MaterialApp(
+        title: 'kExcel',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            primarySwatch: Colors.green,
+            appBarTheme: AppBarTheme(
+              titleTextStyle: headerTextStyle.large.onPrimary,
+              backgroundColor: primaryColor,
+              foregroundColor: onPrimaryColor,
+              elevation: 1,
+              centerTitle: true,
+              systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: primaryDarkerColor,
+              ),
             ),
-          ),
-          textTheme: TextTheme(
-            displayLarge: headerTextStyle.medium,
-            displayMedium: titleTextStyle.medium,
-            displaySmall: captionTextStyle.medium,
-            headlineLarge: headerTextStyle.large,
-            headlineMedium: headerTextStyle.medium,
-            headlineSmall: headerTextStyle.small,
-            titleLarge: titleTextStyle.large,
-            titleMedium: titleTextStyle.medium,
-            titleSmall: titleTextStyle.small,
-            bodyLarge: primaryTextStyle.large,
-            bodyMedium: primaryTextStyle.medium,
-            bodySmall: primaryTextStyle.small,
-            labelLarge: captionTextStyle.large,
-            labelMedium: captionTextStyle.medium,
-            labelSmall: captionTextStyle.small,
-          )),
-      home: const HomeScreen(),
+            textTheme: TextTheme(
+              displayLarge: headerTextStyle.medium,
+              displayMedium: titleTextStyle.medium,
+              displaySmall: captionTextStyle.medium,
+              headlineLarge: headerTextStyle.large,
+              headlineMedium: headerTextStyle.medium,
+              headlineSmall: headerTextStyle.small,
+              titleLarge: titleTextStyle.large,
+              titleMedium: titleTextStyle.medium,
+              titleSmall: titleTextStyle.small,
+              bodyLarge: primaryTextStyle.large,
+              bodyMedium: primaryTextStyle.medium,
+              bodySmall: primaryTextStyle.small,
+              labelLarge: captionTextStyle.large,
+              labelMedium: captionTextStyle.medium,
+              labelSmall: captionTextStyle.small,
+            )),
+        home: const HomeScreen(),
+      ),
     );
   }
 }

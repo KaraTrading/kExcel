@@ -3,6 +3,7 @@ import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/presenter/base_screen.dart';
+import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
@@ -53,8 +54,8 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Id: ${entities?[index].id ?? ''}'),
-                          Text('Name: ${entities?[index].name ?? ''}'),
+                          Text('${'id'.translate}: ${entities?[index].id ?? ''}'),
+                          Text('${'name'.translate}: ${entities?[index].name ?? ''}'),
                         ],
                       ),
                     ],
@@ -95,18 +96,18 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
                   const SizedBox(height: 25),
                   TextField(
                     controller: nameController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Name',
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'name'.translate,
                     ),
                   ),
                   const SizedBox(height: 25),
                   InputDecorator(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-                      border: OutlineInputBorder(gapPadding: 1),
-                      labelText: "Client..",
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+                      border: const OutlineInputBorder(gapPadding: 1),
+                      labelText: 'client'.translate,
                     ),
                     child: Autocomplete(
                       onSelected: (ClientEntity entity) => client = entity,
@@ -130,11 +131,11 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
                   ),
                   const SizedBox(height: 25),
                   InputDecorator(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       contentPadding:
-                      EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-                      border: OutlineInputBorder(gapPadding: 1),
-                      labelText: "Winner..",
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+                      border: const OutlineInputBorder(gapPadding: 1),
+                      labelText: 'winner'.translate,
                     ),
                     child: Autocomplete(
                       onSelected: (SupplierEntity entity) => winner = entity,
@@ -171,7 +172,7 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
                         }
                         Navigator.pop(context);
                       },
-                      child: const Text('Save'))
+                      child: Text('save'.translate))
                 ],
               ),
             ),
@@ -181,17 +182,17 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
 
   void _export() async {
     final titles = [
-      'Project ID',
-      'ID',
-      'Name',
-      'Kara Proj ID',
-      'Client Id',
-      'Client Name',
-      'Winner Id',
-      'Winner Name',
-      'Kara PI Value',
-      'Cancelled',
-      'Delivery Date',
+      'projectId'.translate,
+      'id'.translate,
+      'name'.translate,
+      'karaProjectId'.translate,
+      'clientId'.translate,
+      'client'.translate,
+      'winnerId'.translate,
+      'winner'.translate,
+      'karaPiValue'.translate,
+      'Cancelled'.translate,
+      'deliveryDate'.translate,
     ];
     exportListToFile(titles, getBloc.projectsItems.map((e) => [
       e.projectId.toString(),
@@ -203,7 +204,7 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
       e.winner?.id.toString(),
       e.winner?.name,
       e.karaPiValue?.toString(),
-      e.isCancelled ? 'True' : 'False',
+      e.isCancelled ? 'true'.translate : 'false'.translate,
       e.deliveryDate?.toIso8601String(),
     ]).toList(), 'exported_projects_items.xlsx');
   }

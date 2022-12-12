@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/presenter/base_bloc_event.dart';
+import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/feature/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
 import 'package:kexcel/presenter/utils/text_styles.dart';
@@ -19,7 +20,7 @@ class ClientScreen extends BaseInformationScreen<ClientBloc, ClientEntity> {
   BaseBlocEvent get initEvent => ClientEventInit();
 
   @override
-  String get title => 'Client Management';
+  String get title => 'clientManagement'.translate;
 
   @override
   void editItemDetails(BuildContext context, {ClientEntity? entity}) {
@@ -66,81 +67,81 @@ class ClientScreen extends BaseInformationScreen<ClientBloc, ClientEntity> {
         children: [
           TextField(
             controller: codeController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Code',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'code'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: nameController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Name',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'name'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: addressController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Address',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'address'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: nationalIdController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'National ID',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'nationalId'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: symbolController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Symbol',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'symbol'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: bafaIdController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'BAFA ID',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'bafaId'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: bafaEmailController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'BAFA Email',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'bafaEmail'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: bafaSiteController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'BAFA Site',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'bafaSite'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: bankController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Bank',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'bank'.translate,
             ),
           ),
           const SizedBox(height: 25),
           TextField(
             controller: contactController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Contact',
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'contact'.translate,
             ),
           ),
           const SizedBox(height: 25),
@@ -166,10 +167,10 @@ class ClientScreen extends BaseInformationScreen<ClientBloc, ClientEntity> {
               }
               Navigator.pop(context);
             },
-            child: const SizedBox(
+            child: SizedBox(
               width: double.infinity,
               height: 50,
-              child: Center(child: Text('Save')),
+              child: Center(child: Text('save'.translate)),
             ),
           ),
           const SizedBox(height: 25),
@@ -182,17 +183,17 @@ class ClientScreen extends BaseInformationScreen<ClientBloc, ClientEntity> {
   void export() async {
     exportListToFile(
       [
-        'ID',
-        'Code',
-        'Name',
-        'Address',
-        'National ID',
-        'Symbol',
-        'BAFA ID',
-        'BAFA Email',
-        'BAFA Site',
-        'Contact',
-        'Bank',
+        'id'.translate,
+        'code'.translate,
+        'name'.translate,
+        'address'.translate,
+        'nationalId'.translate,
+        'symbol'.translate,
+        'bafId'.translate,
+        'bafEmail'.translate,
+        'bafaSite'.translate,
+        'contact'.translate,
+        'bank'.translate,
       ],
       getBloc.clients
           .map(
@@ -264,20 +265,20 @@ class ClientScreen extends BaseInformationScreen<ClientBloc, ClientEntity> {
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
-            'National ID: ${entity.nationalId ?? ''}',
+            '${'nationalId'.translate}: ${entity.nationalId ?? ''}',
             style: captionTextStyle.medium,
           ),
         ),
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
-            'Symbol: ${entity.symbol ?? ''}',
+            '${'symbol'.translate}: ${entity.symbol ?? ''}',
             style: captionTextStyle.medium,
           ),
         ),
         const SizedBox(height: 10),
         Text(
-          'Address: ${entity.address ?? ''}',
+          '${'address'.translate}: ${entity.address ?? ''}',
           softWrap: true,
           maxLines: 2,
           style: primaryTextStyle.medium,
@@ -285,25 +286,25 @@ class ClientScreen extends BaseInformationScreen<ClientBloc, ClientEntity> {
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
-            'BAFA ID: ${entity.bafaId ?? ''}',
+            '${'bafaId'.translate}: ${entity.bafaId ?? ''}',
             style: captionTextStyle.medium,
           ),
         ),
         FittedBox(
           child: Text(
-            'BAFA Email: ${entity.bafaEmail ?? ''}',
+            '${'bafaEmail'.translate}: ${entity.bafaEmail ?? ''}',
             style: captionTextStyle.medium,
           ),
         ),
         FittedBox(
           child: Text(
-            'BAFA Site: ${entity.bafaSite ?? ''}',
+            '${'bafaSite'.translate}: ${entity.bafaSite ?? ''}',
             style: captionTextStyle.medium,
           ),
         ),
         const SizedBox(height: 10),
-        FittedBox(child: Text('Bank: ${entity.bank ?? ''}')),
-        FittedBox(child: Text('Contact: ${entity.contact ?? ''}')),
+        FittedBox(child: Text('${'bank'.translate}: ${entity.bank ?? ''}')),
+        FittedBox(child: Text('${'contact'.translate}: ${entity.contact ?? ''}')),
       ],
     );
   }
