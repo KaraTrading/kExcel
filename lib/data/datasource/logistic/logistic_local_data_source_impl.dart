@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:kexcel/data/datasource/logistic/logistic_local_data_source.dart';
 import 'package:kexcel/data/local/model/logistic_data.dart';
-import 'package:kexcel/data/local/model/mapper.dart';
 import 'package:kexcel/data/local/secure_storage.dart';
 import 'package:kexcel/domain/entity/logistic_entity.dart';
 

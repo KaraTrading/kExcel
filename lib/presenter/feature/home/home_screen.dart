@@ -1,3 +1,5 @@
+import 'package:kexcel/presenter/common/localization.dart';
+import 'package:kexcel/presenter/feature/information/item/item_screen.dart';
 import 'package:kexcel/presenter/feature/project/item/project_item_screen.dart';
 import 'package:kexcel/presenter/feature/information/supplier/supplier_screen.dart';
 import 'package:flutter/material.dart';
@@ -10,21 +12,27 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final features = [
       featureItem(
-        onPressed: () => _routeClient(context),
-        title: 'Clients',
+        onPressed: () => _routeClients(context),
+        title: 'clientsManagement'.translate,
         icon: Icons.contact_mail_rounded,
         // color: Colors.yellow,
       ),
       featureItem(
-        onPressed: () => _routeSupplier(context),
-        title: 'Suppliers',
+        onPressed: () => _routeSuppliers(context),
+        title: 'suppliersManagement'.translate,
         icon: Icons.precision_manufacturing,
         // color: Colors.blue,
       ),
       featureItem(
+        onPressed: () => _routeItems(context),
+        title: 'itemsManagement'.translate,
+        icon: Icons.storage_rounded,
+        // color: Colors.blue,
+      ),
+      featureItem(
         onPressed: () => _routeProjectsItem(context),
-        title: 'Projects Items',
-        icon: Icons.format_list_numbered_rounded,
+        title: 'projectsItemsManagement'.translate,
+        icon: Icons.fire_truck_rounded,
         // color: Colors.black,
       ),
     ];
@@ -71,22 +79,22 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  _routeClient(BuildContext context) {
+  _routeClients(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const ClientScreen(),
     ));
   }
 
-  _routeSupplier(BuildContext context) {
+  _routeSuppliers(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const SupplierScreen(),
     ));
   }
 
-  _routeLogistic(BuildContext context) {
-    // Navigator.of(context).push(MaterialPageRoute(
-    //   builder: (context) => const ClientScreen(),
-    // ));
+  _routeItems(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const ItemScreen(),
+    ));
   }
 
   _routeProjectsItem(BuildContext context) {

@@ -15,7 +15,7 @@ class SupplierScreen
   const SupplierScreen({super.key});
 
   @override
-  String get title => 'Suppliers Management';
+  String get title => 'suppliersManagement'.translate;
 
   @override
   BaseBlocEvent deleteEvent(SupplierEntity entity) => SupplierEventDelete(entity);

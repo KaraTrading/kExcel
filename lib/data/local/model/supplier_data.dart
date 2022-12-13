@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
+import 'package:kexcel/domain/entity/supplier_entity.dart';
 
 part 'supplier_data.g.dart';
 
@@ -29,4 +30,26 @@ class SupplierData extends BaseData {
     this.symbol,
     this.vatId,
   });
+}
+
+extension SupplierDataMapper on SupplierData {
+  SupplierEntity get mapToEntity => SupplierEntity(
+    id: id,
+    code: code ?? '',
+    name: name,
+    address: address,
+    symbol: symbol,
+    vatId: vatId,
+  );
+}
+
+extension SupplierEntityMapper on SupplierEntity {
+  SupplierData get mapToData => SupplierData(
+    id: id,
+    code: code,
+    name: name,
+    address: address,
+    symbol: symbol,
+    vatId: vatId,
+  );
 }

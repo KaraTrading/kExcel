@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:kexcel/core/app_interceptor.dart';
 import 'package:kexcel/data/local/database_configuration.dart';
 import 'package:kexcel/data/local/model/client_data.dart';
+import 'package:kexcel/data/local/model/item_data.dart';
 import 'package:kexcel/data/local/model/logistic_data.dart';
 import 'package:kexcel/data/local/model/project_item_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
@@ -38,6 +39,11 @@ abstract class RegisterModule {
   @Singleton()
   SecureStorage<ProjectItemData> projectStorage() {
     return SecureStorageImpl<ProjectItemData>(projectItemBox);
+  }
+
+  @Singleton()
+  SecureStorage<ItemData> itemStorage() {
+    return SecureStorageImpl<ItemData>(itemBox);
   }
 
 // @Singleton()

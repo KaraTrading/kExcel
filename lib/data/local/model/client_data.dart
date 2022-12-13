@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
+import 'package:kexcel/domain/entity/client_entity.dart';
 
 part 'client_data.g.dart';
 
@@ -40,4 +41,36 @@ class ClientData extends BaseData {
     this.contact,
     this.bank,
   });
+}
+
+extension ClientDataMapper on ClientData {
+  ClientEntity get mapToEntity => ClientEntity(
+    id: id,
+    name: name,
+    code: code,
+    nationalId: nationalId,
+    symbol: symbol,
+    address: address,
+    bafaId: bafaId,
+    bafaEmail: bafaEmail,
+    bafaSite: bafaSite,
+    contact: contact,
+    bank: bank,
+  );
+}
+
+extension ClientEntityMapper on ClientEntity {
+  ClientData get mapToData => ClientData(
+    id: id,
+    name: name,
+    code: code,
+    nationalId: nationalId,
+    symbol: symbol,
+    address: address,
+    bafaId: bafaId,
+    bafaEmail: bafaEmail,
+    bafaSite: bafaSite,
+    contact: contact,
+    bank: bank,
+  );
 }

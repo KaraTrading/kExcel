@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
+import 'package:kexcel/domain/entity/project_item_entity.dart';
 
 part 'project_item_data.g.dart';
 
@@ -44,4 +45,33 @@ class ProjectItemData extends BaseData {
     this.karaPiValue,
     this.deliveryDate,
   });
+}
+
+extension ProjectItemDataMapper on ProjectItemData {
+  ProjectItemEntity get mapToEntity => ProjectItemEntity(
+    projectId: projectId,
+    id: id,
+    name: name,
+    client: null,
+    karaProjectNumber: karaProjectNumber,
+    winner: null,
+    logisticEntity: null,
+    isCancelled: isCancelled,
+    karaPiValue: karaPiValue,
+    deliveryDate: deliveryDate,
+  );
+}
+
+extension ProjectItemEntityMapper on ProjectItemEntity {
+  ProjectItemData get mapToData => ProjectItemData(
+    projectId: projectId,
+    name: name,
+    clientId: client!.id,
+    karaProjectNumber: karaProjectNumber,
+    winnerId: winner?.id,
+    logisticId: logisticEntity?.id,
+    isCancelled: isCancelled,
+    karaPiValue: karaPiValue,
+    deliveryDate: deliveryDate,
+  );
 }

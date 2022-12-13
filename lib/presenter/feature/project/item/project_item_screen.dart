@@ -15,7 +15,7 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
   @override
   AppBar? get appBar =>
       AppBar(
-        title: const Text('Projects Items Management'),
+        title: Text('projectsItemsManagement'.translate),
         actions: [
           GestureDetector(
             onTap: () => _export(),

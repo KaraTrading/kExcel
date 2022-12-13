@@ -20,7 +20,7 @@ class ClientScreen extends BaseInformationScreen<ClientBloc, ClientEntity> {
   BaseBlocEvent get initEvent => ClientEventInit();
 
   @override
-  String get title => 'clientManagement'.translate;
+  String get title => 'clientsManagement'.translate;
 
   @override
   void editItemDetails(BuildContext context, {ClientEntity? entity}) {
