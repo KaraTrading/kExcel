@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/base_entity.dart';
 import 'package:kexcel/presenter/base_bloc.dart';

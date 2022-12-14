@@ -8,6 +8,7 @@ import 'package:kexcel/presenter/feature/information/base_information_screen.dar
 import 'package:kexcel/presenter/utils/excel_utils.dart';
 import 'project_item_bloc.dart';
 import 'project_item_bloc_event.dart';
+
 class ProjectItemScreen extends BaseInformationScreen<ProjectItemBloc, ProjectItemEntity> {
   const ProjectItemScreen({super.key});
 
@@ -28,7 +29,7 @@ class ProjectItemScreen extends BaseInformationScreen<ProjectItemBloc, ProjectIt
   );
 
   @override
-  String get title => throw UnimplementedError();
+  String get title => 'projectsItemsManagement'.translate;
 
   @override
   BaseBlocEvent get initEvent => callEvent(ProjectItemEventInit());
