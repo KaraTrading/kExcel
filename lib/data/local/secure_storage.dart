@@ -8,6 +8,8 @@ abstract class SecureStorage<T> {
 
   Future<T?> getById(int id);
 
+  Future<List<T>?> getByIds(List<int> ids);
+
   Future<List<T>?> getAll();
 
   Future<T?> findFirst(String query);

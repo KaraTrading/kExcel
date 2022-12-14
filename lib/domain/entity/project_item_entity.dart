@@ -1,4 +1,5 @@
 import 'base_entity.dart';
+import 'item_entity.dart';
 import 'logistic_entity.dart';
 import 'client_entity.dart';
 import 'supplier_entity.dart';
@@ -14,6 +15,7 @@ class ProjectItemEntity extends BaseEntity {
   final bool isCancelled;
   final double? karaPiValue;
   final DateTime? deliveryDate;
+  List<ItemEntity>? items;
 
   ProjectItemEntity({
     required this.projectId,
@@ -26,5 +28,6 @@ class ProjectItemEntity extends BaseEntity {
     this.karaPiValue,
     this.isCancelled = false,
     this.deliveryDate,
+    this.items,
   });
 }

@@ -63,6 +63,18 @@ class SecureStorageImpl<T extends BaseData> extends SecureStorage<T> {
   }
 
   @override
+  Future<List<T>?> getByIds(List<int> ids) async {
+    List<T> collected = [];
+    for (var id in ids) {
+      final item = box.get(id);
+      if (item != null) {
+        collected.add(item);
+      }
+    }
+    return Future.value(collected);
+  }
+
+  @override
   Future<T?> put(T data) async {
     box.put(data.id, data);
     return Future.value(data);

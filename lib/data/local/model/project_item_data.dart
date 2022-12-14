@@ -33,6 +33,9 @@ class ProjectItemData extends BaseData {
   @HiveField(9)
   DateTime? deliveryDate;
 
+  @HiveField(10)
+  List<int>? itemsIds;
+
   ProjectItemData({
     super.id = 0,
     required this.projectId,
@@ -44,6 +47,7 @@ class ProjectItemData extends BaseData {
     this.isCancelled = false,
     this.karaPiValue,
     this.deliveryDate,
+    this.itemsIds,
   });
 }
 
@@ -59,6 +63,7 @@ extension ProjectItemDataMapper on ProjectItemData {
     isCancelled: isCancelled,
     karaPiValue: karaPiValue,
     deliveryDate: deliveryDate,
+    items: null,
   );
 }
 
@@ -73,5 +78,6 @@ extension ProjectItemEntityMapper on ProjectItemEntity {
     isCancelled: isCancelled,
     karaPiValue: karaPiValue,
     deliveryDate: deliveryDate,
+    itemsIds: items?.map((e) => e.id).toList(),
   );
 }

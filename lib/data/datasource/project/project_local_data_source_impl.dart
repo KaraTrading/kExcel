@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:kexcel/data/datasource/project/project_local_data_source.dart';
 import 'package:kexcel/data/local/model/client_data.dart';
+import 'package:kexcel/data/local/model/item_data.dart';
 import 'package:kexcel/data/local/model/logistic_data.dart';
 import 'package:kexcel/data/local/model/project_item_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
@@ -16,12 +17,14 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
   SecureStorage<ClientData> clientStorage;
   SecureStorage<SupplierData> supplierStorage;
   SecureStorage<LogisticData> logisticStorage;
+  SecureStorage<ItemData> itemsStorage;
 
   ProjectLocalDataSourceImpl({
     required this.storage,
     required this.clientStorage,
     required this.supplierStorage,
     required this.logisticStorage,
+    required this.itemsStorage,
   });
 
   @override
@@ -75,6 +78,9 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
     if (data.logisticId != null) {
       entity.logisticEntity =
           (await logisticStorage.getById(data.logisticId!))?.mapToEntity;
+    }
+    if (data.itemsIds != null) {
+      entity.items = (await itemsStorage.getByIds(data.itemsIds!))?.map((e) => e.mapToEntity).toList() ?? [];
     }
     return entity;
   }
