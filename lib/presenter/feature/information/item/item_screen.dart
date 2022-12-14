@@ -189,7 +189,7 @@ class ItemScreen extends BaseInformationScreen<ItemBloc, ItemEntity> {
             id: 0,
             name: item?[0] ?? '',
             type: item?[1] ?? '',
-            manufacturer: (item?[2]?.isNotEmpty == true) ? getBloc.suppliers.firstWhere((element) => element.name.contains(item![2]!)) : null,
+            manufacturer: findSupplier(item?[2]),
             description: item?[3],
             hsCode: item?[4],
           ));
@@ -225,5 +225,17 @@ class ItemScreen extends BaseInformationScreen<ItemBloc, ItemEntity> {
           .toList(),
       'export_items.xlsx',
     );
+  }
+
+  SupplierEntity? findSupplier(String? manufactureName) {
+    if (manufactureName?.isNotEmpty == true) {
+      for (var element in getBloc.suppliers) {
+        if ((element.symbol?.contains(manufactureName!) ?? false) ||
+            element.name.contains(manufactureName!)) {
+          return element;
+        }
+      }
+    }
+    return null;
   }
 }
