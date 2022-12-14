@@ -1,16 +1,20 @@
 # kexcel
 
-Excel Creator
+Import clients data, suppliers data, ....from excel sheets, add them into new projects or edit existing one, and then export formatted PDF.
 
-## Getting Started
+## Getting Started With most popular frameworks and libraries
+- [Flutter: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Clean-Architecture](https://www.youtube.com/watch?v=o_TH-Y78tt4)
+- [Hive](https://pub.dev/packages/hive_flutter)
+- [Dio](https://pub.dev/packages/dio)
+- [GetIt](https://pub.dev/packages/get_it)
+- [Bloc](https://pub.dev/packages/flutter_bloc)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Example of using these Third-Party libraries
+- [syncfusion_flutter_xlsio](https://pub.dev/packages/syncfusion_flutter_xlsio)
+- [excel](https://pub.dev/packages/excel)
+- [open_file](https://pub.dev/packages/open_file)
+- [file_picker](https://pub.dev/packages/file_picker)
+- [easy_localization](https://pub.dev/packages/easy_localization)
+- [pdf](https://pub.dev/packages/pdf)
+- [printing](https://pub.dev/packages/printing)

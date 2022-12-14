@@ -4,9 +4,11 @@ import 'package:kexcel/core/di/dependency_injector.dart';
 import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/core/exception/network_exception.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
+import 'package:kexcel/domain/entity/item_entity.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/domain/usecase/client/get_clients_use_case.dart';
+import 'package:kexcel/domain/usecase/item/get_items_use_case.dart';
 import 'package:kexcel/domain/usecase/project/item/add_project_Item_use_case.dart';
 import 'package:kexcel/domain/usecase/project/item/get_projects_items_use_case.dart';
 import 'package:kexcel/domain/usecase/project/item/update_project_Item_use_case.dart';
@@ -15,10 +17,8 @@ import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
 import 'project_item_bloc_event.dart';
 
-
 @Singleton()
 class ProjectItemBloc extends BaseBloc<ProjectItemBlocEvent> {
-
   ProjectItemBloc() {
     on<ProjectItemEventInit>(_getAll);
     on<ProjectItemEventSearch>(_getAll);
@@ -28,6 +28,7 @@ class ProjectItemBloc extends BaseBloc<ProjectItemBlocEvent> {
 
   late List<ClientEntity> clients = [];
   late List<SupplierEntity> suppliers = [];
+  late List<ItemEntity> items = [];
   late List<ProjectItemEntity> projectsItems = [];
 
   _getAll(event, emit) async {
@@ -35,17 +36,18 @@ class ProjectItemBloc extends BaseBloc<ProjectItemBlocEvent> {
       emit(LoadingState());
 
       if (clients.isEmpty) {
-        final getAllClientsUseCase = dependencyResolver<GetClientsUseCase>();
-        clients = await getAllClientsUseCase.call(null);
+        clients = await dependencyResolver<GetClientsUseCase>().call(null);
       }
 
       if (suppliers.isEmpty) {
-        final getAllSuppliersUseCase = dependencyResolver<GetSuppliersUseCase>();
-        suppliers = await getAllSuppliersUseCase.call(null);
+        suppliers = await dependencyResolver<GetSuppliersUseCase>().call(null);
       }
 
-      final getAllUseCase = dependencyResolver<GetProjectItemsUseCase>();
-      projectsItems = await getAllUseCase
+      if (items.isEmpty) {
+        items = await dependencyResolver<GetItemsUseCase>().call(null);
+      }
+
+      projectsItems = await dependencyResolver<GetProjectItemsUseCase>()
           .call(event is ProjectItemEventSearch ? event.query : null);
       emit(ResponseState<List<ProjectItemEntity>>(data: projectsItems));
     } on BaseNetworkException catch (e) {
@@ -62,8 +64,7 @@ class ProjectItemBloc extends BaseBloc<ProjectItemBlocEvent> {
         return;
       }
       emit(LoadingState());
-      final addUseCase = dependencyResolver<AddProjectItemUseCase>();
-      await addUseCase.call(event.entity);
+      await dependencyResolver<AddProjectItemUseCase>().call(event.entity);
       return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
@@ -72,15 +73,15 @@ class ProjectItemBloc extends BaseBloc<ProjectItemBlocEvent> {
     }
   }
 
-  _update(ProjectItemEventEditingDone event, Emitter<BaseBlocState> emit) async {
+  _update(
+      ProjectItemEventEditingDone event, Emitter<BaseBlocState> emit) async {
     try {
       if (event.entity.id < 0 || event.entity.name.isEmpty) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
         return;
       }
       emit(LoadingState());
-      final updateUseCase = dependencyResolver<UpdateProjectItemUseCase>();
-      await updateUseCase.call(event.entity);
+      await dependencyResolver<UpdateProjectItemUseCase>().call(event.entity);
       return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
