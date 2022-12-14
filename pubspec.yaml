@@ -23,6 +23,9 @@ dependencies:
   open_file: ^3.2.1
   file_picker:
   easy_localization: ^3.0.1
+  pdf: ^3.8.4
+  printing: ^5.9.3
+
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +41,8 @@ flutter:
 
   assets:
     - assets/translations/
+    - assets/vectors/
+    - assets/images/
 
   # fonts:
   #   - family: Schyler

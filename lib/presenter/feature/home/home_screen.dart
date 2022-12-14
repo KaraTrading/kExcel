@@ -1,5 +1,6 @@
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/feature/information/item/item_screen.dart';
+import 'package:kexcel/presenter/feature/pdf_screen.dart';
 import 'package:kexcel/presenter/feature/project/item/project_item_screen.dart';
 import 'package:kexcel/presenter/feature/information/supplier/supplier_screen.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,12 @@ class HomeScreen extends StatelessWidget {
         onPressed: () => _routeProjectsItem(context),
         title: 'projectsItemsManagement'.translate,
         icon: Icons.fire_truck_rounded,
+        // color: Colors.black,
+      ),
+      featureItem(
+        onPressed: () => _showPdf(context),
+        title: 'PDF Sample',
+        icon: Icons.picture_as_pdf,
         // color: Colors.black,
       ),
     ];
@@ -100,6 +107,11 @@ class HomeScreen extends StatelessWidget {
   _routeProjectsItem(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const ProjectItemScreen(),
+    ));
+  }
+  _showPdf(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const PDFScreen(),
     ));
   }
 }
