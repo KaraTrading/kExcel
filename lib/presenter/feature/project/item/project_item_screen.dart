@@ -2,81 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
-import 'package:kexcel/presenter/base_screen.dart';
+import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/common/localization.dart';
-import 'package:kexcel/presenter/data_load_bloc_builder.dart';
+import 'package:kexcel/presenter/feature/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
-import 'package:kexcel/presenter/widget/no_item_widget.dart';
 import 'project_item_bloc.dart';
 import 'project_item_bloc_event.dart';
-class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
+class ProjectItemScreen extends BaseInformationScreen<ProjectItemBloc, ProjectItemEntity> {
   const ProjectItemScreen({super.key});
 
   @override
-  AppBar? get appBar =>
-      AppBar(
-        title: Text('projectsItemsManagement'.translate),
-        actions: [
-          GestureDetector(
-            onTap: () => _export(),
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.output_rounded,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-          ),
-        ],
-      );
+  AppBar? get appBar => AppBar(
+    title: Text(title),
+    actions: [
+      IconButton(
+        tooltip: 'exportToExcel'.translate,
+        onPressed: () => export(),
+        icon: const Icon(
+          Icons.output_rounded,
+          color: Colors.white,
+          size: 20,
+        ),
+      ),
+    ],
+  );
 
   @override
-  Widget screenBody(BuildContext context) {
-    callEvent(ProjectItemEventInit());
-    return DataLoadBlocBuilder<ProjectItemBloc, List<ProjectItemEntity>?>(
-      noDataView: const NoItemWidget(),
-      bloc: getBloc,
-      builder: (BuildContext context, List<ProjectItemEntity>? entities) {
-        return ListView.builder(
-          itemCount: entities?.length ?? 0,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onLongPress: () =>
-                  showClientDetails(context, entity: entities?[index]),
-              child: Card(
-                margin: const EdgeInsets.all(8),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('${'id'.translate}: ${entities?[index].id ?? ''}'),
-                          Text('${'name'.translate}: ${entities?[index].name ?? ''}'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
+  String get title => throw UnimplementedError();
+
+  @override
+  BaseBlocEvent get initEvent => callEvent(ProjectItemEventInit());
+
+  @override
+  BaseBlocEvent deleteEvent(ProjectItemEntity entity) => callEvent(ProjectItemEventDelete(entity));
+
+  @override
+  Widget itemDetails(ProjectItemEntity entity) {
+    return Column(
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('${'id'.translate}: ${entity.id ?? ''}'),
+            Text('${'name'.translate}: ${entity.name ?? ''}'),
+          ],
+        ),
+      ],
     );
   }
 
   @override
-  FloatingActionButton? floatingActionButton(BuildContext context) =>
-      FloatingActionButton(
-        onPressed: () => showClientDetails(context),
-        child: const Icon(Icons.add),
-      );
-
-  void showClientDetails(BuildContext context, {ProjectItemEntity? entity}) {
+  void editItemDetails(BuildContext context, {ProjectItemEntity? entity}) {
     final TextEditingController nameController =
     TextEditingController(text: entity?.name ?? '');
 
@@ -180,7 +157,8 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
     );
   }
 
-  void _export() async {
+  @override
+  void export() {
     final titles = [
       'projectId'.translate,
       'id'.translate,
@@ -207,5 +185,10 @@ class ProjectItemScreen extends BaseScreen<ProjectItemBloc> {
       e.isCancelled ? 'true'.translate : 'false'.translate,
       e.deliveryDate?.toIso8601String(),
     ]).toList(), 'exported_projects_items.xlsx');
+  }
+
+  @override
+  void import() {
+
   }
 }
