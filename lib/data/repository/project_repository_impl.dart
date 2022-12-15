@@ -11,14 +11,14 @@ class ProjectRepositoryImpl extends ProjectRepository{
   ProjectRepositoryImpl(this.localDataSource);
 
   @override
-  Future<bool?> addProjectItem({required ProjectItemEntity projectItem}) async {
-    final res = localDataSource.saveProjectItem(projectItem);
+  Future<bool?> addProjectItem(ProjectItemEntity entity) async {
+    final res = localDataSource.saveProjectItem(entity);
     return res;
   }
 
   @override
-  Future<bool?> updateProjectItem({required ProjectItemEntity projectItem}) async {
-    final res = localDataSource.updateProjectItem(projectItem);
+  Future<bool?> updateProjectItem(ProjectItemEntity entity) async {
+    final res = localDataSource.updateProjectItem(entity);
     return res;
   }
 
@@ -31,6 +31,18 @@ class ProjectRepositoryImpl extends ProjectRepository{
   @override
   Future<List<ProjectItemEntity>?> getProjectsItems({int? projectId, String? search}) async {
     final res = localDataSource.getProjectsItems(search);
+    return res;
+  }
+
+  @override
+  Future<bool?> addProjectItems(List<ProjectItemEntity> entities) {
+    final res = localDataSource.saveProjectItems(entities);
+    return res;
+  }
+
+  @override
+  Future<bool?> deleteProjectItem(ProjectItemEntity entity) {
+    final res = localDataSource.deleteProjectItem(entity);
     return res;
   }
 

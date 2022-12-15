@@ -1,4 +1,5 @@
 import 'package:kexcel/domain/entity/item_entity.dart';
+import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/presenter/base_bloc_event.dart';
 
 abstract class ItemBlocEvent extends BaseBlocEvent {}
@@ -12,6 +13,10 @@ class ItemEventSearch extends ItemBlocEvent {
 class ItemEventAddingDone extends ItemBlocEvent {
   final ItemEntity entity;
   ItemEventAddingDone(this.entity);
+}
+class ItemEventAddManufacturer extends ItemBlocEvent {
+  final String manufacturerName;
+  ItemEventAddManufacturer(this.manufacturerName);
 }
 class ItemEventDelete extends ItemBlocEvent {
   final ItemEntity entity;

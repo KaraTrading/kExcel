@@ -7,7 +7,7 @@ class SupplierEntity extends BaseEntity {
   final String? address;
   final String? symbol;
   final String? vatId;
-  final bool? isManufacturer;
+  bool? isManufacturer;
 
   SupplierEntity({
     required this.id,

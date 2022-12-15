@@ -23,7 +23,7 @@ class ProjectItemScreen extends BaseInformationScreen<ProjectItemBloc, ProjectIt
           Icons.output_rounded,
           color: Colors.white,
           size: 20,
-        ),
+        )
       ),
     ],
   );
@@ -32,10 +32,10 @@ class ProjectItemScreen extends BaseInformationScreen<ProjectItemBloc, ProjectIt
   String get title => 'projectsItemsManagement'.translate;
 
   @override
-  BaseBlocEvent get initEvent => callEvent(ProjectItemEventInit());
+  BaseBlocEvent get initEvent => ProjectItemEventInit();
 
   @override
-  BaseBlocEvent deleteEvent(ProjectItemEntity entity) => callEvent(ProjectItemEventDelete(entity));
+  BaseBlocEvent deleteEvent(ProjectItemEntity entity) => ProjectItemEventDelete(entity);
 
   @override
   Widget itemDetails(ProjectItemEntity entity) {
@@ -45,8 +45,8 @@ class ProjectItemScreen extends BaseInformationScreen<ProjectItemBloc, ProjectIt
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('${'id'.translate}: ${entity.id ?? ''}'),
-            Text('${'name'.translate}: ${entity.name ?? ''}'),
+            Text('${'id'.translate}: ${entity.id}'),
+            Text('${'name'.translate}: ${entity.name}'),
           ],
         ),
       ],

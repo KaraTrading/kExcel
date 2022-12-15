@@ -12,7 +12,7 @@ class UpdateProjectItemUseCase extends BaseUseCase<bool, ProjectItemEntity> {
 
   @override
   Future<bool> call(ProjectItemEntity params) async {
-    final bool? response = await repository.updateProjectItem(projectItem: params);
+    final bool? response = await repository.updateProjectItem(params);
     return response == true;
   }
 

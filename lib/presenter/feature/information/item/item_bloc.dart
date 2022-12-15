@@ -10,7 +10,10 @@ import 'package:kexcel/domain/usecase/item/add_items_use_case.dart';
 import 'package:kexcel/domain/usecase/item/delete_item_use_case.dart';
 import 'package:kexcel/domain/usecase/item/get_items_use_case.dart';
 import 'package:kexcel/domain/usecase/item/update_item_use_case.dart';
+import 'package:kexcel/domain/usecase/supplier/add_supplier_use_case.dart';
+import 'package:kexcel/domain/usecase/supplier/get_manufacturers_use_case.dart';
 import 'package:kexcel/domain/usecase/supplier/get_suppliers_use_case.dart';
+import 'package:kexcel/domain/usecase/supplier/update_supplier_use_case.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
 import 'package:kexcel/presenter/feature/information/item/item_bloc_event.dart';
@@ -18,7 +21,7 @@ import 'package:kexcel/presenter/feature/information/item/item_bloc_event.dart';
 @Singleton()
 class ItemBloc extends BaseBloc<ItemBlocEvent>{
   late List<ItemEntity> items = [];
-  late List<SupplierEntity> suppliers = [];
+  late List<SupplierEntity> manufacturers = [];
 
   ItemBloc() {
     on<ItemEventInit>(_getAll);
@@ -26,6 +29,7 @@ class ItemBloc extends BaseBloc<ItemBlocEvent>{
     on<ItemEventAddingDone>(_addNew);
     on<ItemEventEditingDone>(_update);
     on<ItemEventImport>(_importNewItems);
+    on<ItemEventAddManufacturer>(_importManufacturer);
     on<ItemEventDelete>(_delete);
   }
 
@@ -33,8 +37,8 @@ class ItemBloc extends BaseBloc<ItemBlocEvent>{
     try {
       emit(LoadingState());
         items = await dependencyResolver<GetItemsUseCase>().call(event is ItemEventSearch ? event.query : null);
-      if (suppliers.isEmpty) {
-        suppliers = await dependencyResolver<GetSuppliersUseCase>().call(null);
+      if (manufacturers.isEmpty) {
+        manufacturers = await dependencyResolver<GetManufacturersUseCase>().call(null);
       }
       emit(ResponseState<List<ItemEntity>>(data: items));
     } on BaseNetworkException catch (e) {
@@ -54,6 +58,26 @@ class ItemBloc extends BaseBloc<ItemBlocEvent>{
       emit(LoadingState());
       await dependencyResolver<AddItemUseCase>().call(event.entity);
       return _getAll(event, emit);
+    } on BaseNetworkException catch (e) {
+      emit.call(ErrorState(error: e));
+    } on BaseException catch (e) {
+      emit.call(ErrorState(error: e));
+    }
+  }
+
+  _importManufacturer(ItemEventAddManufacturer event, Emitter<BaseBlocState> emit) async {
+    try {
+      final suppliers = await dependencyResolver<GetSuppliersUseCase>().call(null);
+      for (var element in suppliers) {
+        if (element.name.contains(event.manufacturerName) || (element.symbol?.contains(event.manufacturerName) ?? false)) {
+          final supplier = element;
+          supplier.isManufacturer = true;
+          await dependencyResolver<UpdateSupplierUseCase>().call(supplier);
+          return;
+        }
+      }
+      await dependencyResolver<AddSupplierUseCase>().call(SupplierEntity(id: 0, code: 'M000', name: event.manufacturerName));
+      return;
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
     } on BaseException catch (e) {
