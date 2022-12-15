@@ -1,10 +1,11 @@
 import 'package:hive/hive.dart';
+import 'package:kexcel/data/local/database_configuration.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 
 part 'project_item_data.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: projectsItemTableTypeId)
 class ProjectItemData extends BaseData {
   @HiveField(1)
   int projectId;

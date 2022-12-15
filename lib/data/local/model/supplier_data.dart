@@ -1,10 +1,11 @@
 import 'package:hive/hive.dart';
+import 'package:kexcel/data/local/database_configuration.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 
 part 'supplier_data.g.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: supplierTableTypeId)
 class SupplierData extends BaseData {
 
   @HiveField(1)
