@@ -15,6 +15,7 @@
   "bank": "Bank",
   "contact": "Contact",
   "vatId": "Vat ID",
+  "isManufacturer": "Is a manufacture",
   "client": "Client",
   "winner": "Winner",
   "projectId": "Project ID",

@@ -5,6 +5,8 @@ abstract class SupplierRepository extends BaseRepository {
 
   Future<List<SupplierEntity>?> getSuppliers({String? search});
 
+  Future<List<SupplierEntity>?> getManufacturers({String? search});
+
   Future<SupplierEntity?> getSupplier(int id);
 
   Future<bool?> addSupplier(SupplierEntity supplier);

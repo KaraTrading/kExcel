@@ -22,6 +22,9 @@ class SupplierData extends BaseData {
   @HiveField(5)
   String? vatId;
 
+  @HiveField(6)
+  bool? isManufacturer;
+
   SupplierData({
     super.id = 0,
     required this.code,
@@ -29,6 +32,7 @@ class SupplierData extends BaseData {
     this.address,
     this.symbol,
     this.vatId,
+    this.isManufacturer,
   });
 }
 
@@ -40,6 +44,7 @@ extension SupplierDataMapper on SupplierData {
     address: address,
     symbol: symbol,
     vatId: vatId,
+    isManufacturer: isManufacturer,
   );
 }
 
@@ -51,5 +56,6 @@ extension SupplierEntityMapper on SupplierEntity {
     address: address,
     symbol: symbol,
     vatId: vatId,
+    isManufacturer: isManufacturer,
   );
 }

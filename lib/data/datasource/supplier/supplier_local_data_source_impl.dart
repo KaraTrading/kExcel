@@ -31,6 +31,12 @@ class SupplierLocalDataSourceImpl extends SupplierLocalDataSource {
   }
 
   @override
+  Future<List<SupplierEntity>?> getManufacturers(String? search) async {
+    final res = await getSuppliers(search);
+    return res?.where((element) => element.isManufacturer == true).toList();
+  }
+
+  @override
   Future<bool?> saveSupplier(SupplierEntity supplier) async {
     final res = storage.add(supplier.mapToData);
     return ((await res)?.id ?? 0) > 0;

@@ -16,4 +16,6 @@ abstract class SupplierLocalDataSource extends BaseLocalDataSource<SupplierData>
 
   Future<List<SupplierEntity>?> getSuppliers(String? search);
 
+  Future<List<SupplierEntity>?> getManufacturers(String? search);
+
 }

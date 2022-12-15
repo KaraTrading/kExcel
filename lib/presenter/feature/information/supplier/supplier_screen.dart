@@ -18,7 +18,8 @@ class SupplierScreen
   String get title => 'suppliersManagement'.translate;
 
   @override
-  BaseBlocEvent deleteEvent(SupplierEntity entity) => SupplierEventDelete(entity);
+  BaseBlocEvent deleteEvent(SupplierEntity entity) =>
+      SupplierEventDelete(entity);
 
   @override
   BaseBlocEvent get initEvent => SupplierEventInit();
@@ -67,24 +68,23 @@ class SupplierScreen
     if (getBloc.suppliers.isNotEmpty) {
       try {
         newCode =
-        'S${((int.tryParse((getBloc.suppliers.last.code).substring(1)) ?? -1) + 1)
-            .toString()
-            .padLeft(3, "0")}';
+            'S${((int.tryParse((getBloc.suppliers.last.code).substring(1)) ?? -1) + 1).toString().padLeft(3, "0")}';
       } on BaseException {
         newCode = '';
       }
     }
 
+    bool isManufacturer = entity?.isManufacturer ?? false;
     final TextEditingController codeController =
-    TextEditingController(text: entity?.code ?? newCode);
+        TextEditingController(text: entity?.code ?? newCode);
     final TextEditingController nameController =
-    TextEditingController(text: entity?.name ?? '');
+        TextEditingController(text: entity?.name ?? '');
     final TextEditingController addressController =
-    TextEditingController(text: entity?.address ?? '');
+        TextEditingController(text: entity?.address ?? '');
     final TextEditingController vatIdController =
-    TextEditingController(text: entity?.vatId ?? '');
+        TextEditingController(text: entity?.vatId ?? '');
     final TextEditingController symbolController =
-    TextEditingController(text: entity?.symbol ?? '');
+        TextEditingController(text: entity?.symbol ?? '');
 
     showAppBottomSheet(
       isDismissible: false,
@@ -110,8 +110,27 @@ class SupplierScreen
             ),
           ),
           const SizedBox(height: 25),
+          StatefulBuilder(
+            builder: (
+              BuildContext context,
+              StateSetter setState,
+            ) =>
+                CheckboxListTile(
+              value: isManufacturer,
+              onChanged: (checked) {
+                setState(() {
+                  isManufacturer = (checked ?? false);
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              title: Text('isManufacturer'.translate),
+            ),
+          ),
+          const SizedBox(height: 25),
           TextField(
             controller: addressController,
+            minLines: 2,
+            maxLines: 4,
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
               labelText: 'address'.translate,
@@ -143,6 +162,7 @@ class SupplierScreen
                 vatId: vatIdController.text,
                 address: addressController.text,
                 symbol: symbolController.text,
+                isManufacturer: isManufacturer,
               );
               if (entity == null) {
                 callEvent(SupplierEventAddingDone(newEntity));
@@ -171,7 +191,8 @@ class SupplierScreen
 
     if (importedData != null && importedData.length > 1) {
       for (int i = 0; i < importedData.length; i++) {
-        if (i == 0 || importedData[i] == null) {} else {
+        if (i == 0 || importedData[i] == null) {
+        } else {
           final item = importedData[i];
           if (item?[1] == null || item?[1]?.isEmpty == true) {
             break;
