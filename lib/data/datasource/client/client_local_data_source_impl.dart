@@ -27,14 +27,13 @@ class ClientLocalDataSourceImpl extends ClientLocalDataSource {
 
   @override
   Future<bool?> saveClient(ClientEntity client) async {
-    final res = storage.add(client.mapToData);
-    return ((await res)?.id ?? 0) > 0;
+    final res = await storage.add(client.mapToData);
+    return (res?.id ?? 0) > 0;
   }
 
   @override
   Future<bool?> deleteClient(ClientEntity client) async {
-    final res = storage.delete(client.mapToData);
-    return res;
+    return await storage.delete(client.mapToData);
   }
 
   @override
@@ -50,8 +49,8 @@ class ClientLocalDataSourceImpl extends ClientLocalDataSource {
 
   @override
   Future<bool?> updateClient(ClientEntity client) async {
-    final res = storage.put(client.mapToData);
-    return ((await res)?.id ?? 0) > 0;
+    final res = await storage.put(client.mapToData);
+    return (res?.id ?? 0) > 0;
   }
 
   @override

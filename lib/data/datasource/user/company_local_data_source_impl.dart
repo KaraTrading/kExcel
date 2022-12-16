@@ -31,13 +31,13 @@ class CompanyLocalDataSourceImpl extends CompanyLocalDataSource {
 
   @override
   Future<bool?> updateCompany(CompanyEntity entity) async {
-    final res = storage.put(entity.mapToData);
-    return ((await res)?.id ?? 0) > 0;
+    final res = await storage.put(entity.mapToData);
+    return (res?.id ?? 0) > 0;
   }
 
   @override
   Future<bool?> saveCompany(CompanyEntity entity) async {
-    final res = storage.add(entity.mapToData);
-    return ((await res)?.id ?? 0) > 0;
+    final res = await storage.add(entity.mapToData);
+    return (res?.id ?? 0) > 0;
   }
 }
