@@ -7,6 +7,7 @@ class SupplierEntity extends BaseEntity {
   final String? address;
   final String? symbol;
   final String? vatId;
+  bool? isManufacturer;
 
   SupplierEntity({
     required this.id,
@@ -15,5 +16,6 @@ class SupplierEntity extends BaseEntity {
     this.address,
     this.symbol,
     this.vatId,
+    this.isManufacturer,
   });
 }

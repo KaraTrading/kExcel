@@ -1,10 +1,11 @@
 import 'package:hive/hive.dart';
+import 'package:kexcel/data/local/database_configuration.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 
 part 'client_data.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: clientTableTypeId)
 class ClientData extends BaseData {
 
   @HiveField(1)

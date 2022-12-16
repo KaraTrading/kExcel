@@ -1,14 +1,14 @@
 import 'package:injectable/injectable.dart';
 import 'package:kexcel/data/datasource/supplier/supplier_local_data_source.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
-import 'package:kexcel/data/local/secure_storage.dart';
+import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 
 @Injectable(as: SupplierLocalDataSource)
 class SupplierLocalDataSourceImpl extends SupplierLocalDataSource {
 
   @override
-  SecureStorage<SupplierData> storage;
+  Database<SupplierData> storage;
 
   SupplierLocalDataSourceImpl(this.storage);
 
@@ -28,6 +28,12 @@ class SupplierLocalDataSourceImpl extends SupplierLocalDataSource {
       final allClientEntity = allClientData?.map((e) => e.mapToEntity).toList();
       return Future.value(allClientEntity);
     }
+  }
+
+  @override
+  Future<List<SupplierEntity>?> getManufacturers(String? search) async {
+    final res = await getSuppliers(search);
+    return res?.where((element) => element.isManufacturer == true).toList();
   }
 
   @override

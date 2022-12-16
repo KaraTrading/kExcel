@@ -10,11 +10,11 @@ abstract class ProjectRepository extends BaseRepository {
 
   Future<ProjectItemEntity?> getProjectItem(int id);
 
-  Future<bool?> addProjectItem({
-    required ProjectItemEntity projectItem,
-  });
+  Future<bool?> addProjectItem(ProjectItemEntity entity);
 
-  Future<bool?> updateProjectItem({
-    required ProjectItemEntity projectItem,
-  });
+  Future<bool?> addProjectItems(List<ProjectItemEntity> entities);
+
+  Future<bool?> deleteProjectItem(ProjectItemEntity entity);
+
+  Future<bool?> updateProjectItem(ProjectItemEntity entity);
 }

@@ -116,7 +116,7 @@ class ItemScreen extends BaseInformationScreen<ItemBloc, ItemEntity> {
               entity.name,
               initialValue: TextEditingValue(text: manufacturer?.name ?? ''),
               optionsBuilder: (TextEditingValue textEditingValue) {
-                return getBloc.suppliers
+                return getBloc.manufacturers
                     .where(
                       (SupplierEntity entity) =>
                   (entity.name.toLowerCase().contains(
@@ -229,12 +229,14 @@ class ItemScreen extends BaseInformationScreen<ItemBloc, ItemEntity> {
 
   SupplierEntity? findSupplier(String? manufactureName) {
     if (manufactureName?.isNotEmpty == true) {
-      for (var element in getBloc.suppliers) {
+      for (var element in getBloc.manufacturers) {
         if ((element.symbol?.contains(manufactureName!) ?? false) ||
             element.name.contains(manufactureName!)) {
           return element;
         }
       }
+      callEvent(ItemEventAddManufacturer(manufactureName!));
+      return SupplierEntity(id: 0, code: 'M000', name: manufactureName);
     }
     return null;
   }

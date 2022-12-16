@@ -45,4 +45,10 @@ class SupplierRepositoryImpl extends SupplierRepository {
     return res;
   }
 
+  @override
+  Future<List<SupplierEntity>?> getManufacturers({String? search}) async {
+    final res = localDataSource.getManufacturers(search);
+    return res;
+  }
+
 }

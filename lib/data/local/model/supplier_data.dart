@@ -1,10 +1,11 @@
 import 'package:hive/hive.dart';
+import 'package:kexcel/data/local/database_configuration.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 
 part 'supplier_data.g.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: supplierTableTypeId)
 class SupplierData extends BaseData {
 
   @HiveField(1)
@@ -22,6 +23,9 @@ class SupplierData extends BaseData {
   @HiveField(5)
   String? vatId;
 
+  @HiveField(6)
+  bool? isManufacturer;
+
   SupplierData({
     super.id = 0,
     required this.code,
@@ -29,6 +33,7 @@ class SupplierData extends BaseData {
     this.address,
     this.symbol,
     this.vatId,
+    this.isManufacturer,
   });
 }
 
@@ -40,6 +45,7 @@ extension SupplierDataMapper on SupplierData {
     address: address,
     symbol: symbol,
     vatId: vatId,
+    isManufacturer: isManufacturer,
   );
 }
 
@@ -51,5 +57,6 @@ extension SupplierEntityMapper on SupplierEntity {
     address: address,
     symbol: symbol,
     vatId: vatId,
+    isManufacturer: isManufacturer,
   );
 }

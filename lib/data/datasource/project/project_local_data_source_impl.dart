@@ -5,19 +5,19 @@ import 'package:kexcel/data/local/model/item_data.dart';
 import 'package:kexcel/data/local/model/logistic_data.dart';
 import 'package:kexcel/data/local/model/project_item_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
-import 'package:kexcel/data/local/secure_storage.dart';
+import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 
 @Injectable(as: ProjectLocalDataSource)
 class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
 
   @override
-  SecureStorage<ProjectItemData> storage;
+  Database<ProjectItemData> storage;
 
-  SecureStorage<ClientData> clientStorage;
-  SecureStorage<SupplierData> supplierStorage;
-  SecureStorage<LogisticData> logisticStorage;
-  SecureStorage<ItemData> itemsStorage;
+  Database<ClientData> clientStorage;
+  Database<SupplierData> supplierStorage;
+  Database<LogisticData> logisticStorage;
+  Database<ItemData> itemsStorage;
 
   ProjectLocalDataSourceImpl({
     required this.storage,
@@ -46,14 +46,14 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
   }
 
   @override
-  Future<bool?> saveProjectItem(ProjectItemEntity projectItem) async {
-    final res = storage.add(projectItem.mapToData);
+  Future<bool?> saveProjectItem(ProjectItemEntity entity) async {
+    final res = storage.add(entity.mapToData);
     return ((await res)?.id ?? 0) > 0;
   }
 
   @override
-  Future<bool?> updateProjectItem(ProjectItemEntity projectItem) async {
-    final res = storage.put(projectItem.mapToData);
+  Future<bool?> updateProjectItem(ProjectItemEntity entity) async {
+    final res = storage.put(entity.mapToData);
     return ((await res)?.id ?? 0) > 0;
   }
 
@@ -83,5 +83,22 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
       entity.items = (await itemsStorage.getByIds(data.itemsIds!))?.map((e) => e.mapToEntity).toList() ?? [];
     }
     return entity;
+  }
+
+  @override
+  Future<bool?> deleteProjectItem(ProjectItemEntity entity) {
+    final res = storage.delete(entity.mapToData);
+    return res;
+  }
+
+  @override
+  Future<bool?> saveProjectItems(List<ProjectItemEntity> entities) async {
+    await storage.deleteAll();
+    bool allAdded = true;
+    for (var element in entities) {
+      final added = await saveProjectItem(element);
+      if (added!) allAdded = false;
+    }
+    return allAdded;
   }
 }

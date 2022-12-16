@@ -1,10 +1,11 @@
 import 'package:hive/hive.dart';
+import 'package:kexcel/data/local/database_configuration.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
 import 'package:kexcel/domain/entity/logistic_entity.dart';
 
 part 'logistic_data.g.dart';
 
-@HiveType(typeId: 2)
+@HiveType(typeId: logisticTableTypeId)
 class LogisticData extends BaseData {
 
   @HiveField(1)

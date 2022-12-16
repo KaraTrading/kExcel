@@ -1,5 +1,5 @@
-import '../local/secure_storage.dart';
+import '../local/database.dart';
 
 abstract class BaseLocalDataSource<T> {
-  abstract final SecureStorage<T> storage;
+  abstract final Database<T> storage;
 }

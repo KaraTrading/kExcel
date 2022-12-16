@@ -1,17 +1,17 @@
 import 'package:injectable/injectable.dart';
 import 'package:kexcel/data/local/model/item_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
-import 'package:kexcel/data/local/secure_storage.dart';
+import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/domain/entity/item_entity.dart';
 import 'item_local_data_source.dart';
 
 @Injectable(as: ItemLocalDataSource)
 class ItemLocalDataSourceImpl extends ItemLocalDataSource {
 
-  SecureStorage<SupplierData> supplierStorage;
+  Database<SupplierData> supplierStorage;
 
   @override
-  SecureStorage<ItemData> storage;
+  Database<ItemData> storage;
 
   ItemLocalDataSourceImpl(this.storage, this.supplierStorage);
 

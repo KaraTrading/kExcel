@@ -5,9 +5,13 @@ import '../../local/model/project_item_data.dart';
 
 abstract class ProjectLocalDataSource extends BaseLocalDataSource<ProjectItemData> {
 
-  Future<bool?> saveProjectItem(ProjectItemEntity projectItem);
+  Future<bool?> saveProjectItem(ProjectItemEntity entity);
 
-  Future<bool?> updateProjectItem(ProjectItemEntity projectItem);
+  Future<bool?> saveProjectItems(List<ProjectItemEntity> entities);
+
+  Future<bool?> deleteProjectItem(ProjectItemEntity entity);
+
+  Future<bool?> updateProjectItem(ProjectItemEntity entity);
 
   Future<List<ProjectItemEntity>?> getProjectsItems(String? search);
 

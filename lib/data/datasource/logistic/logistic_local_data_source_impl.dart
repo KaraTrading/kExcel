@@ -1,14 +1,14 @@
 import 'package:injectable/injectable.dart';
 import 'package:kexcel/data/datasource/logistic/logistic_local_data_source.dart';
 import 'package:kexcel/data/local/model/logistic_data.dart';
-import 'package:kexcel/data/local/secure_storage.dart';
+import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/domain/entity/logistic_entity.dart';
 
 @Injectable(as: LogisticLocalDataSource)
 class LogisticLocalDataSourceImpl extends LogisticLocalDataSource {
 
   @override
-  SecureStorage<LogisticData> storage;
+  Database<LogisticData> storage;
 
   LogisticLocalDataSourceImpl(this.storage);
 
