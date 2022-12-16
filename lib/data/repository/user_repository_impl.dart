@@ -14,24 +14,29 @@ class UserRepositoryImpl extends UserRepository {
   UserRepositoryImpl(this.userLocalDataSource, this.companyLocalDataSource);
 
   @override
-  Future<UserEntity?> getUser() {
-    return userLocalDataSource.getUser();
+  Future<UserEntity?> getUser() async {
+    return await userLocalDataSource.getUser();
   }
 
   @override
   Future<CompanyEntity> getUserCompany() async {
     final user = await getUser();
-    return companyLocalDataSource.getUserCompany(user!.id!);
+    return await companyLocalDataSource.getUserCompany(user!.id!);
   }
 
   @override
-  Future<bool?> saveUser(UserEntity entity) {
-    return userLocalDataSource.setUser(entity);
+  Future<List<CompanyEntity>> getCompanies() async {
+    return await companyLocalDataSource.getCompanies();
   }
 
   @override
-  Future<bool?> saveUserCompany(CompanyEntity entity) {
-    return companyLocalDataSource.saveCompany(entity);
+  Future<bool?> saveUser(UserEntity entity) async {
+    return await userLocalDataSource.setUser(entity);
+  }
+
+  @override
+  Future<bool?> saveUserCompany(CompanyEntity entity) async {
+    return await companyLocalDataSource.saveCompany(entity);
   }
 
 }
