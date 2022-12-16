@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart' as localization;
 import 'package:flutter/material.dart';
 import 'package:kexcel/core/di/dependency_injector.dart';
-import 'package:kexcel/presenter/feature/home/home_screen.dart';
+import 'package:kexcel/presenter/feature/login/login_screen.dart';
 import 'package:kexcel/presenter/utils/app_theme.dart';
 import 'data/local/database_configuration.dart';
 
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: const HomeScreen(),
+      home: const LoginScreen(),
     );
   }
 }

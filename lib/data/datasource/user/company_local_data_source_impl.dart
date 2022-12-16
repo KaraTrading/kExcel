@@ -19,7 +19,14 @@ class CompanyLocalDataSourceImpl extends CompanyLocalDataSource {
 
   @override
   Future<List<CompanyEntity>> getCompanies() async {
-      return Future.value((await storage.getAll())!.map((e) => e.mapToEntity).toList());
+    final companies = await storage.getAll() ?? [];
+    if (companies.isNotEmpty) {
+      return (companies).map((e) => e.mapToEntity).toList();
+    } else {
+      await saveCompany(CompanyEntity(id: 0, name: 'Metpool', logoAssetsAddress: 'assets/images/metpool_logo.png', ceoName: 'Amin Katani', registerNumber: '90875', taxNumber: '103/5746/3762', ustIdNumber: 'DE-336448399', email: 'info@metpool.de', telephone: '+492115229548', fax: '+49211522954899', bankName: 'Stadtsparkasse', bankIban: 'DE73 3005 0110 1008 3759 80', bankBic: 'DUSSDEDDXXX'));
+      await saveCompany(CompanyEntity(id: 1, name: 'Kara', logoAssetsAddress: 'assets/images/kara_logo.png', ceoName: 'Ahmad Katani', registerNumber: '73611', taxNumber: '103/5739/1683', ustIdNumber: 'DE-297826287', email: 'info@kara-trading.de', telephone: '+4921152295480', fax: '+49211522954899', bankName: 'Stadtsparkasse', bankIban: 'DE05 3005 0110 1007 0354 03', bankBic: 'DUSSDEDDXXX'));
+      return await getCompanies();
+    }
   }
 
   @override

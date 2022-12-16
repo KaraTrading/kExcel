@@ -4,12 +4,15 @@ import 'package:injectable/injectable.dart';
 import 'package:kexcel/core/app_interceptor.dart';
 import 'package:kexcel/data/local/database_configuration.dart';
 import 'package:kexcel/data/local/model/client_data.dart';
+import 'package:kexcel/data/local/model/company_data.dart';
 import 'package:kexcel/data/local/model/item_data.dart';
 import 'package:kexcel/data/local/model/logistic_data.dart';
 import 'package:kexcel/data/local/model/project_item_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/data/local/database_impl.dart';
+import 'package:kexcel/data/local/secure_storage.dart';
+import 'package:kexcel/data/local/secure_storage_impl.dart';
 
 @module
 abstract class RegisterModule {
@@ -48,13 +51,24 @@ abstract class RegisterModule {
   }
 
   @Singleton()
-  FlutterSecureStorage get flutterSecureStorage {
-    return const FlutterSecureStorage(
-      aOptions: AndroidOptions(
-        encryptedSharedPreferences: true,
-      ),
-    );
+  Database<CompanyData> companyStorage() {
+    return DatabaseImpl<CompanyData>(companyBox);
   }
+
+  @Singleton()
+  SecureStorage get secureStorage => SecureStorageImpl(
+        const FlutterSecureStorage(
+          iOptions: IOSOptions(
+            accessibility: KeychainAccessibility.first_unlock,
+          ),
+          mOptions: MacOsOptions(
+            accessibility: KeychainAccessibility.first_unlock,
+          ),
+          aOptions: AndroidOptions(
+            encryptedSharedPreferences: true,
+          ),
+        ),
+      );
 
 // @Singleton()
 // GigHttpRequest get getHttpRequest {
