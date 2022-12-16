@@ -6,6 +6,6 @@ abstract class UserLocalDataSource {
 
   Future<bool?> updateUser(UserEntity entity);
 
-  Future<UserEntity> getUser();
+  Future<UserEntity?> getUser();
 
 }

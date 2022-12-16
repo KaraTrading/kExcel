@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:kexcel/data/local/model/company_data.dart';
-import 'package:kexcel/data/local/secure_storage.dart';
+import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/domain/entity/company_entity.dart';
 import 'company_local_data_source.dart';
 
@@ -8,7 +8,7 @@ import 'company_local_data_source.dart';
 class CompanyLocalDataSourceImpl extends CompanyLocalDataSource {
 
   @override
-  SecureStorage<CompanyData> storage;
+  Database<CompanyData> storage;
 
   CompanyLocalDataSourceImpl(this.storage);
 

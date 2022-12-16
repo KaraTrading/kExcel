@@ -1,14 +1,14 @@
 import 'package:injectable/injectable.dart';
 import 'package:kexcel/data/datasource/client/client_local_data_source.dart';
 import 'package:kexcel/data/local/model/client_data.dart';
-import 'package:kexcel/data/local/secure_storage.dart';
+import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 
 @Injectable(as: ClientLocalDataSource)
 class ClientLocalDataSourceImpl extends ClientLocalDataSource {
 
   @override
-  SecureStorage<ClientData> storage;
+  Database<ClientData> storage;
 
   ClientLocalDataSourceImpl(this.storage);
 
