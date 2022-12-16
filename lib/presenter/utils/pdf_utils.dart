@@ -16,210 +16,14 @@
 
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:kexcel/domain/entity/company_entity.dart';
 import 'package:kexcel/domain/entity/item_entity.dart';
-import 'package:kexcel/domain/entity/supplier_entity.dart';
+import 'package:kexcel/domain/entity/user_entity.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-Future<Uint8List> generateInvoice(PdfPageFormat pageFormat) async {
-  final lorem = pw.LoremText();
-
-  final items = <ItemEntityWithExtraData>[
-    ItemEntityWithExtraData(
-      sortIndex: 0,
-      item: ItemEntity(
-          id: 0,
-          name: lorem.sentence(2),
-          description: lorem.sentence(15),
-          hsCode: lorem.random.nextInt(8000).toString(),
-          manufacturer: SupplierEntity(
-              id: 0,
-              code: 'S${lorem.random.nextInt(999)}',
-              name: lorem.sentence(2))),
-      quantity: lorem.random.nextInt(1),
-    ),
-    ItemEntityWithExtraData(
-        sortIndex: 1,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 2,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 3,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 4,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 5,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 6,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 7,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 8,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 9,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 10,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 11,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 12,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-    ItemEntityWithExtraData(
-        sortIndex: 13,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1)),
-  ];
-
-  final invoice = Invoice(
-    invoiceNumber: '22PO32-AL',
-    items: items,
-    necessaryInformation: [
-      'Our reference',
-      'Scope of supply (Description of goods)',
-      'Item price and total price',
-      'Time of delivery',
-      'Terms of delivery (Ex works)',
-      'Packing (seaworthy packing)',
-      'Weights: net & gross (estimated at least)',
-      'Terms of payment',
-      'Country of origin',
-      'Customs tariff number / HS code',
-      'Validity of offer',
-      'Technical datasheet'
-    ],
-    customerName: 'Wyan Aleko',
-    customerAddress: '54 rue de Rivoli\n75001 Paris, France',
-    contactInfo: 'Wyan Aleko\nManagement Assistant\nAleko@metpool.de',
-    baseColor: PdfColors.grey800,
-    accentColor: PdfColors.indigo800,
-  );
+Future<Uint8List> generateInvoice(Invoice invoice, PdfPageFormat pageFormat) async {
 
   return await invoice.buildPdf(pageFormat);
 }
@@ -227,10 +31,9 @@ Future<Uint8List> generateInvoice(PdfPageFormat pageFormat) async {
 class Invoice {
   final List<ItemEntityWithExtraData> items;
   final List<String> necessaryInformation;
-  final String customerName;
-  final String customerAddress;
+  final UserEntity user;
+  final CompanyEntity company;
   final String invoiceNumber;
-  final String contactInfo;
   final PdfColor baseColor;
   final PdfColor accentColor;
 
@@ -252,10 +55,9 @@ class Invoice {
   Invoice({
     required this.items,
     this.necessaryInformation = const [],
-    required this.customerName,
-    required this.customerAddress,
+    required this.user,
+    required this.company,
     required this.invoiceNumber,
-    required this.contactInfo,
     required this.baseColor,
     required this.accentColor,
   });
@@ -266,7 +68,7 @@ class Invoice {
     _fontTitle = await PdfGoogleFonts.cairoExtraLight();
     _fontLight = await PdfGoogleFonts.firaSansExtraLight();
     _fontBold = await PdfGoogleFonts.firaSansExtraLight();
-    _logo = await rootBundle.load('assets/images/metpool_logo.png');
+    _logo = await rootBundle.load(company.logoAssetsAddress);
 
     // Add page to the PDF
     doc.addPage(
@@ -335,7 +137,7 @@ class Invoice {
                   child: pw.Row(
                     children: [
                       pw.Text(
-                        'METPOOL',
+                        company.name,
                         style: pw.TextStyle(
                           color: accentColor,
                           font: _fontTitle,
@@ -343,14 +145,15 @@ class Invoice {
                         ),
                       ),
                       pw.SizedBox(width: 8),
-                      pw.Text(
-                        'GmbH',
-                        style: pw.TextStyle(
-                          color: accentColor,
-                          font: _fontTitle,
-                          fontSize: 25,
+                      if (company.nameExtension?.isNotEmpty == true)
+                        pw.Text(
+                          company.nameExtension!,
+                          style: pw.TextStyle(
+                            color: accentColor,
+                            font: _fontTitle,
+                            fontSize: 25,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -358,7 +161,7 @@ class Invoice {
                   padding: const pw.EdgeInsets.only(top: 10),
                   alignment: pw.Alignment.centerLeft,
                   child: pw.Text(
-                    'Am Seestern 8, 40547 Dusseldorf, Germany',
+                    company.address,
                     style: pw.TextStyle(
                       color: baseColor,
                       fontWeight: pw.FontWeight.bold,
@@ -372,7 +175,8 @@ class Invoice {
               width: 120,
               alignment: pw.Alignment.topRight,
               height: 60,
-              child: pw.Image(pw.MemoryImage(_logo!.buffer.asUint8List()), width: 60, height: 60),
+              child: pw.Image(pw.MemoryImage(_logo!.buffer.asUint8List()),
+                  width: 60, height: 60),
             ),
           ],
         ),
@@ -405,7 +209,7 @@ class Invoice {
               pw.Container(
                 margin: const pw.EdgeInsets.only(top: 5, left: 5),
                 child: pw.Text(
-                  contactInfo,
+                  '${user.name}\n${user.title}\n${user.email}',
                   style: const pw.TextStyle(
                     fontSize: 8,
                     lineSpacing: 3,

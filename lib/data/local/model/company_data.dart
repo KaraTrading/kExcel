@@ -32,6 +32,10 @@ class CompanyData extends BaseData {
   String bankIban;
   @HiveField(12)
   String bankBic;
+  @HiveField(13)
+  String? nameExtension;
+  @HiveField(14)
+  String? address;
 
   CompanyData({
     super.id = 0,
@@ -47,6 +51,8 @@ class CompanyData extends BaseData {
     required this.bankName,
     required this.bankIban,
     required this.bankBic,
+    this.nameExtension,
+    this.address,
   });
 }
 
@@ -65,6 +71,8 @@ extension CompanyDataMapper on CompanyData {
     bankName: bankName,
     bankIban: bankIban,
     bankBic: bankBic,
+    address: address ?? '',
+    nameExtension: nameExtension,
   );
 }
 
@@ -83,5 +91,7 @@ extension CompanyEntityMapper on CompanyEntity {
       bankName: bankName,
       bankIban: bankIban,
       bankBic: bankBic,
+      nameExtension: nameExtension,
+      address: address,
   );
 }
