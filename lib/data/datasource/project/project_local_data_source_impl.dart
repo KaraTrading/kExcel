@@ -47,14 +47,14 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
 
   @override
   Future<bool?> saveProjectItem(ProjectItemEntity entity) async {
-    final res = storage.add(entity.mapToData);
-    return ((await res)?.id ?? 0) > 0;
+    final res = await storage.add(entity.mapToData);
+    return (res?.id ?? 0) > 0;
   }
 
   @override
   Future<bool?> updateProjectItem(ProjectItemEntity entity) async {
-    final res = storage.put(entity.mapToData);
-    return ((await res)?.id ?? 0) > 0;
+    final res = await storage.put(entity.mapToData);
+    return (res?.id ?? 0) > 0;
   }
 
   @override
@@ -86,9 +86,8 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
   }
 
   @override
-  Future<bool?> deleteProjectItem(ProjectItemEntity entity) {
-    final res = storage.delete(entity.mapToData);
-    return res;
+  Future<bool?> deleteProjectItem(ProjectItemEntity entity) async {
+    return await storage.delete(entity.mapToData);
   }
 
   @override

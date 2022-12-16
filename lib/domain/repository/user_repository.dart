@@ -10,6 +10,8 @@ abstract class UserRepository extends BaseRepository {
 
   Future<CompanyEntity> getUserCompany();
 
+  Future<List<CompanyEntity>> getCompanies();
+
   Future<bool?> saveUserCompany(CompanyEntity entity);
 
 }

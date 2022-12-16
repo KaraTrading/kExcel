@@ -38,15 +38,14 @@ class SupplierLocalDataSourceImpl extends SupplierLocalDataSource {
 
   @override
   Future<bool?> saveSupplier(SupplierEntity supplier) async {
-    final res = storage.add(supplier.mapToData);
-    return ((await res)?.id ?? 0) > 0;
+    final res = await storage.add(supplier.mapToData);
+    return (res?.id ?? 0) > 0;
   }
 
 
   @override
   Future<bool?> deleteSupplier(SupplierEntity supplier) async {
-    final res = storage.delete(supplier.mapToData);
-    return res;
+    return await storage.delete(supplier.mapToData);
   }
 
   @override
@@ -62,7 +61,7 @@ class SupplierLocalDataSourceImpl extends SupplierLocalDataSource {
 
   @override
   Future<bool?> updateSupplier(SupplierEntity supplier) async {
-    final res = storage.put(supplier.mapToData);
-    return ((await res)?.id ?? 0) > 0;
+    final res = await storage.put(supplier.mapToData);
+    return (res?.id ?? 0) > 0;
   }
 }

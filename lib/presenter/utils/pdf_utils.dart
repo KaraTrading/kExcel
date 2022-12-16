@@ -266,9 +266,7 @@ class Invoice {
     _fontTitle = await PdfGoogleFonts.cairoExtraLight();
     _fontLight = await PdfGoogleFonts.firaSansExtraLight();
     _fontBold = await PdfGoogleFonts.firaSansExtraLight();
-    // _logo = await rootBundle.loadString('assets/images/logo.png');
-    _logo = await rootBundle.load('assets/images/logo.png');
-    // _bgShape = await rootBundle.loadString('assets/vectors/invoice.svg');
+    _logo = await rootBundle.load('assets/images/metpool_logo.png');
 
     // Add page to the PDF
     doc.addPage(

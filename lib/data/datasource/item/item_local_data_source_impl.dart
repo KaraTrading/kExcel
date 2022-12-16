@@ -35,14 +35,13 @@ class ItemLocalDataSourceImpl extends ItemLocalDataSource {
 
   @override
   Future<bool?> saveItem(ItemEntity client) async {
-    final res = storage.add(client.mapToData);
-    return ((await res)?.id ?? 0) > 0;
+    final res = await storage.add(client.mapToData);
+    return (res?.id ?? 0) > 0;
   }
 
   @override
   Future<bool?> deleteItem(ItemEntity client) async {
-    final res = storage.delete(client.mapToData);
-    return res;
+    return await storage.delete(client.mapToData);
   }
 
   @override
@@ -58,8 +57,8 @@ class ItemLocalDataSourceImpl extends ItemLocalDataSource {
 
   @override
   Future<bool?> updateItem(ItemEntity client) async {
-    final res = storage.put(client.mapToData);
-    return ((await res)?.id ?? 0) > 0;
+    final res = await storage.put(client.mapToData);
+    return (res?.id ?? 0) > 0;
   }
 
   @override

@@ -27,8 +27,8 @@ class LogisticLocalDataSourceImpl extends LogisticLocalDataSource {
 
   @override
   Future<bool?> saveLogistic(LogisticEntity projectItem) async {
-    final res = storage.add(projectItem.mapToData);
-    return ((await res)?.id ?? 0) > 0;
+    final res = await storage.add(projectItem.mapToData);
+    return (res?.id ?? 0) > 0;
   }
 
   @override
