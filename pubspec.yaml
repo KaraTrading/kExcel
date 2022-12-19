@@ -17,6 +17,7 @@ dependencies:
   get_it: ^7.2.0
   flutter_bloc: ^8.1.1
   dio: ^4.0.6
+  path_provider: ^2.0.11
   syncfusion_flutter_xlsio: ^20.3.59-beta
   excel: ^2.0.0-null-safety-3
   cupertino_icons: ^1.0.2
