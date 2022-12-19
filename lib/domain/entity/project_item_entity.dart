@@ -4,7 +4,7 @@ import 'logistic_entity.dart';
 import 'client_entity.dart';
 import 'supplier_entity.dart';
 
-class ProjectItemEntity extends BaseEntity {
+class ProjectEntity extends BaseEntity {
   final int projectId;
   final int id;
   final String name;
@@ -17,7 +17,7 @@ class ProjectItemEntity extends BaseEntity {
   final DateTime? deliveryDate;
   List<ItemEntity>? items;
 
-  ProjectItemEntity({
+  ProjectEntity({
     required this.projectId,
     required this.id,
     required this.name,

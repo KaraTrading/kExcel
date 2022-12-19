@@ -10,19 +10,19 @@ class ProjectEventSearch extends ProjectBlocEvent {
   ProjectEventSearch(this.query);
 }
 class ProjectEventAddingDone extends ProjectBlocEvent {
-  final ProjectItemEntity entity;
+  final ProjectEntity entity;
   ProjectEventAddingDone(this.entity);
 }
 class ProjectEventDelete extends ProjectBlocEvent {
-  final ProjectItemEntity entity;
+  final ProjectEntity entity;
   ProjectEventDelete(this.entity);
 }
 class ProjectEventEditingDone extends ProjectBlocEvent {
-  final ProjectItemEntity entity;
+  final ProjectEntity entity;
   ProjectEventEditingDone(this.entity);
 }
 class ProjectEventExport extends ProjectBlocEvent {}
 class ProjectEventImport extends ProjectBlocEvent {
-  final List<ProjectItemEntity> entities;
+  final List<ProjectEntity> entities;
   ProjectEventImport(this.entities);
 }

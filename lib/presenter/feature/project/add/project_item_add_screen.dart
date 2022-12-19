@@ -12,7 +12,7 @@ import 'package:kexcel/presenter/feature/project/pdf_screen.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 
 class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
-  final ProjectItemEntity? entity;
+  final ProjectEntity? entity;
   const ProjectItemAddScreen({this.entity, super.key});
 
   @override
@@ -122,7 +122,7 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
               ),
               ElevatedButton(
                   onPressed: () {
-                    final newEntity = ProjectItemEntity(
+                    final newEntity = ProjectEntity(
                       projectId: 0,
                       id: 0,
                       client: client,

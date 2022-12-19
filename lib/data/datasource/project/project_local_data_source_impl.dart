@@ -3,7 +3,7 @@ import 'package:kexcel/data/datasource/project/project_local_data_source.dart';
 import 'package:kexcel/data/local/model/client_data.dart';
 import 'package:kexcel/data/local/model/item_data.dart';
 import 'package:kexcel/data/local/model/logistic_data.dart';
-import 'package:kexcel/data/local/model/project_item_data.dart';
+import 'package:kexcel/data/local/model/project_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
@@ -12,7 +12,7 @@ import 'package:kexcel/domain/entity/project_item_entity.dart';
 class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
 
   @override
-  Database<ProjectItemData> storage;
+  Database<ProjectData> storage;
 
   Database<ClientData> clientStorage;
   Database<SupplierData> supplierStorage;
@@ -28,16 +28,16 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
   });
 
   @override
-  Future<List<ProjectItemEntity>?> getProjectsItems(String? search) async {
-    final List<ProjectItemData>? allClientData;
+  Future<List<ProjectEntity>?> getProjects(String? search) async {
+    final List<ProjectData>? allClientData;
     if (search == null || search.isEmpty) {
       allClientData = await storage.getAll();
     } else {
       allClientData = await storage.findAll(search);
     }
-    final List<ProjectItemEntity> allClientEntity = [];
+    final List<ProjectEntity> allClientEntity = [];
     allClientData?.forEach((e) async {
-      final item = await projectItemDataToProjectItemEntity(e);
+      final item = await projectDataToProjectEntity(e);
       if (item != null) {
         allClientEntity.add(item);
       }
@@ -46,29 +46,28 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
   }
 
   @override
-  Future<bool?> saveProjectItem(ProjectItemEntity entity) async {
+  Future<bool?> saveProject(ProjectEntity entity) async {
     final res = await storage.add(entity.mapToData);
     return (res?.id ?? 0) > 0;
   }
 
   @override
-  Future<bool?> updateProjectItem(ProjectItemEntity entity) async {
+  Future<bool?> updateProject(ProjectEntity entity) async {
     final res = await storage.put(entity.mapToData);
     return (res?.id ?? 0) > 0;
   }
 
   @override
-  Future<ProjectItemEntity?> getProjectsItemsById(int id) async {
+  Future<ProjectEntity?> getProject(int id) async {
     final data = await storage.getById(id);
     if (data != null) {
-      return projectItemDataToProjectItemEntity(data);
+      return projectDataToProjectEntity(data);
     } else {
       return null;
     }
   }
 
-  Future<ProjectItemEntity?> projectItemDataToProjectItemEntity(
-      ProjectItemData data) async {
+  Future<ProjectEntity?> projectDataToProjectEntity(ProjectData data) async {
     final entity = data.mapToEntity;
     entity.client = (await clientStorage.getById(data.clientId))?.mapToEntity;
     if (data.winnerId != null) {
@@ -86,16 +85,16 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
   }
 
   @override
-  Future<bool?> deleteProjectItem(ProjectItemEntity entity) async {
+  Future<bool?> deleteProject(ProjectEntity entity) async {
     return await storage.delete(entity.mapToData);
   }
 
   @override
-  Future<bool?> saveProjectItems(List<ProjectItemEntity> entities) async {
+  Future<bool?> saveProjects(List<ProjectEntity> entities) async {
     await storage.deleteAll();
     bool allAdded = true;
     for (var element in entities) {
-      final added = await saveProjectItem(element);
+      final added = await saveProject(element);
       if (added!) allAdded = false;
     }
     return allAdded;

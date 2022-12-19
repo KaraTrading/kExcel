@@ -8,7 +8,7 @@ import 'package:kexcel/domain/entity/item_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/domain/usecase/client/get_clients_use_case.dart';
 import 'package:kexcel/domain/usecase/item/get_items_use_case.dart';
-import 'package:kexcel/domain/usecase/project/item/add_project_Item_use_case.dart';
+import 'package:kexcel/domain/usecase/project/add_project_use_case.dart';
 import 'package:kexcel/domain/usecase/supplier/get_suppliers_use_case.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
@@ -58,7 +58,7 @@ class ProjectItemAddBloc extends BaseBloc<ProjectItemAddBlocEvent> {
         return;
       }
       emit(LoadingState());
-      await dependencyResolver<AddProjectItemUseCase>().call(event.entity);
+      await dependencyResolver<AddProjectUseCase>().call(event.entity);
       return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));

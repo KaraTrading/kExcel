@@ -8,7 +8,7 @@ import 'package:kexcel/presenter/utils/excel_utils.dart';
 import 'project_bloc.dart';
 import 'project_bloc_event.dart';
 
-class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectItemEntity> {
+class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
   const ProjectScreen({super.key});
 
   @override
@@ -34,10 +34,10 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectItemEntity
   BaseBlocEvent get initEvent => ProjectEventInit();
 
   @override
-  BaseBlocEvent deleteEvent(ProjectItemEntity entity) => ProjectEventDelete(entity);
+  BaseBlocEvent deleteEvent(ProjectEntity entity) => ProjectEventDelete(entity);
 
   @override
-  Widget itemDetails(ProjectItemEntity entity) {
+  Widget itemDetails(ProjectEntity entity) {
     return Column(
       children: [
         Row(
@@ -53,7 +53,7 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectItemEntity
   }
 
   @override
-  void editItemDetails(BuildContext context, {ProjectItemEntity? entity}) {
+  void editItemDetails(BuildContext context, {ProjectEntity? entity}) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ProjectItemAddScreen(entity: entity),
     ));

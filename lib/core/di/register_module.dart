@@ -7,7 +7,7 @@ import 'package:kexcel/data/local/model/client_data.dart';
 import 'package:kexcel/data/local/model/company_data.dart';
 import 'package:kexcel/data/local/model/item_data.dart';
 import 'package:kexcel/data/local/model/logistic_data.dart';
-import 'package:kexcel/data/local/model/project_item_data.dart';
+import 'package:kexcel/data/local/model/project_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/data/local/database_impl.dart';
@@ -41,8 +41,8 @@ abstract class RegisterModule {
   }
 
   @Singleton()
-  Database<ProjectItemData> projectStorage() {
-    return DatabaseImpl<ProjectItemData>(projectItemBox);
+  Database<ProjectData> projectStorage() {
+    return DatabaseImpl<ProjectData>(projectBox);
   }
 
   @Singleton()
