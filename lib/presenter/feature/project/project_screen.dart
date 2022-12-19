@@ -5,11 +5,11 @@ import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/feature/information/base_information_screen.dart';
 import 'package:kexcel/presenter/feature/project/add/project_item_add_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
-import 'project_item_bloc.dart';
-import 'project_item_bloc_event.dart';
+import 'project_bloc.dart';
+import 'project_bloc_event.dart';
 
-class ProjectItemScreen extends BaseInformationScreen<ProjectItemBloc, ProjectItemEntity> {
-  const ProjectItemScreen({super.key});
+class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectItemEntity> {
+  const ProjectScreen({super.key});
 
   @override
   AppBar? get appBar => AppBar(
@@ -31,10 +31,10 @@ class ProjectItemScreen extends BaseInformationScreen<ProjectItemBloc, ProjectIt
   String get title => 'projectsItemsManagement'.translate;
 
   @override
-  BaseBlocEvent get initEvent => ProjectItemEventInit();
+  BaseBlocEvent get initEvent => ProjectEventInit();
 
   @override
-  BaseBlocEvent deleteEvent(ProjectItemEntity entity) => ProjectItemEventDelete(entity);
+  BaseBlocEvent deleteEvent(ProjectItemEntity entity) => ProjectEventDelete(entity);
 
   @override
   Widget itemDetails(ProjectItemEntity entity) {

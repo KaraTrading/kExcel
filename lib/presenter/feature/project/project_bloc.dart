@@ -17,17 +17,17 @@ import 'package:kexcel/domain/usecase/project/item/update_project_Item_use_case.
 import 'package:kexcel/domain/usecase/supplier/get_suppliers_use_case.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
-import 'project_item_bloc_event.dart';
+import 'project_bloc_event.dart';
 
 @Singleton()
-class ProjectItemBloc extends BaseBloc<ProjectItemBlocEvent> {
-  ProjectItemBloc() {
-    on<ProjectItemEventInit>(_getAll);
-    on<ProjectItemEventSearch>(_getAll);
-    on<ProjectItemEventAddingDone>(_addNew);
-    on<ProjectItemEventEditingDone>(_update);
-    on<ProjectItemEventImport>(_importNewItems);
-    on<ProjectItemEventDelete>(_delete);
+class ProjectBloc extends BaseBloc<ProjectBlocEvent> {
+  ProjectBloc() {
+    on<ProjectEventInit>(_getAll);
+    on<ProjectEventSearch>(_getAll);
+    on<ProjectEventAddingDone>(_addNew);
+    on<ProjectEventEditingDone>(_update);
+    on<ProjectEventImport>(_importNewItems);
+    on<ProjectEventDelete>(_delete);
   }
 
   late List<ClientEntity> clients = [];
@@ -52,7 +52,7 @@ class ProjectItemBloc extends BaseBloc<ProjectItemBlocEvent> {
       }
 
       projectsItems = await dependencyResolver<GetProjectItemsUseCase>()
-          .call(event is ProjectItemEventSearch ? event.query : null);
+          .call(event is ProjectEventSearch ? event.query : null);
       emit(ResponseState<List<ProjectItemEntity>>(data: projectsItems));
     } on BaseNetworkException catch (e) {
       emit(ErrorState(error: e));
@@ -61,7 +61,7 @@ class ProjectItemBloc extends BaseBloc<ProjectItemBlocEvent> {
     }
   }
 
-  _addNew(ProjectItemEventAddingDone event, Emitter<BaseBlocState> emit) async {
+  _addNew(ProjectEventAddingDone event, Emitter<BaseBlocState> emit) async {
     try {
       if (event.entity.name.isEmpty) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
@@ -78,7 +78,7 @@ class ProjectItemBloc extends BaseBloc<ProjectItemBlocEvent> {
   }
 
   _update(
-      ProjectItemEventEditingDone event, Emitter<BaseBlocState> emit) async {
+      ProjectEventEditingDone event, Emitter<BaseBlocState> emit) async {
     try {
       if (event.entity.id < 0 || event.entity.name.isEmpty) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
@@ -95,7 +95,7 @@ class ProjectItemBloc extends BaseBloc<ProjectItemBlocEvent> {
   }
 
   _importNewItems(
-      ProjectItemEventImport event, Emitter<BaseBlocState> emit) async {
+      ProjectEventImport event, Emitter<BaseBlocState> emit) async {
     try {
       emit(LoadingState());
       await dependencyResolver<AddProjectItemsUseCase>().call(event.entities);
@@ -108,7 +108,7 @@ class ProjectItemBloc extends BaseBloc<ProjectItemBlocEvent> {
   }
 
 
-  _delete(ProjectItemEventDelete event, Emitter<BaseBlocState> emit) async {
+  _delete(ProjectEventDelete event, Emitter<BaseBlocState> emit) async {
     try {
       emit(LoadingState());
       await dependencyResolver<DeleteProjectItemUseCase>().call(event.entity);
