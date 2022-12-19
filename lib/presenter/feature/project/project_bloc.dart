@@ -5,7 +5,7 @@ import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/core/exception/network_exception.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/domain/entity/item_entity.dart';
-import 'package:kexcel/domain/entity/project_item_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/domain/usecase/client/get_clients_use_case.dart';
 import 'package:kexcel/domain/usecase/item/get_items_use_case.dart';

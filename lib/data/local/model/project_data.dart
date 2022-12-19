@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:kexcel/data/local/database_configuration.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
-import 'package:kexcel/domain/entity/project_item_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 
 part 'project_data.g.dart';
 
@@ -52,7 +52,7 @@ class ProjectData extends BaseData {
   });
 }
 
-extension ProjectItemDataMapper on ProjectData {
+extension ProjectDataMapper on ProjectData {
   ProjectEntity get mapToEntity => ProjectEntity(
     projectId: projectId,
     id: id,
@@ -68,7 +68,7 @@ extension ProjectItemDataMapper on ProjectData {
   );
 }
 
-extension ProjectItemEntityMapper on ProjectEntity {
+extension ProjectEntityMapper on ProjectEntity {
   ProjectData get mapToData => ProjectData(
     projectId: projectId,
     name: name,

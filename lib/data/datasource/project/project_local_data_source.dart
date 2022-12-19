@@ -1,5 +1,5 @@
 import 'package:kexcel/data/datasource/base_local_data_source.dart';
-import 'package:kexcel/domain/entity/project_item_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 
 import '../../local/model/project_data.dart';
 

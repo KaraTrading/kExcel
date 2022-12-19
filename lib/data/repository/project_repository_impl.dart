@@ -1,5 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:kexcel/domain/entity/project_item_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/repository/project_repository.dart';
 
 import '../datasource/project/project_local_data_source.dart';

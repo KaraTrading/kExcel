@@ -1,5 +1,5 @@
 import 'base_repository.dart';
-import '../entity/project_item_entity.dart';
+import '../entity/project_entity.dart';
 
 abstract class ProjectRepository extends BaseRepository {
 

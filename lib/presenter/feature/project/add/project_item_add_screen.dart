@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/domain/entity/item_entity.dart';
-import 'package:kexcel/domain/entity/project_item_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/common/localization.dart';

@@ -1,4 +1,4 @@
-import 'package:kexcel/domain/entity/project_item_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/presenter/base_bloc_event.dart';
 
 abstract class ProjectItemAddBlocEvent extends BaseBlocEvent {}

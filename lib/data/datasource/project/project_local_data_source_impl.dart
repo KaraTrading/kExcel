@@ -6,7 +6,7 @@ import 'package:kexcel/data/local/model/logistic_data.dart';
 import 'package:kexcel/data/local/model/project_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/database.dart';
-import 'package:kexcel/domain/entity/project_item_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 
 @Injectable(as: ProjectLocalDataSource)
 class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
