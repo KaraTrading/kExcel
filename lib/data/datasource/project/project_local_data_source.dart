@@ -1,20 +1,20 @@
 import 'package:kexcel/data/datasource/base_local_data_source.dart';
-import 'package:kexcel/domain/entity/project_item_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 
-import '../../local/model/project_item_data.dart';
+import '../../local/model/project_data.dart';
 
-abstract class ProjectLocalDataSource extends BaseLocalDataSource<ProjectItemData> {
+abstract class ProjectLocalDataSource extends BaseLocalDataSource<ProjectData> {
 
-  Future<bool?> saveProjectItem(ProjectItemEntity entity);
+  Future<bool?> saveProject(ProjectEntity entity);
 
-  Future<bool?> saveProjectItems(List<ProjectItemEntity> entities);
+  Future<bool?> saveProjects(List<ProjectEntity> entities);
 
-  Future<bool?> deleteProjectItem(ProjectItemEntity entity);
+  Future<bool?> deleteProject(ProjectEntity entity);
 
-  Future<bool?> updateProjectItem(ProjectItemEntity entity);
+  Future<bool?> updateProject(ProjectEntity entity);
 
-  Future<List<ProjectItemEntity>?> getProjectsItems(String? search);
+  Future<List<ProjectEntity>?> getProjects(String? search);
 
-  Future<ProjectItemEntity?> getProjectsItemsById(int id);
+  Future<ProjectEntity?> getProject(int id);
 
 }

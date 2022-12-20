@@ -1,12 +1,12 @@
 import 'package:hive/hive.dart';
 import 'package:kexcel/data/local/database_configuration.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
-import 'package:kexcel/domain/entity/project_item_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 
-part 'project_item_data.g.dart';
+part 'project_data.g.dart';
 
-@HiveType(typeId: projectsItemTableTypeId)
-class ProjectItemData extends BaseData {
+@HiveType(typeId: projectTableTypeId)
+class ProjectData extends BaseData {
   @HiveField(1)
   int projectId;
 
@@ -37,7 +37,7 @@ class ProjectItemData extends BaseData {
   @HiveField(10)
   List<int>? itemsIds;
 
-  ProjectItemData({
+  ProjectData({
     super.id = 0,
     required this.projectId,
     required this.name,
@@ -52,8 +52,8 @@ class ProjectItemData extends BaseData {
   });
 }
 
-extension ProjectItemDataMapper on ProjectItemData {
-  ProjectItemEntity get mapToEntity => ProjectItemEntity(
+extension ProjectDataMapper on ProjectData {
+  ProjectEntity get mapToEntity => ProjectEntity(
     projectId: projectId,
     id: id,
     name: name,
@@ -68,8 +68,8 @@ extension ProjectItemDataMapper on ProjectItemData {
   );
 }
 
-extension ProjectItemEntityMapper on ProjectItemEntity {
-  ProjectItemData get mapToData => ProjectItemData(
+extension ProjectEntityMapper on ProjectEntity {
+  ProjectData get mapToData => ProjectData(
     projectId: projectId,
     name: name,
     clientId: client!.id,

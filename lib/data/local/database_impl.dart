@@ -71,7 +71,7 @@ class DatabaseImpl<T extends BaseData> extends Database<T> {
         collected.add(item);
       }
     }
-    return Future.value(collected);
+    return collected;
   }
 
   @override

@@ -1,5 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:kexcel/domain/entity/project_item_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/repository/project_repository.dart';
 
 import '../datasource/project/project_local_data_source.dart';
@@ -11,38 +11,38 @@ class ProjectRepositoryImpl extends ProjectRepository{
   ProjectRepositoryImpl(this.localDataSource);
 
   @override
-  Future<bool?> addProjectItem(ProjectItemEntity entity) async {
-    final res = localDataSource.saveProjectItem(entity);
+  Future<bool?> addProject(ProjectEntity entity) async {
+    final res = localDataSource.saveProject(entity);
     return res;
   }
 
   @override
-  Future<bool?> updateProjectItem(ProjectItemEntity entity) async {
-    final res = localDataSource.updateProjectItem(entity);
+  Future<bool?> updateProject(ProjectEntity entity) async {
+    final res = localDataSource.updateProject(entity);
     return res;
   }
 
   @override
-  Future<ProjectItemEntity?> getProjectItem(int id) async {
-    final res = localDataSource.getProjectsItemsById(id);
+  Future<ProjectEntity?> getProject(int id) async {
+    final res = localDataSource.getProject(id);
     return res;
   }
 
   @override
-  Future<List<ProjectItemEntity>?> getProjectsItems({int? projectId, String? search}) async {
-    final res = localDataSource.getProjectsItems(search);
+  Future<List<ProjectEntity>?> getProjects({int? projectId, String? search}) async {
+    final res = localDataSource.getProjects(search);
     return res;
   }
 
   @override
-  Future<bool?> addProjectItems(List<ProjectItemEntity> entities) {
-    final res = localDataSource.saveProjectItems(entities);
+  Future<bool?> addProjects(List<ProjectEntity> entities) {
+    final res = localDataSource.saveProjects(entities);
     return res;
   }
 
   @override
-  Future<bool?> deleteProjectItem(ProjectItemEntity entity) {
-    final res = localDataSource.deleteProjectItem(entity);
+  Future<bool?> deleteProject(ProjectEntity entity) {
+    final res = localDataSource.deleteProject(entity);
     return res;
   }
 

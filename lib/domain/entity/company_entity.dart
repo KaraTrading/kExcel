@@ -3,6 +3,8 @@ import 'package:kexcel/domain/entity/base_entity.dart';
 class CompanyEntity extends BaseEntity {
   final int id;
   final String name;
+  final String? nameExtension;
+  final String address;
   final String logoAssetsAddress;
   final String ceoName;
   final String registerNumber;
@@ -18,6 +20,8 @@ class CompanyEntity extends BaseEntity {
   CompanyEntity({
     required this.id,
     required this.name,
+    this.nameExtension,
+    required this.address,
     required this.logoAssetsAddress,
     required this.ceoName,
     required this.registerNumber,
