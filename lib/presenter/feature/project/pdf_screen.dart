@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/company_entity.dart';
-import 'package:kexcel/domain/entity/item_entity.dart';
-import 'package:kexcel/domain/entity/supplier_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/entity/user_entity.dart';
 import 'package:kexcel/presenter/utils/pdf_utils.dart';
 import 'package:open_file/open_file.dart';
@@ -12,10 +11,20 @@ import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart'
     show getApplicationDocumentsDirectory;
-import 'package:pdf/widgets.dart' as pw;
 
 class PDFScreen extends StatelessWidget {
-  const PDFScreen({Key? key}) : super(key: key);
+  final ProjectEntity project;
+  final UserEntity user;
+  final CompanyEntity company;
+  final String? termOfDeliveryExtraRules;
+
+  const PDFScreen({
+    required this.project,
+    required this.user,
+    required this.company,
+    this.termOfDeliveryExtraRules,
+    super.key,
+  });
 
   void _showPrintedToast(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -33,11 +42,9 @@ class PDFScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _saveAsFile(
-      BuildContext context,
+  Future<void> _saveAsFile(BuildContext context,
       LayoutCallback build,
-      PdfPageFormat pageFormat,
-      ) async {
+      PdfPageFormat pageFormat,) async {
     final bytes = await build(pageFormat);
 
     final appDocDir = await getApplicationDocumentsDirectory();
@@ -58,189 +65,16 @@ class PDFScreen extends StatelessWidget {
         )
     ];
 
-    final lorem = pw.LoremText();
-
-    final items = <ItemEntityWithExtraData>[
-      ItemEntityWithExtraData(
-        sortIndex: 0,
-        item: ItemEntity(
-            id: 0,
-            name: lorem.sentence(2),
-            description: lorem.sentence(15),
-            hsCode: lorem.random.nextInt(8000).toString(),
-            manufacturer: SupplierEntity(
-                id: 0,
-                code: 'S${lorem.random.nextInt(999)}',
-                name: lorem.sentence(2))),
-        quantity: lorem.random.nextInt(1),
-      ),
-      ItemEntityWithExtraData(
-          sortIndex: 1,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 2,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 3,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 4,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 5,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 6,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 7,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 8,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 9,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 10,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 11,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 12,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-      ItemEntityWithExtraData(
-          sortIndex: 13,
-          item: ItemEntity(
-              id: 0,
-              name: lorem.sentence(2),
-              description: lorem.sentence(15),
-              hsCode: lorem.random.nextInt(8000).toString(),
-              manufacturer: SupplierEntity(
-                  id: 0,
-                  code: 'S${lorem.random.nextInt(999)}',
-                  name: lorem.sentence(2))),
-          quantity: lorem.random.nextInt(1)),
-    ];
-
+    int index = 1;
     final invoice = Invoice(
-      invoiceNumber: '22PO32-AL',
-      items: items,
+      invoiceNumber: project.name,
+      items: project.items!.map((e) => ItemEntityWithExtraData(sortIndex: index++, item: e, quantity: 1)).toList(),
       necessaryInformation: [
         'Our reference',
         'Scope of supply (Description of goods)',
         'Item price and total price',
         'Time of delivery',
-        'Terms of delivery (Ex works)',
+        'Terms of delivery${termOfDeliveryExtraRules?.isNotEmpty == true ? ' ($termOfDeliveryExtraRules)' : ''}',
         'Packing (seaworthy packing)',
         'Weights: net & gross (estimated at least)',
         'Terms of payment',
@@ -249,26 +83,8 @@ class PDFScreen extends StatelessWidget {
         'Validity of offer',
         'Technical datasheet'
       ],
-      user: UserEntity(
-          name: 'Wyan Aleko',
-          companyId: 1,
-          title: 'Management Assistant',
-          email: 'Aleko@metpool.de'),
-      company: CompanyEntity(
-          id: 1,
-          name: 'Metpool',
-          nameExtension: 'GmbH',
-          address: 'Am Seestern 8, 40547 Dusseldorf, Germany',
-          logoAssetsAddress: 'assets/images/metpool_logo.png',
-          ceoName: 'ceoName',
-          registerNumber: 'registerNumber',
-          taxNumber: 'taxNumber',
-          ustIdNumber: 'ustIdNumber',
-          email: 'email',
-          telephone: 'telephone',
-          bankName: 'bankName',
-          bankIban: 'bankIban',
-          bankBic: 'bankBic'),
+      user: user,
+      company: company,
       baseColor: PdfColors.grey800,
       accentColor: PdfColors.indigo800,
     );

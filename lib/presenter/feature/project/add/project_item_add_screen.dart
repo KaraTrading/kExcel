@@ -9,10 +9,13 @@ import 'package:kexcel/presenter/data_load_bloc_builder.dart';
 import 'package:kexcel/presenter/feature/project/add/project_item_add_bloc.dart';
 import 'package:kexcel/presenter/feature/project/add/project_item_add_bloc_event.dart';
 import 'package:kexcel/presenter/feature/project/pdf_screen.dart';
+import 'package:kexcel/presenter/utils/app_colors.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
   final ProjectEntity? entity;
+
   const ProjectItemAddScreen({this.entity, super.key});
 
   @override
@@ -25,10 +28,15 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
   Widget screenBody(BuildContext context) {
     callEvent(ProjectItemAddEventInit());
 
-    final TextEditingController nameController = TextEditingController(text: entity?.name);
+    final TextEditingController nameController =
+        TextEditingController(text: entity?.name);
 
-    ClientEntity? client = entity?.client;
-    SupplierEntity? winner = entity?.winner;
+    if (entity != null) {
+      getBloc.project = entity!;
+    } else {
+      getBloc.project =
+          ProjectEntity(projectId: 0, id: 0, name: '', karaProjectNumber: 0);
+    }
 
     return DataLoadBlocBuilder<ProjectItemAddBloc, List<ItemEntity>?>(
         noDataView: const NoItemWidget(),
@@ -62,11 +70,11 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
                           ),
                           child: Autocomplete(
                             onSelected: (ClientEntity entity) =>
-                                client = entity,
+                                getBloc.project.client = entity,
                             displayStringForOption: (ClientEntity entity) =>
                                 entity.name,
-                            initialValue:
-                                TextEditingValue(text: client?.name ?? ''),
+                            initialValue: TextEditingValue(
+                                text: getBloc.project.client?.name ?? ''),
                             optionsBuilder:
                                 (TextEditingValue textEditingValue) {
                               return getBloc.clients
@@ -95,11 +103,11 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
                           ),
                           child: Autocomplete(
                             onSelected: (SupplierEntity entity) =>
-                                winner = entity,
+                                getBloc.project.winner = entity,
                             displayStringForOption: (SupplierEntity entity) =>
                                 entity.name,
-                            initialValue:
-                                TextEditingValue(text: winner?.name ?? ''),
+                            initialValue: TextEditingValue(
+                                text: getBloc.project.winner?.name ?? ''),
                             optionsBuilder:
                                 (TextEditingValue textEditingValue) {
                               return getBloc.suppliers
@@ -115,29 +123,87 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
                           ),
                         ),
                         const SizedBox(height: 25),
+                        StatefulBuilder(
+                          builder:
+                              (BuildContext context, StateSetter setState) =>
+                                  Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: colorGrey,
+                                width: 1,
+                              ),
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                MultiSelectBottomSheetField<ItemEntity?>(
+                                  initialValue: getBloc.project.items ?? [],
+                                  initialChildSize: 0.4,
+                                  listType: MultiSelectListType.LIST,
+                                  searchable: true,
+                                  buttonText: const Text("Selected Items"),
+                                  title: const Text("Items"),
+                                  onSelectionChanged: (values) {
+                                    setState(() {
+                                      getBloc.project.items = values.cast<ItemEntity>();
+                                    });
+                                  },
+                                  items: getBloc.items
+                                      .map((e) => MultiSelectItem(e, e.name))
+                                      .toList(),
+                                  onConfirm: (values) {
+                                    setState(() {
+                                      getBloc.project.items = values.cast<ItemEntity>();
+                                    });
+                                  },
+                                  chipDisplay: MultiSelectChipDisplay(
+                                    // onTap: (value) {
+                                    //   setState(() {
+                                    //     getBloc.selectedItems.remove(value);
+                                    //   });
+                                    // },
+                                  ),
+                                ),
+                                getBloc.project.items == null ||
+                                        getBloc.project.items!.isEmpty
+                                    ? Container(
+                                        padding: const EdgeInsets.all(10),
+                                        alignment: Alignment.centerLeft,
+                                        child: const Text(
+                                          "None selected",
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        ))
+                                    : Container(),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 25),
                       ],
                     ),
                   ),
                 ),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    final newEntity = ProjectEntity(
-                      projectId: 0,
-                      id: 0,
-                      client: client,
-                      winner: winner,
-                      name: nameController.text,
-                      karaProjectNumber: 0,
-                    );
+              Padding(
+                padding: const EdgeInsets.only(bottom: 25),
+                child: ElevatedButton(
+                    onPressed: () {
+                      getBloc.project.name = nameController.text;
+                      callEvent(ProjectItemEventAddingDone());
 
-                    callEvent(ProjectItemEventAddingDone(newEntity));
-
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const PDFScreen(),
-                    ));
-                  },
-                  child: Text('save'.translate))
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => PDFScreen(
+                            project: getBloc.project,
+                            user: getBloc.user,
+                            company: getBloc.company),
+                      ));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('save'.translate),
+                    )),
+              )
             ],
           );
         });

@@ -29,20 +29,20 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
 
   @override
   Future<List<ProjectEntity>?> getProjects(String? search) async {
-    final List<ProjectData>? allClientData;
+    final List<ProjectData>? projects;
     if (search == null || search.isEmpty) {
-      allClientData = await storage.getAll();
+      projects = await storage.getAll();
     } else {
-      allClientData = await storage.findAll(search);
+      projects = await storage.findAll(search);
     }
-    final List<ProjectEntity> allClientEntity = [];
-    allClientData?.forEach((e) async {
+    final List<ProjectEntity> allProjects = [];
+    projects?.forEach((e) async {
       final item = await projectDataToProjectEntity(e);
       if (item != null) {
-        allClientEntity.add(item);
+        allProjects.add(item);
       }
     });
-    return allClientEntity;
+    return allProjects;
   }
 
   @override

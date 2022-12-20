@@ -7,14 +7,14 @@ import 'supplier_entity.dart';
 class ProjectEntity extends BaseEntity {
   final int projectId;
   final int id;
-  final String name;
+  String name;
   ClientEntity? client;
   final int karaProjectNumber;
   SupplierEntity? winner;
   LogisticEntity? logisticEntity;
   final bool isCancelled;
   final double? karaPiValue;
-  final DateTime? deliveryDate;
+  DateTime? deliveryDate;
   List<ItemEntity>? items;
 
   ProjectEntity({
