@@ -180,7 +180,7 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
                                     });
                                   },
                                   items: getBloc.items
-                                      .map((e) => MultiSelectItem(e, e.name))
+                                      .map((e) => MultiSelectItem(e, '${e.type}: ${e.name} - ${e.manufacturer} - ${e.hsCode}\n${e.description}'))
                                       .toList(),
                                   onConfirm: (values) {
                                     setState(() {
