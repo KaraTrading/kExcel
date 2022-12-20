@@ -31,6 +31,36 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
     final TextEditingController nameController =
         TextEditingController(text: entity?.name);
 
+    bool isAdvanceOptionsShowing = false;
+
+    final TextEditingController introController =
+    TextEditingController(text: 'Dear Sir/Madame,\nKindly provide us with your best offer for delivering the list items:');
+
+    final TextEditingController outroController =
+    TextEditingController(text: 'The offer is requested in English language. In case of any questions please feel free to contact me at any time.\nBest Regards,');
+
+    final necessaryItems = [
+      NecessaryItem(title: 'Our reference', isAvailable: true),
+      NecessaryItem(title: 'Scope of supply (Description of goods)', isAvailable: true),
+      NecessaryItem(title: 'Item price and total price', isAvailable: true),
+      NecessaryItem(title: 'Time of delivery', isAvailable: true),
+      NecessaryItem(title: 'Terms of delivery', isAvailable: true),
+      NecessaryItem(title: 'Packing', isAvailable: true),
+      NecessaryItem(title: 'Weights: net & gross (estimated at least)', isAvailable: true),
+      NecessaryItem(title: 'Terms of payment', isAvailable: true),
+      NecessaryItem(title: 'Country of origin', isAvailable: true),
+      NecessaryItem(title: 'Customs tariff number / HS code', isAvailable: true),
+      NecessaryItem(title: 'Validity of offer', isAvailable: true),
+    ];
+
+    final TextEditingController termsOfDeliveryExtraDataController =
+    TextEditingController(text: necessaryItems[4].extraData);
+    final TextEditingController packingExtraDataController =
+    TextEditingController(text: necessaryItems[5].extraData);
+    final TextEditingController termsOfPaymentExtraDataController =
+    TextEditingController(text: necessaryItems[7].extraData);
+
+
     if (entity != null) {
       getBloc.project = entity!;
     } else {
@@ -145,7 +175,8 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
                                   title: const Text("Items"),
                                   onSelectionChanged: (values) {
                                     setState(() {
-                                      getBloc.project.items = values.cast<ItemEntity>();
+                                      getBloc.project.items =
+                                          values.cast<ItemEntity>();
                                     });
                                   },
                                   items: getBloc.items
@@ -153,16 +184,17 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
                                       .toList(),
                                   onConfirm: (values) {
                                     setState(() {
-                                      getBloc.project.items = values.cast<ItemEntity>();
+                                      getBloc.project.items =
+                                          values.cast<ItemEntity>();
                                     });
                                   },
                                   chipDisplay: MultiSelectChipDisplay(
-                                    // onTap: (value) {
-                                    //   setState(() {
-                                    //     getBloc.selectedItems.remove(value);
-                                    //   });
-                                    // },
-                                  ),
+                                      // onTap: (value) {
+                                      //   setState(() {
+                                      //     getBloc.selectedItems.remove(value);
+                                      //   });
+                                      // },
+                                      ),
                                 ),
                                 getBloc.project.items == null ||
                                         getBloc.project.items!.isEmpty
@@ -180,6 +212,84 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
                           ),
                         ),
                         const SizedBox(height: 25),
+                        StatefulBuilder(builder:
+                            (BuildContext context, StateSetter setState) {
+                          return Column(children: [
+                            InkWell(
+                                child: Text(isAdvanceOptionsShowing
+                                    ? '...hide advanced options'
+                                    : 'show advanced options...'),
+                                onTap: () => setState(() {
+                                      isAdvanceOptionsShowing =
+                                          !isAdvanceOptionsShowing;
+                                    })),
+                            if (isAdvanceOptionsShowing)
+                              TextField(
+                                controller: introController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Intro',
+                                ),
+                                minLines: 2,
+                                maxLines: 3,
+                              ),
+                            if (isAdvanceOptionsShowing)
+                              const SizedBox(height: 25),
+                            if (isAdvanceOptionsShowing)
+                              ...necessaryItems
+                                  .map((e) => CheckboxListTile(
+                                      title: Text(e.title),
+                                      value: e.isAvailable,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          e.isAvailable = newValue ?? false;
+                                        });
+                                      }))
+                                  .toList(),
+                            if (isAdvanceOptionsShowing && necessaryItems[4].isAvailable)
+                              TextField(
+                                controller: termsOfDeliveryExtraDataController,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: '${necessaryItems[4].title} extra data',
+                                ),
+                              ),
+                            if (isAdvanceOptionsShowing && necessaryItems[4].isAvailable)
+                              const SizedBox(height: 25),
+                            if (isAdvanceOptionsShowing && necessaryItems[5].isAvailable)
+                              TextField(
+                                controller: packingExtraDataController,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: '${necessaryItems[5].title} extra data',
+                                ),
+                              ),
+                            if (isAdvanceOptionsShowing && necessaryItems[5].isAvailable)
+                              const SizedBox(height: 25),
+                            if (isAdvanceOptionsShowing && necessaryItems[7].isAvailable)
+                              TextField(
+                                controller: termsOfPaymentExtraDataController,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: '${necessaryItems[7].title} extra data',
+                                ),
+                              ),
+                            if (isAdvanceOptionsShowing && necessaryItems[7].isAvailable)
+                              const SizedBox(height: 25),
+                            if (isAdvanceOptionsShowing)
+                              TextField(
+                                controller: outroController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Outro',
+                                ),
+                                minLines: 2,
+                                maxLines: 3,
+                              ),
+                            if (isAdvanceOptionsShowing)
+                              const SizedBox(height: 25),
+                          ]);
+                        }),
                       ],
                     ),
                   ),
@@ -190,13 +300,22 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
                 child: ElevatedButton(
                     onPressed: () {
                       getBloc.project.name = nameController.text;
+
+                      necessaryItems[4].extraData = termsOfDeliveryExtraDataController.text;
+                      necessaryItems[5].extraData = packingExtraDataController.text;
+                      necessaryItems[7].extraData = termsOfPaymentExtraDataController.text;
+
                       callEvent(ProjectItemEventAddingDone());
 
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => PDFScreen(
-                            project: getBloc.project,
-                            user: getBloc.user,
-                            company: getBloc.company),
+                          intro: introController.text,
+                          outro: outroController.text,
+                          project: getBloc.project,
+                          user: getBloc.user,
+                          company: getBloc.company,
+                          necessaryInformation: necessaryItems.where((element) => element.isAvailable).map((e) => '${e.title}${(e.extraData?.isNotEmpty == true) ? ' (${e.extraData})' : ''}').toList(),
+                        ),
                       ));
                     },
                     child: Padding(
@@ -208,4 +327,16 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
           );
         });
   }
+}
+
+class NecessaryItem {
+  String title;
+  String? extraData;
+  bool isAvailable;
+
+  NecessaryItem({
+    required this.title,
+    this.extraData,
+    required this.isAvailable,
+  });
 }

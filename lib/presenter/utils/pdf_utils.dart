@@ -34,6 +34,8 @@ class Invoice {
   final UserEntity user;
   final CompanyEntity company;
   final String invoiceNumber;
+  final String intro;
+  final String outro;
   final PdfColor baseColor;
   final PdfColor accentColor;
 
@@ -60,6 +62,8 @@ class Invoice {
     required this.invoiceNumber,
     required this.baseColor,
     required this.accentColor,
+    required this.intro,
+    required this.outro,
   });
 
   Future<Uint8List> buildPdf(PdfPageFormat pageFormat) async {
@@ -223,7 +227,7 @@ class Invoice {
         pw.Container(
           margin: const pw.EdgeInsets.only(top: 5, bottom: 10),
           child: pw.Text(
-            'Dear Sir/Madame,\nKindly provide us with your best offer for delivering the list items:',
+            intro,
             style: const pw.TextStyle(
               fontSize: 8,
               lineSpacing: 5,
@@ -347,7 +351,7 @@ class Invoice {
               pw.Container(
                 padding: const pw.EdgeInsets.only(bottom: 4),
                 child: pw.Text(
-                  'The offer is requested in English language. In case of any questions please feel free to contact me at any time.\nBest Regards,',
+                  outro,
                   style: pw.TextStyle(
                     fontSize: 8,
                     color: baseColor,

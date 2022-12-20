@@ -13,16 +13,20 @@ import 'package:path_provider/path_provider.dart'
     show getApplicationDocumentsDirectory;
 
 class PDFScreen extends StatelessWidget {
+  final String intro;
+  final String outro;
   final ProjectEntity project;
   final UserEntity user;
   final CompanyEntity company;
-  final String? termOfDeliveryExtraRules;
+  final List<String> necessaryInformation;
 
   const PDFScreen({
+    required this.intro,
+    required this.outro,
     required this.project,
     required this.user,
     required this.company,
-    this.termOfDeliveryExtraRules,
+    this.necessaryInformation = const [],
     super.key,
   });
 
@@ -42,9 +46,11 @@ class PDFScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _saveAsFile(BuildContext context,
-      LayoutCallback build,
-      PdfPageFormat pageFormat,) async {
+  Future<void> _saveAsFile(
+    BuildContext context,
+    LayoutCallback build,
+    PdfPageFormat pageFormat,
+  ) async {
     final bytes = await build(pageFormat);
 
     final appDocDir = await getApplicationDocumentsDirectory();
@@ -67,22 +73,14 @@ class PDFScreen extends StatelessWidget {
 
     int index = 1;
     final invoice = Invoice(
+      intro: intro,
+      outro: outro,
       invoiceNumber: project.name,
-      items: project.items!.map((e) => ItemEntityWithExtraData(sortIndex: index++, item: e, quantity: 1)).toList(),
-      necessaryInformation: [
-        'Our reference',
-        'Scope of supply (Description of goods)',
-        'Item price and total price',
-        'Time of delivery',
-        'Terms of delivery${termOfDeliveryExtraRules?.isNotEmpty == true ? ' ($termOfDeliveryExtraRules)' : ''}',
-        'Packing (seaworthy packing)',
-        'Weights: net & gross (estimated at least)',
-        'Terms of payment',
-        'Country of origin',
-        'Customs tariff number / HS code',
-        'Validity of offer',
-        'Technical datasheet'
-      ],
+      items: project.items!
+          .map((e) =>
+              ItemEntityWithExtraData(sortIndex: index++, item: e, quantity: 1))
+          .toList(),
+      necessaryInformation: necessaryInformation,
       user: user,
       company: company,
       baseColor: PdfColors.grey800,
