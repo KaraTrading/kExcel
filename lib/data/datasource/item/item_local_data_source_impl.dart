@@ -7,7 +7,6 @@ import 'item_local_data_source.dart';
 
 @Injectable(as: ItemLocalDataSource)
 class ItemLocalDataSourceImpl extends ItemLocalDataSource {
-
   Database<SupplierData> supplierStorage;
 
   @override
@@ -23,6 +22,7 @@ class ItemLocalDataSourceImpl extends ItemLocalDataSource {
     } else {
       dataList = await storage.findAll(search);
     }
+    dataList?.sort((a, b) => (a.type ?? a.name).toLowerCase().compareTo((b.type ?? b.name).toLowerCase()));
     final List<ItemEntity> list = [];
     dataList?.forEach((e) async {
       final item = await itemDataToItemEntity(e);
@@ -30,7 +30,6 @@ class ItemLocalDataSourceImpl extends ItemLocalDataSource {
         list.add(item);
       }
     });
-    list.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     return list;
   }
 
