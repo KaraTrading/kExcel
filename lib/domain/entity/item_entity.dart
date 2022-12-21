@@ -18,4 +18,9 @@ class ItemEntity extends BaseEntity {
     this.description,
     this.hsCode,
   });
+
+  @override
+  String toString() {
+    return '$name $type';
+  }
 }

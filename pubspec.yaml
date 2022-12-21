@@ -27,7 +27,8 @@ dependencies:
   pdf: ^3.8.4
   printing: ^5.9.3
   flutter_secure_storage: ^7.0.1
-  multi_select_flutter: ^4.1.3
+  multi_select_flutter:
+    git: https://github.com/Shahriyar13/multi_select_flutter.git
 
 dev_dependencies:
   flutter_test:

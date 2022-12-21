@@ -10,6 +10,7 @@ import 'package:kexcel/presenter/feature/project/add/project_item_add_bloc.dart'
 import 'package:kexcel/presenter/feature/project/add/project_item_add_bloc_event.dart';
 import 'package:kexcel/presenter/feature/project/pdf_screen.dart';
 import 'package:kexcel/presenter/utils/app_colors.dart';
+import 'package:kexcel/presenter/utils/text_styles.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
@@ -179,8 +180,17 @@ class ProjectItemAddScreen extends BaseScreen<ProjectItemAddBloc> {
                                           values.cast<ItemEntity>();
                                     });
                                   },
+                                      // '${e.type}: ${e.name} - ${e.manufacturer} - ${e.hsCode}\n${e.description}\n'
                                   items: getBloc.items
-                                      .map((e) => MultiSelectItem(e, '${e.type}: ${e.name} - ${e.manufacturer} - ${e.hsCode}\n${e.description}'))
+                                      .map((e) => MultiSelectItem(e, Text.rich(
+                                    TextSpan(
+                                      children: <TextSpan>[
+                                        TextSpan(text: '${e.type}: ${e.name}\n', style: primaryTextStyle),
+                                        TextSpan(text: e.description, style: captionTextStyle),
+                                        TextSpan(text: (e.manufacturer != null) ? '\nManufacturer: ${e.manufacturer}' : '\n', style: captionTextStyle),
+                                        TextSpan(text: (e.hsCode != null) ? 'HS-Code: ${e.hsCode}' : '', style: captionTextStyle),
+                                      ],
+                                    ),)))
                                       .toList(),
                                   onConfirm: (values) {
                                     setState(() {
