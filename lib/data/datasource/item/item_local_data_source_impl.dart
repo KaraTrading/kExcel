@@ -17,20 +17,21 @@ class ItemLocalDataSourceImpl extends ItemLocalDataSource {
 
   @override
   Future<List<ItemEntity>?> getItems(String? search) async {
-    final List<ItemData>? allClientData;
+    final List<ItemData>? dataList;
     if (search == null || search.isEmpty) {
-      allClientData = await storage.getAll();
+      dataList = await storage.getAll();
     } else {
-      allClientData = await storage.findAll(search);
+      dataList = await storage.findAll(search);
     }
-    final List<ItemEntity> allClientEntity = [];
-    allClientData?.forEach((e) async {
+    final List<ItemEntity> list = [];
+    dataList?.forEach((e) async {
       final item = await itemDataToItemEntity(e);
       if (item != null) {
-        allClientEntity.add(item);
+        list.add(item);
       }
     });
-    return allClientEntity;
+    list.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    return list;
   }
 
   @override
