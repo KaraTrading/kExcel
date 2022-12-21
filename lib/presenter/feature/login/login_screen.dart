@@ -26,8 +26,10 @@ class LoginScreen extends BaseScreen<LoginBloc> {
         bloc: getBloc,
         builder: (BuildContext context, List<CompanyEntity>? entities) {
           if (getBloc.user != null) {
-            _routeHome(context);
-            return Container();
+            Future.delayed(
+              const Duration(milliseconds: 50),
+              () => _routeHome(context),
+            );
           }
           final TextEditingController nameController = TextEditingController();
           final TextEditingController titleController = TextEditingController();
@@ -65,8 +67,8 @@ class LoginScreen extends BaseScreen<LoginBloc> {
                   const SizedBox(height: 25),
                   InputDecorator(
                     decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 4),
                       border: const OutlineInputBorder(gapPadding: 1),
                       labelText: 'company'.translate,
                     ),
@@ -118,8 +120,8 @@ class LoginScreen extends BaseScreen<LoginBloc> {
         });
   }
 
-  _routeHome(BuildContext context) {
-    Navigator.pushAndRemoveUntil(
+  _routeHome(BuildContext context) async {
+    return await Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const HomeScreen()),
       (route) => false,

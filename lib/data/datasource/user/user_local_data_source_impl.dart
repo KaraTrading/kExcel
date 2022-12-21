@@ -24,11 +24,11 @@ class UserLocalDataSourceImpl extends UserLocalDataSource {
         userEmail != null &&
         userCompanyId != null) {
       return UserEntity(
-        id: userId as int,
+        id: int.tryParse(userId) ?? 0,
         name: userName,
         title: userTitle,
         email: userEmail,
-        companyId: userCompanyId as int,
+        companyId: int.tryParse(userCompanyId) ?? 0,
       );
     }
     return null;

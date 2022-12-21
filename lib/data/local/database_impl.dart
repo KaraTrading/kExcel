@@ -79,4 +79,13 @@ class DatabaseImpl<T extends BaseData> extends Database<T> {
     box.put(data.id, data);
     return Future.value(data);
   }
+  @override
+  Future<int?> lastKey() async {
+    final keys = box.keys;
+    if (keys.isEmpty) {
+      box.clear();
+      return -1;
+    }
+    return keys.last;
+  }
 }

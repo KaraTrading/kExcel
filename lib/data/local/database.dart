@@ -20,4 +20,6 @@ abstract class Database<T> {
 
   Future<T?> add(T data);
 
+  Future<int?> lastKey();
+
 }

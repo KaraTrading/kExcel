@@ -106,10 +106,6 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
 
   @override
   Future<int?> getLatestProjectNumber() async {
-    final allProjects = await getProjects(null);
-    if (allProjects?.isNotEmpty ?? false) {
-      return allProjects!.last.id;
-    }
-    return null;
+    return storage.lastKey();
   }
 }
