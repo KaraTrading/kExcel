@@ -17,4 +17,6 @@ abstract class ProjectLocalDataSource extends BaseLocalDataSource<ProjectData> {
 
   Future<ProjectEntity?> getProject(int id);
 
+  Future<int?> getLatestProjectNumber();
+
 }

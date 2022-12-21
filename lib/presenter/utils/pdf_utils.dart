@@ -23,8 +23,8 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-Future<Uint8List> generateInvoice(Invoice invoice, PdfPageFormat pageFormat) async {
-
+Future<Uint8List> generateInvoice(
+    Invoice invoice, PdfPageFormat pageFormat) async {
   return await invoice.buildPdf(pageFormat);
 }
 
@@ -118,14 +118,15 @@ class Invoice {
   pw.Widget _buildHeader(pw.Context context) {
     return pw.Column(
       children: [
-        pw.Row(
+        pw.Flex(
+          direction: pw.Axis.horizontal,
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Container(
-              width: 120,
+            pw.Flexible(
+              flex: 1,
               child: pw.Text(
-                'Enquiry NO.: $invoiceNumber',
+                'Enquiry NO.:\n$invoiceNumber',
                 style: pw.TextStyle(
                   color: _baseTextColor,
                   font: _fontTitle,
@@ -133,52 +134,55 @@ class Invoice {
                 ),
               ),
             ),
-            pw.Column(
-              children: [
-                pw.Container(
-                  padding: const pw.EdgeInsets.only(left: 20, right: 20),
-                  alignment: pw.Alignment.centerLeft,
-                  child: pw.Row(
-                    children: [
-                      pw.Text(
-                        company.name,
-                        style: pw.TextStyle(
-                          color: accentColor,
-                          font: _fontTitle,
-                          fontSize: 25,
-                        ),
-                      ),
-                      pw.SizedBox(width: 8),
-                      if (company.nameExtension?.isNotEmpty == true)
+            pw.Flexible(
+              flex: 3,
+              child: pw.FittedBox(
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
+                  children: [
+                    pw.Row(
+                      crossAxisAlignment: pw.CrossAxisAlignment.center,
+                      mainAxisAlignment: pw.MainAxisAlignment.center,
+                      children: [
                         pw.Text(
-                          company.nameExtension!,
+                          company.name,
                           style: pw.TextStyle(
                             color: accentColor,
                             font: _fontTitle,
                             fontSize: 25,
                           ),
                         ),
-                    ],
-                  ),
-                ),
-                pw.Container(
-                  padding: const pw.EdgeInsets.only(top: 10),
-                  alignment: pw.Alignment.centerLeft,
-                  child: pw.Text(
-                    company.address,
-                    style: pw.TextStyle(
-                      color: baseColor,
-                      fontWeight: pw.FontWeight.bold,
-                      fontSize: 10,
+                        if (company.nameExtension?.isNotEmpty == true)
+                          pw.SizedBox(width: 8),
+                        if (company.nameExtension?.isNotEmpty == true)
+                          pw.Text(
+                            company.nameExtension!,
+                            style: pw.TextStyle(
+                              color: PdfColors.grey,
+                              font: _fontTitle,
+                              fontSize: 25,
+                            ),
+                          ),
+                      ],
                     ),
-                  ),
+                    pw.Container(
+                      padding: const pw.EdgeInsets.only(top: 10),
+                      alignment: pw.Alignment.center,
+                      child: pw.Text(
+                        company.address,
+                        style: pw.TextStyle(
+                          color: baseColor,
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-            pw.Container(
-              width: 120,
-              alignment: pw.Alignment.topRight,
-              height: 60,
+            pw.Flexible(
+              flex: 1,
               child: pw.Image(pw.MemoryImage(_logo!.buffer.asUint8List()),
                   width: 60, height: 60),
             ),

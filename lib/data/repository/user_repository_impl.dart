@@ -21,7 +21,7 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<CompanyEntity> getUserCompany() async {
     final user = await getUser();
-    return await companyLocalDataSource.getUserCompany(user?.id ?? 1); //TODO: Remove default after user bug fix
+    return await companyLocalDataSource.getUserCompany(user?.id ?? 0); //TODO: Remove default after user bug fix
   }
 
   @override

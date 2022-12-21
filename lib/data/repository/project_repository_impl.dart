@@ -12,38 +12,37 @@ class ProjectRepositoryImpl extends ProjectRepository{
 
   @override
   Future<bool?> addProject(ProjectEntity entity) async {
-    final res = localDataSource.saveProject(entity);
-    return res;
+    return localDataSource.saveProject(entity);
   }
 
   @override
   Future<bool?> updateProject(ProjectEntity entity) async {
-    final res = localDataSource.updateProject(entity);
-    return res;
+    return localDataSource.updateProject(entity);
   }
 
   @override
   Future<ProjectEntity?> getProject(int id) async {
-    final res = localDataSource.getProject(id);
-    return res;
+    return localDataSource.getProject(id);
   }
 
   @override
   Future<List<ProjectEntity>?> getProjects({int? projectId, String? search}) async {
-    final res = localDataSource.getProjects(search);
-    return res;
+    return await localDataSource.getProjects(search);
   }
 
   @override
   Future<bool?> addProjects(List<ProjectEntity> entities) {
-    final res = localDataSource.saveProjects(entities);
-    return res;
+    return localDataSource.saveProjects(entities);
   }
 
   @override
   Future<bool?> deleteProject(ProjectEntity entity) {
-    final res = localDataSource.deleteProject(entity);
-    return res;
+    return localDataSource.deleteProject(entity);
+  }
+
+  @override
+  Future<int?> getLatestProjectNumber() {
+    return localDataSource.getLatestProjectNumber();
   }
 
 }

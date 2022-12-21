@@ -36,12 +36,16 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
       projects = await storage.findAll(search);
     }
     final List<ProjectEntity> allProjects = [];
-    projects?.forEach((e) async {
-      final item = await projectDataToProjectEntity(e);
+
+    if (projects?.isEmpty ?? true) {
+      return [];
+    }
+    for (var project in projects!) {
+      final item = await projectDataToProjectEntity(project);
       if (item != null) {
         allProjects.add(item);
       }
-    });
+    }
     return allProjects;
   }
 
@@ -98,5 +102,14 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
       if (added!) allAdded = false;
     }
     return allAdded;
+  }
+
+  @override
+  Future<int?> getLatestProjectNumber() async {
+    final allProjects = await getProjects(null);
+    if (allProjects?.isNotEmpty ?? false) {
+      return allProjects!.last.id;
+    }
+    return null;
   }
 }

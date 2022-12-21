@@ -70,6 +70,7 @@ extension ProjectDataMapper on ProjectData {
 
 extension ProjectEntityMapper on ProjectEntity {
   ProjectData get mapToData => ProjectData(
+    id: id,
     projectId: projectId,
     name: name,
     clientId: client!.id,

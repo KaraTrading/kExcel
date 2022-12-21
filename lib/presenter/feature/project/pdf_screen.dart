@@ -76,10 +76,9 @@ class PDFScreen extends StatelessWidget {
       intro: intro,
       outro: outro,
       invoiceNumber: project.name,
-      items: project.items!
-          .map((e) =>
+      items: project.items?.map((e) =>
               ItemEntityWithExtraData(sortIndex: index++, item: e, quantity: 1))
-          .toList(),
+          .toList() ?? [],
       necessaryInformation: necessaryInformation,
       user: user,
       company: company,
