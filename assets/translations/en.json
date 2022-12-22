@@ -21,6 +21,7 @@
   "vatId": "Vat ID",
   "isManufacturer": "Is a manufacture",
   "client": "Client",
+  "supplier": "Supplier",
   "winner": "Winner",
   "projectId": "Project ID",
   "karProjectId": "Kara Proj ID",

@@ -108,7 +108,7 @@ class ItemScreen extends BaseInformationScreen<ItemBloc, ItemEntity> {
               contentPadding:
               const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
               border: const OutlineInputBorder(gapPadding: 1),
-              labelText: 'winner'.translate,
+              labelText: 'manufacturer'.translate,
             ),
             child: Autocomplete(
               onSelected: (SupplierEntity entity) => manufacturer = entity,

@@ -146,7 +146,7 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                             contentPadding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 4),
                             border: const OutlineInputBorder(gapPadding: 1),
-                            labelText: 'winner'.translate,
+                            labelText: 'supplier'.translate,
                           ),
                           child: Autocomplete(
                             onSelected: (SupplierEntity entity) {
