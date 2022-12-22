@@ -19,6 +19,11 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
+  Future<void> logout() async {
+    return await userLocalDataSource.logout();
+  }
+
+  @override
   Future<CompanyEntity> getUserCompany() async {
     final user = await getUser();
     return await companyLocalDataSource.getUserCompany(user!.companyId);

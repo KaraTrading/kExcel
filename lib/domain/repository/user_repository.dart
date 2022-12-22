@@ -6,6 +6,8 @@ abstract class UserRepository extends BaseRepository {
 
   Future<UserEntity?> getUser();
 
+  Future<void> logout();
+
   Future<bool?> saveUser(UserEntity entity);
 
   Future<CompanyEntity> getUserCompany();
