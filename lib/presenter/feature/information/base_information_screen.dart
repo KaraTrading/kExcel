@@ -64,58 +64,65 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
           itemBuilder: (context, index) {
             return Card(
               margin: const EdgeInsets.all(8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 7,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: itemDetails(entities![index]),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      flex: 9,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: itemDetails(entities![index]),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () => editItemDetails(context,
-                              entity: entities[index]),
-                          child: Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5)),
-                              ),
-                              // height: 112,
-                              child: const Center(
-                                  child: Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                              ))),
-                        ),
-                        GestureDetector(
-                          onTap: () => _showDeleteConfirmation(
-                              context, entities[index]),
-                          child: Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(5)),
-                              ),
-                              // height: 112,
-                              child: const Center(
-                                  child: Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ))),
-                        ),
-                      ],
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Flexible(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: () => editItemDetails(context,
+                                  entity: entities[index]),
+                              child: Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(5)),
+                                  ),
+                                  // height: 112,
+                                  child: const Center(
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                      ))),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: () => _showDeleteConfirmation(
+                                  context, entities[index]),
+                              child: Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.only(
+                                        bottomRight: Radius.circular(5)),
+                                  ),
+                                  // height: 112,
+                                  child: const Center(
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ))),
+                            ),
+                          ),
+                        ],
+                      )
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },
