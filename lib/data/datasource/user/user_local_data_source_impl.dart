@@ -48,4 +48,14 @@ class UserLocalDataSourceImpl extends UserLocalDataSource {
   Future<bool?> updateUser(UserEntity entity) async {
     return await setUser(entity);
   }
+
+  @override
+  Future<void> logout() async {
+    await secureStorage.delete(userIdKey);
+    await secureStorage.delete(userNameKey);
+    await secureStorage.delete(userTitleKey);
+    await secureStorage.delete(userEmailKey);
+    await secureStorage.delete(userCompanyIdKey);
+    return Future(() => null);
+  }
 }

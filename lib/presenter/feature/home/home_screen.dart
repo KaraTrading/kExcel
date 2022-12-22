@@ -1,5 +1,6 @@
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:flutter/material.dart';
+import 'package:kexcel/presenter/feature/home/profile/profile_screen.dart';
 import 'environment/environment_screen.dart';
 import 'information/client/client_screen.dart';
 import 'information/item/item_screen.dart';
@@ -42,6 +43,9 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('kExcel'),
+          actions: [
+            IconButton(onPressed: () => _routeProfile(context), icon: const Icon(Icons.person))
+          ],
         ),
         body: GridView(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -77,6 +81,12 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _routeProfile(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const ProfileScreen(),
+    ));
   }
 
   _routeClients(BuildContext context) {

@@ -8,4 +8,6 @@ abstract class UserLocalDataSource {
 
   Future<UserEntity?> getUser();
 
+  Future<void> logout();
+
 }
