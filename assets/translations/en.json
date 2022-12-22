@@ -1,7 +1,7 @@
 {
   "clientsManagement": "Clients Management",
   "suppliersManagement": "Suppliers Management",
-  "projectsItemsManagement": "Projects Items Management",
+  "environmentManagement": "Environment Management",
   "itemsManagement": "Items Management",
   "fullName": "Full name",
   "jobTitle": "Job title",

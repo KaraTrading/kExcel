@@ -16,7 +16,8 @@ import 'package:kexcel/domain/usecase/supplier/get_suppliers_use_case.dart';
 import 'package:kexcel/domain/usecase/supplier/update_supplier_use_case.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
-import 'package:kexcel/presenter/feature/information/item/item_bloc_event.dart';
+
+import 'item_bloc_event.dart';
 
 @Singleton()
 class ItemBloc extends BaseBloc<ItemBlocEvent>{

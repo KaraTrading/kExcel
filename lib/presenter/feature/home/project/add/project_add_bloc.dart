@@ -18,7 +18,7 @@ import 'package:kexcel/domain/usecase/user/get_user_company_usecase.dart';
 import 'package:kexcel/domain/usecase/user/get_user_usecase.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
-import 'package:kexcel/presenter/feature/project/add/project_add_bloc_event.dart';
+import 'project_add_bloc_event.dart';
 
 @LazySingleton()
 class ProjectAddBloc extends BaseBloc<ProjectAddBlocEvent> {

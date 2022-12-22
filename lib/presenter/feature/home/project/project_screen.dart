@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/common/localization.dart';
-import 'package:kexcel/presenter/feature/information/base_information_screen.dart';
-import 'package:kexcel/presenter/feature/project/add/project_add_screen.dart';
+import 'package:kexcel/presenter/feature/home/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
+import 'add/project_add_screen.dart';
 import 'project_bloc.dart';
 import 'project_bloc_event.dart';
 

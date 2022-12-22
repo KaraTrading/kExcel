@@ -1,9 +1,9 @@
 import 'package:kexcel/presenter/common/localization.dart';
-import 'package:kexcel/presenter/feature/information/item/item_screen.dart';
-import 'package:kexcel/presenter/feature/project/project_screen.dart';
-import 'package:kexcel/presenter/feature/information/supplier/supplier_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:kexcel/presenter/feature/information/client/client_screen.dart';
+import 'information/client/client_screen.dart';
+import 'information/item/item_screen.dart';
+import 'information/supplier/supplier_screen.dart';
+import 'project/project_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
