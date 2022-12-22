@@ -6,8 +6,7 @@ import 'package:kexcel/data/local/database_configuration.dart';
 import 'package:kexcel/data/local/model/client_data.dart';
 import 'package:kexcel/data/local/model/company_data.dart';
 import 'package:kexcel/data/local/model/item_data.dart';
-import 'package:kexcel/data/local/model/logistic_data.dart';
-import 'package:kexcel/data/local/model/project_data.dart';
+import 'package:kexcel/data/local/model/environment_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/data/local/database_impl.dart';
@@ -36,13 +35,8 @@ abstract class RegisterModule {
   }
 
   @Singleton()
-  Database<LogisticData> logisticStorage() {
-    return DatabaseImpl<LogisticData>(logisticBox);
-  }
-
-  @Singleton()
-  Database<ProjectData> projectStorage() {
-    return DatabaseImpl<ProjectData>(projectBox);
+  Database<EnvironmentData> environmentStorage() {
+    return DatabaseImpl<EnvironmentData>(environmentBox);
   }
 
   @Singleton()

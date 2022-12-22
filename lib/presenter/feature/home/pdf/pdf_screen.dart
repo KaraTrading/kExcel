@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/company_entity.dart';
-import 'package:kexcel/domain/entity/project_entity.dart';
+import 'package:kexcel/domain/entity/environment_entity.dart';
 import 'package:kexcel/domain/entity/user_entity.dart';
 import 'package:kexcel/presenter/utils/pdf_utils.dart';
 import 'package:open_file/open_file.dart';
@@ -15,7 +15,7 @@ import 'package:path_provider/path_provider.dart'
 class PDFScreen extends StatelessWidget {
   final String intro;
   final String outro;
-  final ProjectEntity project;
+  final EnvironmentEntity project;
   final UserEntity user;
   final CompanyEntity company;
   final List<String> necessaryInformation;

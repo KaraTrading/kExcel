@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:kexcel/domain/entity/project_entity.dart';
+import 'package:kexcel/domain/entity/environment_entity.dart';
 import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/feature/home/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
-import 'add/project_add_screen.dart';
-import 'project_bloc.dart';
-import 'project_bloc_event.dart';
+import 'add/environment_add_screen.dart';
+import 'environment_bloc.dart';
+import 'environment_bloc_event.dart';
 
-class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
-  const ProjectScreen({super.key});
+class EnvironmentScreen extends BaseInformationScreen<EnvironmentBloc, EnvironmentEntity> {
+  const EnvironmentScreen({super.key});
 
   @override
   AppBar? get appBar => AppBar(
@@ -27,16 +27,16 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
       );
 
   @override
-  String get title => 'projectsItemsManagement'.translate;
+  String get title => 'environmentManagement'.translate;
 
   @override
-  BaseBlocEvent get initEvent => ProjectEventInit();
+  BaseBlocEvent get initEvent => EnvironmentEventInit();
 
   @override
-  BaseBlocEvent deleteEvent(ProjectEntity entity) => ProjectEventDelete(entity);
+  BaseBlocEvent deleteEvent(EnvironmentEntity entity) => EnvironmentEventDelete(entity);
 
   @override
-  Widget itemDetails(ProjectEntity entity) {
+  Widget itemDetails(EnvironmentEntity entity) {
     return Column(
       children: [
         Row(
@@ -52,10 +52,10 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
   }
 
   @override
-  void editItemDetails(BuildContext context, {ProjectEntity? entity}) {
+  void editItemDetails(BuildContext context, {EnvironmentEntity? entity}) {
     Navigator.of(context)
         .push(MaterialPageRoute(
-          builder: (context) => ProjectAddScreen(entity: entity),
+          builder: (context) => EnvironmentAddScreen(entity: entity),
         ))
         .then((val) {
           callEvent(initEvent);
@@ -68,33 +68,25 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
       'projectId'.translate,
       'id'.translate,
       'name'.translate,
-      'karaProjectId'.translate,
       'clientId'.translate,
       'client'.translate,
-      'winnerId'.translate,
-      'winner'.translate,
-      'karaPiValue'.translate,
-      'Cancelled'.translate,
-      'deliveryDate'.translate,
+      'supplierId'.translate,
+      'supplier'.translate,
     ];
     exportListToFile(
         titles,
-        getBloc.projectsItems
+        getBloc.environments
             .map((e) => [
                   e.projectId.toString(),
                   e.id.toString(),
                   e.name,
-                  e.karaProjectNumber.toString(),
                   e.client?.id.toString(),
                   e.client?.name,
-                  e.winner?.id.toString(),
-                  e.winner?.name,
-                  e.karaPiValue?.toString(),
-                  e.isCancelled ? 'true'.translate : 'false'.translate,
-                  e.deliveryDate?.toIso8601String(),
+                  e.supplier?.id.toString(),
+                  e.supplier?.name,
                 ])
             .toList(),
-        'exported_projects_items.xlsx');
+        'exported_environments.xlsx');
   }
 
   @override

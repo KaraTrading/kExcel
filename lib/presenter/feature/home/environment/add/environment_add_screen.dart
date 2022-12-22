@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/domain/entity/item_entity.dart';
-import 'package:kexcel/domain/entity/project_entity.dart';
+import 'package:kexcel/domain/entity/environment_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/common/localization.dart';
@@ -11,13 +11,13 @@ import 'package:kexcel/presenter/utils/app_colors.dart';
 import 'package:kexcel/presenter/utils/text_styles.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'project_add_bloc.dart';
-import 'project_add_bloc_event.dart';
+import 'environment_add_bloc.dart';
+import 'environment_add_bloc_event.dart';
 
-class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
-  final ProjectEntity? entity;
+class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
+  final EnvironmentEntity? entity;
 
-  const ProjectAddScreen({this.entity, super.key});
+  const EnvironmentAddScreen({this.entity, super.key});
 
   @override
   AppBar? get appBar => AppBar();
@@ -27,19 +27,18 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
 
   @override
   Widget screenBody(BuildContext context) {
-    callEvent(ProjectAddEventInit());
+    callEvent(EnvironmentAddEventInit());
 
-    if (getBloc.project == null) {
+    if (getBloc.environment == null) {
       if (entity != null) {
-        getBloc.project = entity!;
+        getBloc.environment = entity!;
       } else {
-        getBloc.project =
-            ProjectEntity(projectId: 0, id: 0, name: '', karaProjectNumber: 0);
+        getBloc.environment = EnvironmentEntity(projectId: 0, id: 0, name: '');
       }
     }
 
     final TextEditingController nameController =
-    TextEditingController(text: getBloc.project?.name);
+    TextEditingController(text: getBloc.environment?.name);
 
     bool isAdvanceOptionsShowing = false;
 
@@ -77,13 +76,13 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
     TextEditingController(text: necessaryItems[7].extraData);
 
     void updateProject() {
-      callEvent(ProjectAddEventUpdatedProject());
+      callEvent(EnvironmentAddEventUpdatedProject());
       Future.delayed(const Duration(milliseconds: 50), () {
-        nameController.text = getBloc.project!.name;
+        nameController.text = getBloc.environment!.name;
       });
     }
 
-    return DataLoadBlocBuilder<ProjectAddBloc, List<ItemEntity>?>(
+    return DataLoadBlocBuilder<EnvironmentAddBloc, List<ItemEntity>?>(
         noDataView: const NoItemWidget(),
         bloc: getBloc,
         builder: (BuildContext context, List<ItemEntity>? entities) {
@@ -115,13 +114,13 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                           ),
                           child: Autocomplete(
                             onSelected: (ClientEntity entity) {
-                              getBloc.project!.client = entity;
+                              getBloc.environment!.client = entity;
                               updateProject();
                             },
                             displayStringForOption: (ClientEntity entity) =>
                             entity.name,
                             initialValue: TextEditingValue(
-                                text: getBloc.project!.client?.name ?? ''),
+                                text: getBloc.environment!.client?.name ?? ''),
                             optionsBuilder:
                                 (TextEditingValue textEditingValue) {
                               return getBloc.clients
@@ -150,13 +149,13 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                           ),
                           child: Autocomplete(
                             onSelected: (SupplierEntity entity) {
-                              getBloc.project!.winner = entity;
+                              getBloc.environment!.supplier = entity;
                               updateProject();
                             },
                             displayStringForOption: (SupplierEntity entity) =>
                             entity.name,
                             initialValue: TextEditingValue(
-                                text: getBloc.project!.winner?.name ?? ''),
+                                text: getBloc.environment!.supplier?.name ?? ''),
                             optionsBuilder:
                                 (TextEditingValue textEditingValue) {
                               return getBloc.suppliers
@@ -187,7 +186,7 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                                 child: Column(
                                   children: <Widget>[
                                     MultiSelectBottomSheetField<ItemEntity?>(
-                                      initialValue: getBloc.project!.items ??
+                                      initialValue: getBloc.environment!.items ??
                                           [],
                                       initialChildSize: 0.4,
                                       listType: MultiSelectListType.LIST,
@@ -196,7 +195,7 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                                       title: const Text("Items"),
                                       onSelectionChanged: (values) {
                                         setState(() {
-                                          getBloc.project!.items =
+                                          getBloc.environment!.items =
                                               values.cast<ItemEntity>();
                                         });
                                       },
@@ -235,7 +234,7 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                                           .toList(),
                                       onConfirm: (values) {
                                         setState(() {
-                                          getBloc.project!.items =
+                                          getBloc.environment!.items =
                                               values.cast<ItemEntity>();
                                         });
                                       },
@@ -247,8 +246,8 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                                         // },
                                       ),
                                     ),
-                                    getBloc.project!.items == null ||
-                                        getBloc.project!.items!.isEmpty
+                                    getBloc.environment!.items == null ||
+                                        getBloc.environment!.items!.isEmpty
                                         ? Container(
                                         padding: const EdgeInsets.all(10),
                                         alignment: Alignment.centerLeft,
@@ -361,7 +360,7 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                 padding: const EdgeInsets.only(bottom: 25),
                 child: ElevatedButton(
                     onPressed: () {
-                      getBloc.project!.name = nameController.text;
+                      getBloc.environment!.name = nameController.text;
 
                       necessaryItems[4].extraData =
                           termsOfDeliveryExtraDataController.text;
@@ -370,14 +369,14 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                       necessaryItems[7].extraData =
                           termsOfPaymentExtraDataController.text;
 
-                      callEvent(ProjectAddEventAddingDone());
+                      callEvent(EnvironmentAddEventAddingDone());
 
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) =>
                             PDFScreen(
                               intro: introController.text,
                               outro: outroController.text,
-                              project: getBloc.project!,
+                              project: getBloc.environment!,
                               user: getBloc.user,
                               company: getBloc.company,
                               necessaryInformation: necessaryItems
@@ -389,7 +388,7 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                                   .toList(),
                             ),
                       )).then((value) {
-                        getBloc.project = null;
+                        getBloc.environment = null;
                         Navigator.of(context).pop();
                       });
                     },
