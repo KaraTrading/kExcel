@@ -1,9 +1,9 @@
 import 'package:kexcel/presenter/common/localization.dart';
-import 'package:kexcel/presenter/feature/information/item/item_screen.dart';
-import 'package:kexcel/presenter/feature/project/project_screen.dart';
-import 'package:kexcel/presenter/feature/information/supplier/supplier_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:kexcel/presenter/feature/information/client/client_screen.dart';
+import 'environment/environment_screen.dart';
+import 'information/client/client_screen.dart';
+import 'information/item/item_screen.dart';
+import 'information/supplier/supplier_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -31,7 +31,7 @@ class HomeScreen extends StatelessWidget {
       ),
       featureItem(
         onPressed: () => _routeProjectsItem(context),
-        title: 'projectsItemsManagement'.translate,
+        title: 'environmentManagement'.translate,
         icon: Icons.fire_truck_rounded,
         // color: Colors.black,
       ),
@@ -99,7 +99,7 @@ class HomeScreen extends StatelessWidget {
 
   _routeProjectsItem(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const ProjectScreen(),
+      builder: (context) => const EnvironmentScreen(),
     ));
   }
 }

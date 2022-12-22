@@ -1,7 +1,7 @@
 {
   "clientsManagement": "Clients Management",
   "suppliersManagement": "Suppliers Management",
-  "projectsItemsManagement": "Projects Items Management",
+  "environmentManagement": "Environment Management",
   "itemsManagement": "Items Management",
   "fullName": "Full name",
   "jobTitle": "Job title",
@@ -21,6 +21,7 @@
   "vatId": "Vat ID",
   "isManufacturer": "Is a manufacture",
   "client": "Client",
+  "supplier": "Supplier",
   "winner": "Winner",
   "projectId": "Project ID",
   "karProjectId": "Kara Proj ID",
