@@ -29,6 +29,7 @@ dependencies:
   flutter_secure_storage: ^7.0.1
   multi_select_flutter:
     git: https://github.com/Shahriyar13/multi_select_flutter.git
+  package_info_plus:
 
 dev_dependencies:
   flutter_test:

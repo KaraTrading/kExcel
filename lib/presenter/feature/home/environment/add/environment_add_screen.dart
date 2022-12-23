@@ -20,7 +20,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
   const EnvironmentAddScreen({this.entity, super.key});
 
   @override
-  AppBar? get appBar => AppBar();
+  AppBar? get appBar => AppBar(title: Text('environmentAdd'.translate));
 
   @override
   FloatingActionButton? floatingActionButton(BuildContext context) => null;
