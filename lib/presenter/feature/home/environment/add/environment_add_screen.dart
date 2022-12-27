@@ -20,7 +20,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
   const EnvironmentAddScreen({this.entity, super.key});
 
   @override
-  AppBar? get appBar => AppBar();
+  AppBar? get appBar => AppBar(title: Text('environmentAdd'.translate));
 
   @override
   FloatingActionButton? floatingActionButton(BuildContext context) => null;
@@ -38,42 +38,38 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
     }
 
     final TextEditingController nameController =
-    TextEditingController(text: getBloc.environment?.name);
+        TextEditingController(text: getBloc.environment?.name);
 
     bool isAdvanceOptionsShowing = false;
 
     final TextEditingController introController = TextEditingController(
-        text:
-        'Dear Sir/Madame,\nKindly provide us with your best offer for delivering the list items:');
+      text: 'environmentIntro'.translate,
+    );
 
     final TextEditingController outroController = TextEditingController(
-        text:
-        'The offer is requested in English language. In case of any questions please feel free to contact me at any time.\nBest Regards,');
+      text: 'environmentOutro'.translate,
+    );
 
     final necessaryItems = [
-      NecessaryItem(title: 'Our reference', isAvailable: true),
-      NecessaryItem(
-          title: 'Scope of supply (Description of goods)', isAvailable: true),
-      NecessaryItem(title: 'Item price and total price', isAvailable: true),
-      NecessaryItem(title: 'Time of delivery', isAvailable: true),
-      NecessaryItem(title: 'Terms of delivery', isAvailable: true),
-      NecessaryItem(title: 'Packing', isAvailable: true),
-      NecessaryItem(
-          title: 'Weights: net & gross (estimated at least)',
-          isAvailable: true),
-      NecessaryItem(title: 'Terms of payment', isAvailable: true),
-      NecessaryItem(title: 'Country of origin', isAvailable: true),
-      NecessaryItem(
-          title: 'Customs tariff number / HS code', isAvailable: true),
-      NecessaryItem(title: 'Validity of offer', isAvailable: true),
+      NecessaryItem(title: 'ourReference'.translate, isAvailable: true),
+      NecessaryItem(title: 'scopeOfSupply'.translate, isAvailable: true),
+      NecessaryItem(title: 'prices'.translate, isAvailable: true),
+      NecessaryItem(title: 'timeOfDelivery'.translate, isAvailable: true),
+      NecessaryItem(title: 'termsOfDelivery'.translate, isAvailable: true),
+      NecessaryItem(title: 'packing'.translate, isAvailable: true),
+      NecessaryItem(title: 'weights'.translate, isAvailable: true),
+      NecessaryItem(title: 'termsOfPayment'.translate, isAvailable: true),
+      NecessaryItem(title: 'countryOfOrigin'.translate, isAvailable: true),
+      NecessaryItem(title: 'customsTariff'.translate, isAvailable: true),
+      NecessaryItem(title: 'validityOfOffer'.translate, isAvailable: true),
     ];
 
     final TextEditingController termsOfDeliveryExtraDataController =
-    TextEditingController(text: necessaryItems[4].extraData);
+        TextEditingController(text: necessaryItems[4].extraData);
     final TextEditingController packingExtraDataController =
-    TextEditingController(text: necessaryItems[5].extraData);
+        TextEditingController(text: necessaryItems[5].extraData);
     final TextEditingController termsOfPaymentExtraDataController =
-    TextEditingController(text: necessaryItems[7].extraData);
+        TextEditingController(text: necessaryItems[7].extraData);
 
     void updateProject() {
       callEvent(EnvironmentAddEventUpdatedProject());
@@ -118,7 +114,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                               updateProject();
                             },
                             displayStringForOption: (ClientEntity entity) =>
-                            entity.name,
+                                entity.name,
                             initialValue: TextEditingValue(
                                 text: getBloc.environment!.client?.name ?? ''),
                             optionsBuilder:
@@ -126,15 +122,15 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                               return getBloc.clients
                                   .where(
                                     (ClientEntity entity) =>
-                                (entity.name.toLowerCase().contains(
-                                  textEditingValue.text
-                                      .toLowerCase(),
-                                ) ||
-                                    entity.code.toLowerCase().contains(
-                                      textEditingValue.text
-                                          .toLowerCase(),
-                                    )),
-                              )
+                                        (entity.name.toLowerCase().contains(
+                                                  textEditingValue.text
+                                                      .toLowerCase(),
+                                                ) ||
+                                            entity.code.toLowerCase().contains(
+                                                  textEditingValue.text
+                                                      .toLowerCase(),
+                                                )),
+                                  )
                                   .toList();
                             },
                           ),
@@ -153,20 +149,20 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                               updateProject();
                             },
                             displayStringForOption: (SupplierEntity entity) =>
-                            entity.name,
+                                entity.name,
                             initialValue: TextEditingValue(
-                                text: getBloc.environment!.supplier?.name ?? ''),
+                                text:
+                                    getBloc.environment!.supplier?.name ?? ''),
                             optionsBuilder:
                                 (TextEditingValue textEditingValue) {
                               return getBloc.suppliers
                                   .where(
-                                    (SupplierEntity entity) =>
-                                (entity.name
-                                    .toLowerCase()
-                                    .contains(
-                                  textEditingValue.text.toLowerCase(),
-                                )),
-                              )
+                                    (SupplierEntity entity) => (entity.name
+                                        .toLowerCase()
+                                        .contains(
+                                          textEditingValue.text.toLowerCase(),
+                                        )),
+                                  )
                                   .toList();
                             },
                           ),
@@ -175,91 +171,88 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                         StatefulBuilder(
                           builder:
                               (BuildContext context, StateSetter setState) =>
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(
-                                    color: colorGrey,
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Column(
-                                  children: <Widget>[
-                                    MultiSelectBottomSheetField<ItemEntity?>(
-                                      initialValue: getBloc.environment!.items ??
-                                          [],
-                                      initialChildSize: 0.4,
-                                      listType: MultiSelectListType.LIST,
-                                      searchable: true,
-                                      buttonText: const Text("Selected Items"),
-                                      title: const Text("Items"),
-                                      onSelectionChanged: (values) {
-                                        setState(() {
-                                          getBloc.environment!.items =
-                                              values.cast<ItemEntity>();
-                                        });
-                                      },
-                                      // '${e.type}: ${e.name} - ${e.manufacturer} - ${e.hsCode}\n${e.description}\n'
-                                      items: getBloc.items
-                                          .map((e) =>
-                                          MultiSelectItem(
-                                              e,
-                                              Text.rich(
+                                  Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: colorGrey,
+                                width: 1,
+                              ),
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                MultiSelectBottomSheetField<ItemEntity?>(
+                                  initialValue:
+                                      getBloc.environment!.items ?? [],
+                                  initialChildSize: 0.4,
+                                  listType: MultiSelectListType.LIST,
+                                  searchable: true,
+                                  buttonText: Text('selectedItems'.translate),
+                                  title: Text('items'.translate),
+                                  onSelectionChanged: (values) {
+                                    setState(() {
+                                      getBloc.environment!.items =
+                                          values.cast<ItemEntity>();
+                                    });
+                                  },
+                                  // '${e.type}: ${e.name} - ${e.manufacturer} - ${e.hsCode}\n${e.description}\n'
+                                  items: getBloc.items
+                                      .map((e) => MultiSelectItem(
+                                          e,
+                                          Text.rich(
+                                            TextSpan(
+                                              children: <TextSpan>[
                                                 TextSpan(
-                                                  children: <TextSpan>[
-                                                    TextSpan(
-                                                        text:
-                                                        '${e.type}: ${e
-                                                            .name}\n',
-                                                        style: primaryTextStyle),
-                                                    TextSpan(
-                                                        text: e.description,
-                                                        style: captionTextStyle),
-                                                    TextSpan(
-                                                        text: (e.manufacturer !=
+                                                    text:
+                                                        '${e.type}: ${e.name}\n',
+                                                    style: primaryTextStyle),
+                                                TextSpan(
+                                                    text: e.description,
+                                                    style: captionTextStyle),
+                                                TextSpan(
+                                                    text: (e.manufacturer !=
                                                             null)
-                                                            ? '\nManufacturer: ${e
-                                                            .manufacturer}'
-                                                            : '\n',
-                                                        style: captionTextStyle),
-                                                    TextSpan(
-                                                        text: (e.hsCode != null)
-                                                            ? 'HS-Code: ${e
-                                                            .hsCode}'
-                                                            : '',
-                                                        style: captionTextStyle),
-                                                  ],
-                                                ),
-                                              )))
-                                          .toList(),
-                                      onConfirm: (values) {
-                                        setState(() {
-                                          getBloc.environment!.items =
-                                              values.cast<ItemEntity>();
-                                        });
-                                      },
-                                      chipDisplay: MultiSelectChipDisplay(
-                                        // onTap: (value) {
-                                        //   setState(() {
-                                        //     getBloc.selectedItems.remove(value);
-                                        //   });
-                                        // },
+                                                        ? '\n${'manufacturer'.translate}: ${e.manufacturer}'
+                                                        : '\n',
+                                                    style: captionTextStyle),
+                                                TextSpan(
+                                                    text: (e.hsCode != null)
+                                                        ? '${'hsCode'.translate}: ${e.hsCode}'
+                                                        : '',
+                                                    style: captionTextStyle),
+                                              ],
+                                            ),
+                                          )))
+                                      .toList(),
+                                  onConfirm: (values) {
+                                    setState(() {
+                                      getBloc.environment!.items =
+                                          values.cast<ItemEntity>();
+                                    });
+                                  },
+                                  chipDisplay: MultiSelectChipDisplay(
+                                      // onTap: (value) {
+                                      //   setState(() {
+                                      //     getBloc.selectedItems.remove(value);
+                                      //   });
+                                      // },
                                       ),
-                                    ),
-                                    getBloc.environment!.items == null ||
+                                ),
+                                getBloc.environment!.items == null ||
                                         getBloc.environment!.items!.isEmpty
-                                        ? Container(
+                                    ? Container(
                                         padding: const EdgeInsets.all(10),
                                         alignment: Alignment.centerLeft,
-                                        child: const Text(
-                                          "None selected",
-                                          style:
-                                          TextStyle(color: Colors.black54),
+                                        child: Text(
+                                          'noneSelected'.translate,
+                                          style: const TextStyle(
+                                            color: Colors.black54,
+                                          ),
                                         ))
-                                        : Container(),
-                                  ],
-                                ),
-                              ),
+                                    : Container(),
+                              ],
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 25),
                         StatefulBuilder(builder:
@@ -267,19 +260,18 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                           return Column(children: [
                             InkWell(
                                 child: Text(isAdvanceOptionsShowing
-                                    ? '...hide advanced options'
-                                    : 'show advanced options...'),
-                                onTap: () =>
-                                    setState(() {
+                                    ? 'hideMore'.translate
+                                    : 'showMore'.translate),
+                                onTap: () => setState(() {
                                       isAdvanceOptionsShowing =
-                                      !isAdvanceOptionsShowing;
+                                          !isAdvanceOptionsShowing;
                                     })),
                             if (isAdvanceOptionsShowing)
                               TextField(
                                 controller: introController,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Intro',
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'intro'.translate,
                                 ),
                                 minLines: 2,
                                 maxLines: 3,
@@ -288,8 +280,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                               const SizedBox(height: 25),
                             if (isAdvanceOptionsShowing)
                               ...necessaryItems
-                                  .map((e) =>
-                                  CheckboxListTile(
+                                  .map((e) => CheckboxListTile(
                                       title: Text(e.title),
                                       value: e.isAvailable,
                                       onChanged: (newValue) {
@@ -305,7 +296,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                                 decoration: InputDecoration(
                                   border: const OutlineInputBorder(),
                                   labelText:
-                                  '${necessaryItems[4].title} extra data',
+                                      '${necessaryItems[4].title} extra data',
                                 ),
                               ),
                             if (isAdvanceOptionsShowing &&
@@ -318,7 +309,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                                 decoration: InputDecoration(
                                   border: const OutlineInputBorder(),
                                   labelText:
-                                  '${necessaryItems[5].title} extra data',
+                                      '${necessaryItems[5].title} ${'extraData'.translate}',
                                 ),
                               ),
                             if (isAdvanceOptionsShowing &&
@@ -331,7 +322,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                                 decoration: InputDecoration(
                                   border: const OutlineInputBorder(),
                                   labelText:
-                                  '${necessaryItems[7].title} extra data',
+                                      '${necessaryItems[7].title} ${'extraData'.translate}',
                                 ),
                               ),
                             if (isAdvanceOptionsShowing &&
@@ -340,9 +331,9 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                             if (isAdvanceOptionsShowing)
                               TextField(
                                 controller: outroController,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Outro',
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'outro'.translate,
                                 ),
                                 minLines: 2,
                                 maxLines: 3,
@@ -371,23 +362,22 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
 
                       callEvent(EnvironmentAddEventAddingDone());
 
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            PDFScreen(
-                              intro: introController.text,
-                              outro: outroController.text,
-                              project: getBloc.environment!,
-                              user: getBloc.user,
-                              company: getBloc.company,
-                              necessaryInformation: necessaryItems
-                                  .where((element) => element.isAvailable)
-                                  .map((e) =>
-                              '${e.title}${(e.extraData?.isNotEmpty == true)
-                                  ? ' (${e.extraData})'
-                                  : ''}')
-                                  .toList(),
-                            ),
-                      )).then((value) {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                        builder: (context) => PDFScreen(
+                          intro: introController.text,
+                          outro: outroController.text,
+                          project: getBloc.environment!,
+                          user: getBloc.user,
+                          company: getBloc.company,
+                          necessaryInformation: necessaryItems
+                              .where((element) => element.isAvailable)
+                              .map((e) =>
+                                  '${e.title}${(e.extraData?.isNotEmpty == true) ? ' (${e.extraData})' : ''}')
+                              .toList(),
+                        ),
+                      ))
+                          .then((value) {
                         getBloc.environment = null;
                         Navigator.of(context).pop();
                       });

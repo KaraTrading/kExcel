@@ -42,7 +42,7 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    namespace 'de.kara_trading.kexcel'
+    namespace 'de.karatrading.kexcel'
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).

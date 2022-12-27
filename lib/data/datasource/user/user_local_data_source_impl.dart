@@ -46,7 +46,12 @@ class UserLocalDataSourceImpl extends UserLocalDataSource {
 
   @override
   Future<bool?> updateUser(UserEntity entity) async {
-    return await setUser(entity);
+    await secureStorage.put(userIdKey, (entity.id ?? 0).toString());
+    await secureStorage.put(userNameKey, entity.name);
+    await secureStorage.put(userTitleKey, entity.title);
+    await secureStorage.put(userEmailKey, entity.email);
+    await secureStorage.put(userCompanyIdKey, entity.companyId.toString());
+    return true;
   }
 
   @override

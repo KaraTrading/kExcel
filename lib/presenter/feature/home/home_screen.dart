@@ -44,7 +44,11 @@ class HomeScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('kExcel'),
           actions: [
-            IconButton(onPressed: () => _routeProfile(context), icon: const Icon(Icons.person))
+            IconButton(
+              onPressed: () => _routeProfile(context),
+              icon: const Icon(Icons.person),
+              tooltip: 'profile'.translate,
+            )
           ],
         ),
         body: GridView(
@@ -70,7 +74,8 @@ class HomeScreen extends StatelessWidget {
         margin: const EdgeInsets.all(8.0),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Center(child: Column(
+          child: Center(
+              child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

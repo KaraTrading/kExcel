@@ -16,4 +16,10 @@ Color get textPrimaryColor => const Color.fromARGB(255, 44, 44, 44);
 
 Color get textCaptionColor => const Color.fromARGB(255, 61, 63, 65);
 
+Color get colorTransparent => const Color.fromARGB(0, 0, 0, 0);
+
 Color get colorGrey => const Color.fromARGB(255, 126, 126, 126);
+
+Color get colorGreyLite => const Color.fromARGB(255, 201, 201, 201);
+
+Color get colorGreyDark => const Color.fromARGB(255, 89, 89, 89);
