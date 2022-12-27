@@ -96,7 +96,7 @@ class ContactScreen extends StatelessWidget {
                 children: [
                   TileLayer(
                     urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'de.kara_trading.website',
+                    userAgentPackageName: 'de.karatrading.kexcel',
                   ),
                   MarkerLayer(
                     markers: [
