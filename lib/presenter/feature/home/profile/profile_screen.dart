@@ -3,6 +3,8 @@ import 'package:kexcel/domain/entity/user_entity.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
+import 'package:kexcel/presenter/feature/home/profile/about/about_screen.dart';
+import 'package:kexcel/presenter/feature/home/profile/contact/contact_screen.dart';
 import 'package:kexcel/presenter/feature/home/profile/profile_bloc.dart';
 import 'package:kexcel/presenter/feature/login/login_screen.dart';
 import 'package:kexcel/presenter/utils/app_colors.dart';
@@ -69,15 +71,15 @@ class ProfileScreen extends BaseScreen<ProfileBloc> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    menuItem('Edit Profile', () {}, isFirstItem: true),
-                    menuItem('About ${getBloc.appName}', () {}),
-                    menuItem('Contact', () {}),
+                    menuItem('editProfile'.translate, () {}, isFirstItem: true),
+                    menuItem('${'about'.translate} ${getBloc.appName}', () => _routeAbout(context)),
+                    menuItem('contact'.translate, () => _routeContact(context)),
                   ],
                 ),
               ),
               Column(
                 children: [
-                  AppButtonWidget('Logout', () {
+                  AppButtonWidget('logout'.translate, () {
                     callEvent(ProfileEventLogout());
                     Future.delayed(
                       const Duration(milliseconds: 50),
@@ -87,7 +89,7 @@ class ProfileScreen extends BaseScreen<ProfileBloc> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: Text(
-                      'Version: ${getBloc.version}',
+                      '${'version'.translate}: ${getBloc.version}',
                       style: TextStyle(color: textCaptionColor, fontSize: 10),
                     ),
                   )
@@ -102,6 +104,24 @@ class ProfileScreen extends BaseScreen<ProfileBloc> {
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => const LoginScreen()),
       (route) => false,
+    );
+  }
+
+  _routeEditProfile(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
+  }
+
+  _routeContact(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const ContactScreen()),
+    );
+  }
+
+  _routeAbout(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const AboutScreen()),
     );
   }
 }
@@ -119,6 +139,6 @@ Widget menuItem(
         indent: 80,
         endIndent: 80,
       ),
-    AppButtonWidget(title, () => onPressed, width: double.infinity)
+    AppButtonWidget(title, onPressed, width: double.infinity)
   ]);
 }
