@@ -8,6 +8,7 @@ import 'package:kexcel/domain/entity/user_entity.dart';
 import 'package:kexcel/domain/usecase/user/get_companies_usecase.dart';
 import 'package:kexcel/domain/usecase/user/get_user_usecase.dart';
 import 'package:kexcel/domain/usecase/user/set_user_usecase.dart';
+import 'package:kexcel/domain/usecase/user/update_user_usecase.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
 
@@ -17,17 +18,26 @@ import 'login_bloc_event.dart';
 class LoginBloc extends BaseBloc {
   late List<CompanyEntity> companies = [];
   late UserEntity? user;
+  late bool isEditProfile;
 
   LoginBloc() {
     on<LoginEventInit>(_getAll);
     on<LoginEventAddingDone>(_addNew);
   }
 
-  _getAll(event, emit) async {
+  _getAll(LoginEventInit event, emit) async {
     try {
+      if (event.user == null) {
+        isEditProfile = false;
+        user = await dependencyResolver<GetUserUseCase>().call(null);
+      } else {
+        isEditProfile = true;
+        user = event.user;
+      }
       emit(LoadingState());
-      user = await dependencyResolver<GetUserUseCase>().call(null);
-      companies = await dependencyResolver<GetCompaniesUseCase>().call(null);
+      if (companies.isEmpty) {
+        companies = await dependencyResolver<GetCompaniesUseCase>().call(null);
+      }
       emit(ResponseState<List<CompanyEntity>>(data: companies));
     } on BaseNetworkException catch (e) {
       emit(ErrorState(error: e));
@@ -43,7 +53,12 @@ class LoginBloc extends BaseBloc {
         return;
       }
       emit(LoadingState());
-      await dependencyResolver<SetUserUseCase>().call(event.entity);
+      if (isEditProfile) {
+        await dependencyResolver<UpdateUserUseCase>().call(event.entity);
+      } else {
+        await dependencyResolver<SetUserUseCase>().call(event.entity);
+      }
+      emit(ResponseState(data: companies));
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
     } on BaseException catch (e) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kexcel/core/di/dependency_injector.dart';
@@ -23,6 +25,7 @@ class ProfileBloc extends BaseBloc<ProfileBlocEvent> {
 
   ProfileBloc() {
     on<ProfileEventInit>(_init);
+    on<ProfileEventEdited>(_edit);
     on<ProfileEventLogout>(_logout);
   }
 
@@ -39,6 +42,12 @@ class ProfileBloc extends BaseBloc<ProfileBlocEvent> {
     } on BaseException catch (e) {
       emit(ErrorState(error: e));
     }
+  }
+
+  _edit(ProfileEventEdited event, Emitter<BaseBlocState> emit) async {
+    user = event.user;
+    company = await dependencyResolver<GetUserCompanyUseCase>().call(null);
+    emit(ResponseState(data: user));
   }
 
   _logout(ProfileEventLogout event, Emitter<BaseBlocState> emit) async {

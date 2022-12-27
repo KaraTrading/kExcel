@@ -71,8 +71,11 @@ class ProfileScreen extends BaseScreen<ProfileBloc> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    menuItem('editProfile'.translate, () {}, isFirstItem: true),
-                    menuItem('${'about'.translate} ${getBloc.appName}', () => _routeAbout(context)),
+                    menuItem('editProfile'.translate,
+                        () => _routeEditProfile(context),
+                        isFirstItem: true),
+                    menuItem('${'about'.translate} ${getBloc.appName}',
+                        () => _routeAbout(context)),
                     menuItem('contact'.translate, () => _routeContact(context)),
                   ],
                 ),
@@ -101,16 +104,27 @@ class ProfileScreen extends BaseScreen<ProfileBloc> {
   }
 
   _routeLogin(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-      (route) => false,
+    Future.delayed(
+      const Duration(milliseconds: 100),
+      () => Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (route) => false,
+      ),
     );
   }
 
   _routeEditProfile(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-    );
+    Navigator.of(context)
+        .push(MaterialPageRoute(
+            builder: (context) => LoginScreen(user: getBloc.user)))
+        .then((value) {
+      if (value is UserEntity) {
+        Future.delayed(
+          const Duration(milliseconds: 800),
+          () => callEvent(ProfileEventEdited(value)),
+        );
+      }
+    });
   }
 
   _routeContact(BuildContext context) {

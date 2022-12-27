@@ -40,6 +40,11 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
+  Future<bool?> updateUser(UserEntity entity) async {
+    return await userLocalDataSource.updateUser(entity);
+  }
+
+  @override
   Future<bool?> saveUserCompany(CompanyEntity entity) async {
     return await companyLocalDataSource.saveCompany(entity);
   }

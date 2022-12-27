@@ -10,31 +10,40 @@ import 'login_bloc.dart';
 import 'login_bloc_event.dart';
 
 class LoginScreen extends BaseScreen<LoginBloc> {
-  const LoginScreen({super.key});
+  final UserEntity? user;
+
+  const LoginScreen({this.user, super.key});
 
   @override
-  AppBar? get appBar => null;
+  AppBar? get appBar =>
+      user != null ? AppBar(title: Text('editProfile'.translate)) : null;
 
   @override
   FloatingActionButton? floatingActionButton(BuildContext context) => null;
 
   @override
   Widget screenBody(BuildContext context) {
-    callEvent(LoginEventInit());
+    callEvent(LoginEventInit(user));
     return DataLoadBlocBuilder<LoginBloc, List<CompanyEntity>?>(
         noDataView: const NoItemWidget(),
         bloc: getBloc,
         builder: (BuildContext context, List<CompanyEntity>? entities) {
-          if (getBloc.user != null) {
-            Future.delayed(
-              const Duration(milliseconds: 50),
-              () => _routeHome(context),
-            );
-          }
-          final TextEditingController nameController = TextEditingController();
-          final TextEditingController titleController = TextEditingController();
-          final TextEditingController emailController = TextEditingController();
+          Future.delayed(const Duration(milliseconds: 50), () {
+            if (getBloc.isEditProfile == false && getBloc.user != null) {
+              _routeHome(context);
+            }
+          });
+          final TextEditingController nameController =
+              TextEditingController(text: getBloc.user?.name);
+          final TextEditingController titleController =
+              TextEditingController(text: getBloc.user?.title);
+          final TextEditingController emailController =
+              TextEditingController(text: getBloc.user?.email);
           CompanyEntity? company;
+          if (getBloc.user != null) {
+            company = getBloc.companies
+                .firstWhere((element) => element.id == getBloc.user!.companyId);
+          }
 
           return SingleChildScrollView(
             child: Padding(
@@ -73,6 +82,7 @@ class LoginScreen extends BaseScreen<LoginBloc> {
                       labelText: 'company'.translate,
                     ),
                     child: Autocomplete(
+                      initialValue: TextEditingValue(text: company?.name ?? ''),
                       onSelected: (CompanyEntity entity) => company = entity,
                       displayStringForOption: (CompanyEntity entity) =>
                           entity.name,
@@ -92,16 +102,15 @@ class LoginScreen extends BaseScreen<LoginBloc> {
                   ElevatedButton(
                     onPressed: () {
                       if (company != null) {
+                        getBloc.user = UserEntity(
+                          id: 0,
+                          name: nameController.text,
+                          email: emailController.text,
+                          title: titleController.text,
+                          companyId: company!.id,
+                        );
                         callEvent(
-                          LoginEventAddingDone(
-                            UserEntity(
-                              id: 0,
-                              name: nameController.text,
-                              email: emailController.text,
-                              title: titleController.text,
-                              companyId: company!.id,
-                            ),
-                          ),
+                          LoginEventAddingDone(getBloc.user!),
                         );
                         _routeHome(context);
                       }
@@ -121,10 +130,14 @@ class LoginScreen extends BaseScreen<LoginBloc> {
   }
 
   _routeHome(BuildContext context) async {
-    return await Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
-      (route) => false,
-    );
+    if (getBloc.isEditProfile) {
+      Navigator.of(context).pop(getBloc.user);
+    } else {
+      return await Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        (route) => false,
+      );
+    }
   }
 }
