@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class AppTextWidget extends StatelessWidget {
   final String text;
+  final TextStyle? style;
   final Icon? icon;
 
   const AppTextWidget(
     this.text, {
     this.icon,
+    this.style,
     super.key,
   });
 
@@ -21,10 +23,10 @@ class AppTextWidget extends StatelessWidget {
                   alignment: PlaceholderAlignment.middle,
                 ),
                 const WidgetSpan(child: SizedBox(width: 5)),
-                TextSpan(text: text)
+                TextSpan(text: text, style: style)
               ],
             ),
           )
-        : Text(text);
+        : Text(text, style: style);
   }
 }

@@ -32,7 +32,7 @@ dependencies:
   package_info_plus:
   url_launcher: ^6.1.6
   latlong2: ^0.8.1
-  flutter_map: ^3.0.0
+  flutter_map: ^3.1.0
 
 dev_dependencies:
   flutter_test:
