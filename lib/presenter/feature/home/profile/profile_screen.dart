@@ -5,6 +5,8 @@ import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
 import 'package:kexcel/presenter/feature/home/profile/profile_bloc.dart';
 import 'package:kexcel/presenter/feature/login/login_screen.dart';
+import 'package:kexcel/presenter/utils/app_colors.dart';
+import 'package:kexcel/presenter/widget/app_button_widget.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 import 'profile_bloc_event.dart';
 
@@ -28,33 +30,66 @@ class ProfileScreen extends BaseScreen<ProfileBloc> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
             children: [
+              Container(
+                color: colorGreyLite,
+                height: 33,
+              ),
               Expanded(
                 child: Column(
                   children: [
-                    menuItem('Edit Personal Information', () {},
-                        isFirstItem: true),
-                    menuItem('title2', () {}),
-                    menuItem('title3', () {}),
+                    Container(
+                      color: colorGreyLite,
+                      child: Stack(
+                        alignment: AlignmentDirectional.bottomCenter,
+                        children: [
+                          Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(20.0),
+                                topRight: Radius.circular(20.0),
+                              ),
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              CircleAvatar(
+                                radius: 33,
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                foregroundImage: AssetImage(
+                                  getBloc.company!.logoAssetsAddress,
+                                ),
+                              ),
+                              Text(getBloc.user?.name ?? ''),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    menuItem('Edit Profile', () {}, isFirstItem: true),
+                    menuItem('About ${getBloc.appName}', () {}),
+                    menuItem('Contact', () {}),
                   ],
                 ),
               ),
               Column(
                 children: [
-                  TextButton(
-                      onPressed: () {
-                        callEvent(ProfileEventLogout());
-                        Future.delayed(
-                          const Duration(milliseconds: 50),
-                          () => _routeLogin(context),
-                        );
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text('Logout'),
-                      )),
+                  AppButtonWidget('Logout', () {
+                    callEvent(ProfileEventLogout());
+                    Future.delayed(
+                      const Duration(milliseconds: 50),
+                      () => _routeLogin(context),
+                    );
+                  }, iconData: Icons.output_rounded, color: Colors.red),
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text('Version: ${getBloc.version}'),
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Text(
+                      'Version: ${getBloc.version}',
+                      style: TextStyle(color: textCaptionColor, fontSize: 10),
+                    ),
                   )
                 ],
               )
@@ -71,25 +106,19 @@ class ProfileScreen extends BaseScreen<ProfileBloc> {
   }
 }
 
-Widget menuItem(String title, Function() onPressed,
-    {IconData? iconData, bool? isFirstItem}) {
-  return Column(
-    children: [
-      if (isFirstItem != true)
-        const Divider(
-          height: 0.5,
-          indent: 80,
-          endIndent: 80,
-        ),
-      TextButton(
-          onPressed: () => onPressed.call(),
-          child: SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(child: Text(title)),
-            ),
-          )),
-    ],
-  );
+Widget menuItem(
+  String title,
+  Function() onPressed, {
+  IconData? iconData,
+  bool? isFirstItem,
+}) {
+  return Column(children: [
+    if (isFirstItem != true)
+      const Divider(
+        height: 0.5,
+        indent: 80,
+        endIndent: 80,
+      ),
+    AppButtonWidget(title, () => onPressed, width: double.infinity)
+  ]);
 }
