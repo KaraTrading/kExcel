@@ -5,7 +5,6 @@ import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/feature/home/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
-import 'package:kexcel/presenter/utils/text_styles.dart';
 import 'package:kexcel/presenter/widget/app_modal_bottom_sheet.dart';
 import 'client_bloc.dart';
 import 'client_bloc_event.dart';
@@ -250,7 +249,7 @@ class ClientScreen extends BaseInformationScreen<ClientBloc, ClientEntity> {
   }
 
   @override
-  Widget itemDetails(ClientEntity entity) {
+  Widget itemDetails(BuildContext context, ClientEntity entity) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -260,20 +259,20 @@ class ClientScreen extends BaseInformationScreen<ClientBloc, ClientEntity> {
           '${entity.code} ${entity.name}',
           softWrap: true,
           maxLines: 2,
-          style: primaryTextStyle.large,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
             '${'nationalId'.translate}: ${entity.nationalId ?? ''}',
-            style: captionTextStyle.medium,
+            style: Theme.of(context).textTheme.caption,
           ),
         ),
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
             '${'symbol'.translate}: ${entity.symbol ?? ''}',
-            style: captionTextStyle.medium,
+            style: Theme.of(context).textTheme.caption,
           ),
         ),
         const SizedBox(height: 10),
@@ -281,25 +280,25 @@ class ClientScreen extends BaseInformationScreen<ClientBloc, ClientEntity> {
           '${'address'.translate}: ${entity.address ?? ''}',
           softWrap: true,
           maxLines: 2,
-          style: primaryTextStyle.medium,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
             '${'bafaId'.translate}: ${entity.bafaId ?? ''}',
-            style: captionTextStyle.medium,
+            style: Theme.of(context).textTheme.caption,
           ),
         ),
         FittedBox(
           child: Text(
             '${'bafaEmail'.translate}: ${entity.bafaEmail ?? ''}',
-            style: captionTextStyle.medium,
+            style: Theme.of(context).textTheme.caption,
           ),
         ),
         FittedBox(
           child: Text(
             '${'bafaSite'.translate}: ${entity.bafaSite ?? ''}',
-            style: captionTextStyle.medium,
+            style: Theme.of(context).textTheme.caption,
           ),
         ),
         const SizedBox(height: 10),

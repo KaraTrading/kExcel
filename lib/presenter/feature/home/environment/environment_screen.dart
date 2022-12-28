@@ -36,7 +36,7 @@ class EnvironmentScreen extends BaseInformationScreen<EnvironmentBloc, Environme
   BaseBlocEvent deleteEvent(EnvironmentEntity entity) => EnvironmentEventDelete(entity);
 
   @override
-  Widget itemDetails(EnvironmentEntity entity) {
+  Widget itemDetails(BuildContext context, EnvironmentEntity entity) {
     return Column(
       children: [
         Row(

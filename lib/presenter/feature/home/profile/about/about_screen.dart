@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kexcel/presenter/common/localization.dart';
-import 'package:kexcel/presenter/utils/text_styles.dart';
 import 'package:kexcel/presenter/widget/app_text_widget.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -20,7 +19,8 @@ class AboutScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppTextWidget('aboutUsSub1'.translate, style: titleTextStyle),
+                AppTextWidget('aboutUsSub1'.translate,
+                    style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(height: 6),
                 AppTextWidget(
                   'aboutUsSub1Desc1'.translate,
@@ -43,7 +43,8 @@ class AboutScreen extends StatelessWidget {
                   icon: const Icon(Icons.circle, size: 8),
                 ),
                 const SizedBox(height: 16),
-                AppTextWidget('aboutUsSub2'.translate, style: titleTextStyle),
+                AppTextWidget('aboutUsSub2'.translate,
+                    style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
             Text('Copyright © ${DateTime.now().year}'),

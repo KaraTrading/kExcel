@@ -5,7 +5,6 @@ import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/feature/home/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
-import 'package:kexcel/presenter/utils/text_styles.dart';
 import 'package:kexcel/presenter/widget/app_modal_bottom_sheet.dart';
 
 import 'item_bloc.dart';
@@ -24,7 +23,7 @@ class ItemScreen extends BaseInformationScreen<ItemBloc, ItemEntity> {
   BaseBlocEvent deleteEvent(ItemEntity entity) => ItemEventDelete(entity);
 
   @override
-  Widget itemDetails(ItemEntity entity) {
+  Widget itemDetails(BuildContext context, ItemEntity entity) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -34,20 +33,20 @@ class ItemScreen extends BaseInformationScreen<ItemBloc, ItemEntity> {
           '${entity.id} ${entity.name}',
           softWrap: true,
           maxLines: 2,
-          style: primaryTextStyle.large,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
             '${'type'.translate}: ${entity.type ?? ''}',
-            style: primaryTextStyle.medium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
             '${'manufacturer'.translate}: ${entity.manufacturer?.name ?? ''}',
-            style: captionTextStyle.medium,
+            style: Theme.of(context).textTheme.caption,
           ),
         ),
         const SizedBox(height: 10),
@@ -55,13 +54,13 @@ class ItemScreen extends BaseInformationScreen<ItemBloc, ItemEntity> {
           '${'description'.translate}: ${entity.description ?? ''}',
           softWrap: true,
           maxLines: 2,
-          style: captionTextStyle.medium,
+          style: Theme.of(context).textTheme.caption,
         ),
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
             '${'hsCode'.translate}: ${entity.hsCode ?? ''}',
-            style: captionTextStyle.medium,
+            style: Theme.of(context).textTheme.caption,
           ),
         ),
       ],

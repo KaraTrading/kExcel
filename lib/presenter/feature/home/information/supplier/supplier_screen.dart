@@ -5,7 +5,6 @@ import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/feature/home/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
-import 'package:kexcel/presenter/utils/text_styles.dart';
 import 'package:kexcel/presenter/widget/app_modal_bottom_sheet.dart';
 import 'supplier_bloc.dart';
 import 'supplier_bloc_event.dart';
@@ -25,7 +24,7 @@ class SupplierScreen
   BaseBlocEvent get initEvent => SupplierEventInit();
 
   @override
-  Widget itemDetails(SupplierEntity entity) {
+  Widget itemDetails(BuildContext context, SupplierEntity entity) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,27 +34,27 @@ class SupplierScreen
           '${entity.code} ${entity.name}',
           softWrap: true,
           maxLines: 2,
-          style: primaryTextStyle.large,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 10),
         Text(
           '${'address'.translate}: ${entity.address}',
           softWrap: true,
           maxLines: 2,
-          style: primaryTextStyle.medium,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
             '${'symbol'.translate}: ${entity.symbol}',
-            style: captionTextStyle.medium,
+            style: Theme.of(context).textTheme.caption,
           ),
         ),
         const SizedBox(height: 10),
         FittedBox(
           child: Text(
             '${'vatId'.translate}: ${entity.vatId ?? ''}',
-            style: captionTextStyle.medium,
+            style: Theme.of(context).textTheme.caption,
           ),
         ),
       ],

@@ -5,7 +5,6 @@ import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
-import 'package:kexcel/presenter/utils/app_colors.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 
 abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
@@ -18,7 +17,7 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
 
   BaseBlocEvent deleteEvent(D entity);
 
-  Widget itemDetails(D entity);
+  Widget itemDetails(BuildContext context, D entity);
 
   void import();
 
@@ -29,7 +28,6 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
   @override
   AppBar? get appBar => AppBar(
         title: Text(title),
-        centerTitle: true,
         actions: [
           IconButton(
             tooltip: 'importFromExcel'.translate,
@@ -72,7 +70,7 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
                       flex: 9,
                       child: Padding(
                         padding: const EdgeInsets.all(8),
-                        child: itemDetails(entities![index]),
+                        child: itemDetails(context, entities![index]),
                       ),
                     ),
                     Expanded(

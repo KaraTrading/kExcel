@@ -7,7 +7,6 @@ import 'package:kexcel/presenter/feature/home/profile/about/about_screen.dart';
 import 'package:kexcel/presenter/feature/home/profile/contact/contact_screen.dart';
 import 'package:kexcel/presenter/feature/home/profile/profile_bloc.dart';
 import 'package:kexcel/presenter/feature/login/login_screen.dart';
-import 'package:kexcel/presenter/utils/app_colors.dart';
 import 'package:kexcel/presenter/widget/app_button_widget.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 import 'profile_bloc_event.dart';
