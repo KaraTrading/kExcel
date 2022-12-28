@@ -20,3 +20,8 @@ Import clients data, suppliers data, ....from excel sheets, add them into new pr
 - [printing](https://pub.dev/packages/printing)
 - [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage)
 - [path_provider](https://pub.dev/packages/path_provider)
+- [multi_select_flutter](https://pub.dev/packages/multi_select_flutter) I used another fork of this repository
+- [package_info_plus](https://pub.dev/packages/package_info_plus)
+- [url_launcher](https://pub.dev/packages/url_launcher)
+- [latlong2](https://pub.dev/packages/latlong2)
+- [flutter_map](https://pub.dev/packages/flutter_map)
