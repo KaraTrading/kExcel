@@ -64,13 +64,13 @@ class HomeScreen extends StatelessWidget {
   Widget featureItem({
     required Function() onPressed,
     required String title,
-    Color color = Colors.white,
+    // Color color = Colors.white,
     IconData? icon,
   }) {
     return GestureDetector(
       onTap: () => onPressed.call(),
       child: Card(
-        color: color,
+        // color: color,
         margin: const EdgeInsets.all(8.0),
         child: Padding(
           padding: const EdgeInsets.all(8.0),

@@ -44,7 +44,7 @@ class ContactScreen extends StatelessWidget {
                     icon: Icon(
                       Icons.phone,
                       size: 18,
-                      color: primaryColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -59,7 +59,7 @@ class ContactScreen extends StatelessWidget {
                     icon: Icon(
                       Icons.fax,
                       size: 18,
-                      color: primaryColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -76,7 +76,7 @@ class ContactScreen extends StatelessWidget {
                 icon: Icon(
                   Icons.mail,
                   size: 18,
-                  color: primaryColor,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
             ),
@@ -106,7 +106,7 @@ class ContactScreen extends StatelessWidget {
                         height: 80,
                         builder: (context) => Icon(
                           Icons.location_on,
-                          color: primaryColor,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     ],

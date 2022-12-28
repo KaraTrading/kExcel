@@ -28,77 +28,80 @@ class ProfileScreen extends BaseScreen<ProfileBloc> {
         noDataView: const NoItemWidget(),
         bloc: getBloc,
         builder: (BuildContext context, UserEntity? user) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                color: colorGreyLite,
-                height: 33,
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    Container(
-                      color: colorGreyLite,
-                      child: Stack(
-                        alignment: AlignmentDirectional.bottomCenter,
-                        children: [
-                          Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(20.0),
-                                topRight: Radius.circular(20.0),
-                              ),
-                            ),
-                          ),
-                          Column(
-                            children: [
-                              CircleAvatar(
-                                radius: 33,
-                                backgroundColor:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                foregroundImage: AssetImage(
-                                  getBloc.company!.logoAssetsAddress,
+          return Container(
+            color: Theme.of(context).colorScheme.surface,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  color: Theme.of(context).colorScheme.background,
+                  height: 33,
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Container(
+                        color: Theme.of(context).colorScheme.background,
+                        child: Stack(
+                          alignment: AlignmentDirectional.bottomCenter,
+                          children: [
+                            Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.surface,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(20.0),
+                                  topRight: Radius.circular(20.0),
                                 ),
                               ),
-                              Text(getBloc.user?.name ?? ''),
-                            ],
-                          ),
-                        ],
+                            ),
+                            Column(
+                              children: [
+                                CircleAvatar(
+                                  radius: 33,
+                                  backgroundColor:
+                                  Theme.of(context).colorScheme.surface,
+                                  foregroundImage: AssetImage(
+                                    getBloc.company!.logoAssetsAddress,
+                                  ),
+                                ),
+                                Text(getBloc.user?.name ?? ''),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    menuItem('editProfile'.translate,
-                        () => _routeEditProfile(context),
-                        isFirstItem: true),
-                    menuItem('${'about'.translate} ${getBloc.appName}',
-                        () => _routeAbout(context)),
-                    menuItem('contact'.translate, () => _routeContact(context)),
-                  ],
+                      const SizedBox(height: 20),
+                      menuItem('editProfile'.translate,
+                          () => _routeEditProfile(context),
+                          isFirstItem: true),
+                      menuItem('${'about'.translate} ${getBloc.appName}',
+                          () => _routeAbout(context)),
+                      menuItem('contact'.translate, () => _routeContact(context)),
+                    ],
+                  ),
                 ),
-              ),
-              Column(
-                children: [
-                  AppButtonWidget('logout'.translate, () {
-                    callEvent(ProfileEventLogout());
-                    Future.delayed(
-                      const Duration(milliseconds: 50),
-                      () => _routeLogin(context),
-                    );
-                  }, iconData: Icons.output_rounded, color: Colors.red),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Text(
-                      '${'version'.translate}: ${getBloc.version}',
-                      style: TextStyle(color: textCaptionColor, fontSize: 10),
-                    ),
-                  )
-                ],
-              )
-            ],
+                Column(
+                  children: [
+                    AppButtonWidget('logout'.translate, () {
+                      callEvent(ProfileEventLogout());
+                      Future.delayed(
+                        const Duration(milliseconds: 50),
+                        () => _routeLogin(context),
+                      );
+                    }, iconData: Icons.output_rounded, color: Colors.red),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Text(
+                        '${'version'.translate}: ${getBloc.version}',
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
           );
         });
   }

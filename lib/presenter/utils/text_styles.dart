@@ -1,29 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:kexcel/presenter/utils/app_colors.dart';
 
-TextStyle get headerTextStyle => TextStyle(
-  fontSize: 18,
-  color: textPrimaryColor,
-);
+const TextStyle headerTextStyle = TextStyle(fontSize: 18);
 
-TextStyle get titleTextStyle => TextStyle(
-  fontSize: 16,
-  color: textPrimaryColor,
-);
+const TextStyle titleTextStyle = TextStyle(fontSize: 16);
 
-TextStyle get primaryTextStyle => TextStyle(
-  fontSize: 14,
-  color: textPrimaryColor,
-);
+const TextStyle primaryTextStyle = TextStyle(fontSize: 14);
 
-TextStyle get captionTextStyle => TextStyle(
-  fontSize: 12,
-  color: textCaptionColor,
-);
+const TextStyle captionTextStyle = TextStyle(fontSize: 12);
 
-extension TestStyleColor on TextStyle {
-  TextStyle get onPrimary => copyWith(color: onPrimaryColor);
-}
 extension TestStyleSize on TextStyle {
   TextStyle get large => copyWith(fontWeight: FontWeight.w700);
   TextStyle get medium => copyWith(fontWeight: FontWeight.w400);

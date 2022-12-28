@@ -34,7 +34,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'kExcel',
       debugShowCheckedModeBanner: false,
-      theme: appTheme,
+      theme: appThemeLight,
+      darkTheme: appThemeDark,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,

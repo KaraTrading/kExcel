@@ -5,6 +5,7 @@ import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
+import 'package:kexcel/presenter/utils/app_colors.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 
 abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
@@ -28,13 +29,13 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
   @override
   AppBar? get appBar => AppBar(
         title: Text(title),
+        centerTitle: true,
         actions: [
           IconButton(
             tooltip: 'importFromExcel'.translate,
             onPressed: () => import(),
             icon: const Icon(
               Icons.input_rounded,
-              color: Colors.white,
               size: 20,
             ),
           ),
@@ -43,7 +44,6 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
             onPressed: () => export(),
             icon: const Icon(
               Icons.output_rounded,
-              color: Colors.white,
               size: 20,
             ),
           ),
@@ -76,51 +76,53 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
                       ),
                     ),
                     Expanded(
-                      flex: 1,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Flexible(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () => editItemDetails(context,
-                                  entity: entities[index]),
-                              child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(5)),
-                                  ),
-                                  // height: 112,
-                                  child: const Center(
-                                      child: Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                      ))),
+                        flex: 1,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Flexible(
+                              flex: 1,
+                              child: GestureDetector(
+                                onTap: () => editItemDetails(context,
+                                    entity: entities[index]),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(5)),
+                                    ),
+                                    // height: 112,
+                                    child: const Center(
+                                        child: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ))),
+                              ),
                             ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () => _showDeleteConfirmation(
-                                  context, entities[index]),
-                              child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.only(
-                                        bottomRight: Radius.circular(5)),
-                                  ),
-                                  // height: 112,
-                                  child: const Center(
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Colors.white,
-                                      ))),
+                            Flexible(
+                              flex: 1,
+                              child: GestureDetector(
+                                onTap: () => _showDeleteConfirmation(
+                                    context, entities[index]),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      borderRadius: const BorderRadius.only(
+                                          bottomRight: Radius.circular(5)),
+                                    ),
+                                    // height: 112,
+                                    child: const Center(
+                                        child: Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ))),
+                              ),
                             ),
-                          ),
-                        ],
-                      )
-                    ),
+                          ],
+                        )),
                   ],
                 ),
               ),
@@ -149,22 +151,29 @@ abstract class BaseInformationScreen<B extends BaseBloc, D extends BaseEntity>
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(Colors.grey),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                          Theme.of(context).colorScheme.primary),
                     ),
                     onPressed: () => Navigator.pop(context),
-                    child: Text('cancel'.translate),
+                    child: Text(
+                      'cancel'.translate,
+                      style: Theme.of(context).primaryTextTheme.titleSmall,
+                    ),
                   ),
                   ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor:
-                      MaterialStatePropertyAll(Colors.redAccent),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                          Theme.of(context).colorScheme.secondary),
                     ),
                     onPressed: () {
                       callEvent(deleteEvent(entity));
                       Navigator.pop(context);
                     },
-                    child: Text('delete'.translate),
+                    child: Text(
+                      'delete'.translate,
+                      style: Theme.of(context).primaryTextTheme.titleSmall,
+                    ),
                   )
                 ],
               )
