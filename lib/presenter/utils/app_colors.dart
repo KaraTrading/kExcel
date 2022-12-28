@@ -18,8 +18,8 @@ const Color primaryColorDark = Color.fromARGB(255, 73, 151, 84);
 const Color onPrimaryColorLight = Color.fromARGB(255, 255, 255, 255);
 const Color onPrimaryColorDark = Color.fromARGB(255, 255, 255, 255);
 
-const Color primaryContainerColorLight = Color.fromARGB(255, 255, 255, 255);
-const Color primaryContainerColorDark = Color.fromARGB(255, 197, 197, 197);
+const Color primaryContainerColorLight = primaryColorLight;
+const Color primaryContainerColorDark = primaryColorDark;
 
 const Color secondaryColorLight = Color.fromARGB(255, 161, 13, 13);
 const Color secondaryColorDark = Color.fromARGB(255, 192, 84, 79);

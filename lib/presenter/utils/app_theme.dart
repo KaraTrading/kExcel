@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import 'app_colors.dart';
 import 'text_styles.dart';
 
@@ -44,12 +42,14 @@ ThemeData appThemeLight = ThemeData(
   useMaterial3: true,
   colorScheme: _colorSchemeLight,
   textTheme: _textThemeLight,
+  appBarTheme: const AppBarTheme(centerTitle: true),
 );
 
 ThemeData appThemeDark = ThemeData(
   useMaterial3: true,
   colorScheme: _colorSchemeDark,
   textTheme: _textThemeDark,
+  appBarTheme: const AppBarTheme(centerTitle: true),
 );
 
 const _colorSchemeLight = ColorScheme(

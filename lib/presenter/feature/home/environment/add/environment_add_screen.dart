@@ -25,173 +25,159 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
 
   @override
   Widget screenBody(BuildContext context) {
-    callEvent(EnvironmentAddEventInit());
-
-    if (getBloc.environment == null) {
-      if (entity != null) {
-        getBloc.environment = entity!;
-      } else {
-        getBloc.environment = EnvironmentEntity(projectId: 0, id: 0, name: '');
-      }
-    }
-
-    final TextEditingController nameController =
-        TextEditingController(text: getBloc.environment?.name);
-
-    bool isAdvanceOptionsShowing = false;
-
-    final TextEditingController introController = TextEditingController(
-      text: 'environmentIntro'.translate,
-    );
-
-    final TextEditingController outroController = TextEditingController(
-      text: 'environmentOutro'.translate,
-    );
-
-    final necessaryItems = [
-      NecessaryItem(title: 'ourReference'.translate, isAvailable: true),
-      NecessaryItem(title: 'scopeOfSupply'.translate, isAvailable: true),
-      NecessaryItem(title: 'prices'.translate, isAvailable: true),
-      NecessaryItem(title: 'timeOfDelivery'.translate, isAvailable: true),
-      NecessaryItem(title: 'termsOfDelivery'.translate, isAvailable: true),
-      NecessaryItem(title: 'packing'.translate, isAvailable: true),
-      NecessaryItem(title: 'weights'.translate, isAvailable: true),
-      NecessaryItem(title: 'termsOfPayment'.translate, isAvailable: true),
-      NecessaryItem(title: 'countryOfOrigin'.translate, isAvailable: true),
-      NecessaryItem(title: 'customsTariff'.translate, isAvailable: true),
-      NecessaryItem(title: 'validityOfOffer'.translate, isAvailable: true),
-    ];
-
-    final TextEditingController termsOfDeliveryExtraDataController =
-        TextEditingController(text: necessaryItems[4].extraData);
-    final TextEditingController packingExtraDataController =
-        TextEditingController(text: necessaryItems[5].extraData);
-    final TextEditingController termsOfPaymentExtraDataController =
-        TextEditingController(text: necessaryItems[7].extraData);
-
-    void updateProject() {
-      callEvent(EnvironmentAddEventUpdatedProject());
-      Future.delayed(const Duration(milliseconds: 50), () {
-        nameController.text = getBloc.environment!.name;
-      });
-    }
-
+    callEvent(EnvironmentAddEventInit(entity));
     return DataLoadBlocBuilder<EnvironmentAddBloc, List<ItemEntity>?>(
       noDataView: const NoItemWidget(),
       bloc: getBloc,
-      builder: (BuildContext context, List<ItemEntity>? entities) => Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-              child: SingleChildScrollView(
-                  child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 25),
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: 'name'.translate,
+      builder: (BuildContext context, List<ItemEntity>? entities) {
+
+        bool isAdvanceOptionsShowing = false;
+
+        final TextEditingController introController = TextEditingController(
+          text: 'environmentIntro'.translate,
+        );
+
+        final TextEditingController outroController = TextEditingController(
+          text: 'environmentOutro'.translate,
+        );
+
+        final necessaryItems = [
+          NecessaryItem(title: 'ourReference'.translate, isAvailable: true),
+          NecessaryItem(title: 'scopeOfSupply'.translate, isAvailable: true),
+          NecessaryItem(title: 'prices'.translate, isAvailable: true),
+          NecessaryItem(title: 'timeOfDelivery'.translate, isAvailable: true),
+          NecessaryItem(title: 'termsOfDelivery'.translate, isAvailable: true),
+          NecessaryItem(title: 'packing'.translate, isAvailable: true),
+          NecessaryItem(title: 'weights'.translate, isAvailable: true),
+          NecessaryItem(title: 'termsOfPayment'.translate, isAvailable: true),
+          NecessaryItem(title: 'countryOfOrigin'.translate, isAvailable: true),
+          NecessaryItem(title: 'customsTariff'.translate, isAvailable: true),
+          NecessaryItem(title: 'validityOfOffer'.translate, isAvailable: true),
+        ];
+
+        final TextEditingController termsOfDeliveryExtraDataController =
+            TextEditingController(text: necessaryItems[4].extraData);
+        final TextEditingController packingExtraDataController =
+            TextEditingController(text: necessaryItems[5].extraData);
+        final TextEditingController termsOfPaymentExtraDataController =
+            TextEditingController(text: necessaryItems[7].extraData);
+
+        final TextEditingController projectIdController = TextEditingController(
+            text: getBloc.environment.projectId.toString().padLeft(5, '0'),
+        );
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+                child: SingleChildScrollView(
+                    child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 25),
+                  TextField(
+                    controller: projectIdController,
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'projectId'.translate,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 25),
-                InputDecorator(
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 0,
-                        horizontal: 4,
+                  const SizedBox(height: 25),
+                  InputDecorator(
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 4,
+                        ),
+                        border: const OutlineInputBorder(gapPadding: 1),
+                        labelText: 'client'.translate,
                       ),
-                      border: const OutlineInputBorder(gapPadding: 1),
-                      labelText: 'client'.translate,
-                    ),
-                    child: Autocomplete(
-                      onSelected: (ClientEntity entity) {
-                        getBloc.environment!.client = entity;
-                        updateProject();
-                      },
-                      displayStringForOption: (ClientEntity entity) =>
-                          entity.name,
-                      initialValue: TextEditingValue(
-                        text: getBloc.environment!.client?.name ?? '',
-                      ),
-                      optionsBuilder: (TextEditingValue textEditingValue) {
-                        return getBloc.clients
-                            .where((ClientEntity entity) =>
-                                (entity.name.toLowerCase().contains(
-                                          textEditingValue.text.toLowerCase(),
-                                        ) ||
-                                    entity.code.toLowerCase().contains(
-                                          textEditingValue.text.toLowerCase(),
-                                        )))
-                            .toList();
-                      },
-                    )),
-                const SizedBox(height: 25),
-                InputDecorator(
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 0,
-                        horizontal: 4,
-                      ),
-                      border: const OutlineInputBorder(gapPadding: 1),
-                      labelText: 'supplier'.translate,
-                    ),
-                    child: Autocomplete(
-                      onSelected: (SupplierEntity entity) {
-                        getBloc.environment!.supplier = entity;
-                        updateProject();
-                      },
-                      displayStringForOption: (SupplierEntity entity) =>
-                          entity.name,
-                      initialValue: TextEditingValue(
-                        text: getBloc.environment!.supplier?.name ?? '',
-                      ),
-                      optionsBuilder: (TextEditingValue textEditingValue) {
-                        return getBloc.suppliers
-                            .where(
-                              (SupplierEntity entity) =>
+                      child: Autocomplete(
+                        onSelected: (ClientEntity entity) {
+                          getBloc.environment.client = entity;
+                        },
+                        displayStringForOption: (ClientEntity entity) =>
+                            entity.name,
+                        initialValue: TextEditingValue(
+                          text: getBloc.environment.client?.name ?? '',
+                        ),
+                        optionsBuilder: (TextEditingValue textEditingValue) {
+                          return getBloc.clients
+                              .where((ClientEntity entity) =>
                                   (entity.name.toLowerCase().contains(
-                                        textEditingValue.text.toLowerCase(),
-                                      )),
-                            )
-                            .toList();
-                      },
-                    )),
-                const SizedBox(height: 25),
-                itemsSelector(),
-                const SizedBox(height: 25),
-                advancedOptions(
-                  isAdvanceOptionsShowing,
-                  introController,
-                  necessaryItems,
-                  termsOfDeliveryExtraDataController,
-                  packingExtraDataController,
-                  termsOfPaymentExtraDataController,
-                  outroController,
-                ),
-              ],
+                                            textEditingValue.text.toLowerCase(),
+                                          ) ||
+                                      entity.code.toLowerCase().contains(
+                                            textEditingValue.text.toLowerCase(),
+                                          )))
+                              .toList();
+                        },
+                      )),
+                  const SizedBox(height: 25),
+                  InputDecorator(
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 4,
+                        ),
+                        border: const OutlineInputBorder(gapPadding: 1),
+                        labelText: 'supplier'.translate,
+                      ),
+                      child: Autocomplete(
+                        onSelected: (SupplierEntity entity) {
+                          getBloc.environment.supplier = entity;
+                        },
+                        displayStringForOption: (SupplierEntity entity) =>
+                            entity.name,
+                        initialValue: TextEditingValue(
+                          text: getBloc.environment.supplier?.name ?? '',
+                        ),
+                        optionsBuilder: (TextEditingValue textEditingValue) {
+                          return getBloc.suppliers
+                              .where(
+                                (SupplierEntity entity) =>
+                                    (entity.name.toLowerCase().contains(
+                                          textEditingValue.text.toLowerCase(),
+                                        )),
+                              )
+                              .toList();
+                        },
+                      )),
+                  const SizedBox(height: 25),
+                  itemsSelector(),
+                  const SizedBox(height: 25),
+                  advancedOptions(
+                    isAdvanceOptionsShowing,
+                    introController,
+                    necessaryItems,
+                    termsOfDeliveryExtraDataController,
+                    packingExtraDataController,
+                    termsOfPaymentExtraDataController,
+                    outroController,
+                  ),
+                ],
+              ),
+            ))),
+            bottomSaveButtons(
+              projectIdController,
+              necessaryItems,
+              termsOfDeliveryExtraDataController,
+              packingExtraDataController,
+              termsOfPaymentExtraDataController,
+              context,
+              introController,
+              outroController,
             ),
-          ))),
-          bottomSaveButtons(
-            nameController,
-            necessaryItems,
-            termsOfDeliveryExtraDataController,
-            packingExtraDataController,
-            termsOfPaymentExtraDataController,
-            context,
-            introController,
-            outroController,
-          ),
-        ],
-      ),
+          ],
+        );
+      },
     );
   }
 
   Padding bottomSaveButtons(
-    TextEditingController nameController,
+    TextEditingController projectIdController,
     List<NecessaryItem> necessaryItems,
     TextEditingController termsOfDeliveryExtraDataController,
     TextEditingController packingExtraDataController,
@@ -204,7 +190,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
       padding: const EdgeInsets.only(bottom: 25),
       child: ElevatedButton(
         onPressed: () {
-          getBloc.environment!.name = nameController.text;
+          getBloc.environment.projectId = int.tryParse(projectIdController.text) ?? -1;
 
           necessaryItems[4].extraData = termsOfDeliveryExtraDataController.text;
           necessaryItems[5].extraData = packingExtraDataController.text;
@@ -212,27 +198,18 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
 
           callEvent(EnvironmentAddEventAddingDone());
 
-          Navigator.of(context)
-              .push(
-            MaterialPageRoute(
+          Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => PDFScreen(
-                intro: introController.text,
-                outro: outroController.text,
-                project: getBloc.environment!,
-                user: getBloc.user,
-                company: getBloc.company,
-                necessaryInformation: necessaryItems
-                    .where((element) => element.isAvailable)
-                    .map((e) =>
-                        '${e.title}${(e.extraData?.isNotEmpty == true) ? ' (${e.extraData})' : ''}')
-                    .toList(),
-              ),
-            ),
-          )
-              .then((value) {
-            getBloc.environment = null;
-            Navigator.of(context).pop();
-          });
+                  intro: introController.text,
+                  outro: outroController.text,
+                  project: getBloc.environment,
+                  user: getBloc.user,
+                  company: getBloc.company,
+                  necessaryInformation: necessaryItems
+                      .where((element) => element.isAvailable)
+                      .map((e) =>
+                          '${e.title}${(e.extraData?.isNotEmpty == true) ? ' (${e.extraData})' : ''}')
+                      .toList())));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -254,7 +231,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
         child: Column(
           children: <Widget>[
             MultiSelectBottomSheetField<ItemEntity?>(
-              initialValue: getBloc.environment!.items ?? [],
+              initialValue: getBloc.environment.items ?? [],
               initialChildSize: 0.4,
               listType: MultiSelectListType.LIST,
               searchable: true,
@@ -266,7 +243,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
               title: Text('items'.translate),
               onSelectionChanged: (values) {
                 setState(() {
-                  getBloc.environment!.items = values.cast<ItemEntity>();
+                  getBloc.environment.items = values.cast<ItemEntity>();
                 });
               },
               items: getBloc.items
@@ -274,12 +251,12 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                   .toList(),
               onConfirm: (values) {
                 setState(() {
-                  getBloc.environment!.items = values.cast<ItemEntity>();
+                  getBloc.environment.items = values.cast<ItemEntity>();
                 });
               },
             ),
-            getBloc.environment!.items == null ||
-                    getBloc.environment!.items!.isEmpty
+            getBloc.environment.items == null ||
+                    getBloc.environment.items!.isEmpty
                 ? Container(
                     padding: const EdgeInsets.all(10),
                     alignment: Alignment.centerLeft,
@@ -328,8 +305,8 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
           ...necessaryItems
               .map(
                 (e) => CheckboxListTile(
-                  checkColor:  Theme.of(context).colorScheme.onPrimary,
-                  activeColor:  Theme.of(context).colorScheme.primary,
+                    checkColor: Theme.of(context).colorScheme.onPrimary,
+                    activeColor: Theme.of(context).colorScheme.primary,
                     title: Text(e.title),
                     value: e.isAvailable,
                     onChanged: (newValue) {

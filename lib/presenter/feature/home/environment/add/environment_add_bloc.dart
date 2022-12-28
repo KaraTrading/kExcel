@@ -10,6 +10,7 @@ import 'package:kexcel/domain/entity/environment_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/domain/entity/user_entity.dart';
 import 'package:kexcel/domain/usecase/client/get_clients_use_case.dart';
+import 'package:kexcel/domain/usecase/environment/update_environment_use_case.dart';
 import 'package:kexcel/domain/usecase/item/get_items_use_case.dart';
 import 'package:kexcel/domain/usecase/environment/add_environment_use_case.dart';
 import 'package:kexcel/domain/usecase/environment/get_latest_environment_number_use_case.dart';
@@ -25,22 +26,27 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
   EnvironmentAddBloc() {
     on<EnvironmentAddEventInit>(_getAll);
     on<EnvironmentAddEventAddingDone>(_addNew);
-    on<EnvironmentAddEventUpdatedProject>(_update);
   }
-
 
   late List<ClientEntity> clients = [];
   late List<SupplierEntity> suppliers = [];
   late List<ItemEntity> items = [];
   late UserEntity user;
   late CompanyEntity company;
-  EnvironmentEntity? environment;
+  late EnvironmentEntity environment;
+  late bool isModify;
   late int latestEnvironmentNumber;
 
-  _getAll(event, emit) async {
+  _getAll(EnvironmentAddEventInit event, emit) async {
     try {
+      if (event.entity != null) {
+        isModify = true;
+        environment = event.entity!;
+      } else {
+        isModify = false;
+        environment = EnvironmentEntity(projectId: 0, id: -1, name: '');
+      }
       emit(LoadingState());
-
       if (clients.isEmpty) {
         clients = await dependencyResolver<GetClientsUseCase>().call(null);
       }
@@ -53,12 +59,17 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
         items = await dependencyResolver<GetItemsUseCase>().call(null);
       }
 
-      latestEnvironmentNumber = await dependencyResolver<GetLatestEnvironmentNumberUseCase>().call(null);
+      latestEnvironmentNumber =
+          await dependencyResolver<GetLatestEnvironmentNumberUseCase>()
+              .call(null);
 
-      updateEnvironmentName();
-      environment?.items = environment?.items?.map((e) => items.firstWhere((element) => element.id == e.id)).toList();
+      environment.items = environment.items
+          ?.map((e) => items.firstWhere((element) => element.id == e.id))
+          .toList();
 
-      user = (await dependencyResolver<GetUserUseCase>().call(null)) ?? UserEntity(name: 'name', companyId: 0, title: 'title', email: 'email');
+      user = (await dependencyResolver<GetUserUseCase>().call(null)) ??
+          UserEntity(
+              name: 'name', companyId: 0, title: 'title', email: 'email');
       company = await dependencyResolver<GetUserCompanyUseCase>().call(null);
 
       emit(ResponseState<List<ItemEntity>>(data: items));
@@ -69,26 +80,27 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
     }
   }
 
-  _addNew(EnvironmentAddEventAddingDone event, Emitter<BaseBlocState> emit) async {
+  _addNew(
+      EnvironmentAddEventAddingDone event, Emitter<BaseBlocState> emit) async {
     try {
-      if (environment?.name.isEmpty ?? false) {
+      if (environment.projectId < 0 || (environment.items?.isEmpty ?? true)) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
         return;
       }
-      await dependencyResolver<AddEnvironmentUseCase>().call(environment!);
+      environment.name =
+      'E-${DateTime.now().year.toString().substring(2)}'
+          '${(latestEnvironmentNumber + 1).toString().padLeft(3, "0")}-'
+          '${environment.supplier?.code.substring(1) ?? '000'}-'
+          '${environment.projectId.toString().padLeft(5, "0")}';
+      if (environment.id < 0) {
+        await dependencyResolver<AddEnvironmentUseCase>().call(environment);
+      } else {
+        await dependencyResolver<UpdateEnvironmentUseCase>().call(environment);
+      }
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
     } on BaseException catch (e) {
       emit.call(ErrorState(error: e));
     }
-  }
-
-  void updateEnvironmentName() {
-    environment?.name = 'E-${DateTime.now().year.toString().substring(2)}${(latestEnvironmentNumber + 1).toString().padLeft(3, "0")}-${environment?.supplier?.code.substring(1) ?? '000'}';
-  }
-
-
-  _update(EnvironmentAddEventUpdatedProject event, Emitter<BaseBlocState> emit) {
-    updateEnvironmentName();
   }
 }

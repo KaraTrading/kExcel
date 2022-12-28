@@ -81,6 +81,8 @@ class ClientScreen extends BaseInformationScreen<ClientBloc, ClientEntity> {
           ),
           const SizedBox(height: 25),
           TextField(
+            minLines: 2,
+            maxLines: 3,
             controller: addressController,
             decoration: InputDecoration(
               border: const OutlineInputBorder(),

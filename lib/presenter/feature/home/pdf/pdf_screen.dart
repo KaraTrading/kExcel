@@ -88,10 +88,9 @@ class PDFScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter PDF Demo'),
+        title: const Text('PDF'),
       ),
       body: PdfPreview(
-        maxPageWidth: 700,
         build: (format) => generateInvoice(invoice, format),
         actions: actions,
         onPrinted: _showPrintedToast,
