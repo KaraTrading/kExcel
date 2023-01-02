@@ -23,6 +23,9 @@ class ItemData extends BaseData {
   @HiveField(5)
   String? hsCode;
 
+  @HiveField(6)
+  List<int>? attachmentsIds;
+
   ItemData({
     super.id = 0,
     required this.name,
@@ -30,6 +33,7 @@ class ItemData extends BaseData {
     this.manufacturerId,
     this.description,
     this.hsCode,
+    this.attachmentsIds,
   });
 }
 
@@ -41,6 +45,7 @@ extension ProjectItemDataMapper on ItemData {
     manufacturer: null,
     description: description,
     hsCode: hsCode,
+    attachments: null,
   );
 }
 
@@ -52,5 +57,6 @@ extension ItemEntityMapper on ItemEntity {
     manufacturerId: manufacturer != null ? manufacturer!.id : null,
     description: description,
     hsCode: hsCode,
+    attachmentsIds: attachments?.map((e) => e.id).toList(),
   );
 }
