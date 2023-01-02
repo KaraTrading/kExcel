@@ -1,3 +1,4 @@
+import 'attachment_entity.dart';
 import 'base_entity.dart';
 import 'item_entity.dart';
 import 'client_entity.dart';
@@ -10,6 +11,7 @@ class EnvironmentEntity extends BaseEntity {
   ClientEntity? client;
   SupplierEntity? supplier;
   List<ItemEntity>? items;
+  List<AttachmentEntity>? attachments;
 
   EnvironmentEntity({
     this.id = -1,
@@ -18,5 +20,6 @@ class EnvironmentEntity extends BaseEntity {
     this.client,
     this.supplier,
     this.items,
+    this.attachments,
   });
 }

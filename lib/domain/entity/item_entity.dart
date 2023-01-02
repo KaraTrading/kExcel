@@ -1,6 +1,6 @@
-import 'package:kexcel/domain/entity/base_entity.dart';
-
+import 'base_entity.dart';
 import 'supplier_entity.dart';
+import 'attachment_entity.dart';
 
 class ItemEntity extends BaseEntity {
   final int id;
@@ -9,6 +9,7 @@ class ItemEntity extends BaseEntity {
   SupplierEntity? manufacturer;
   final String? description;
   final String? hsCode;
+  List<AttachmentEntity>? attachments;
 
   ItemEntity({
     required this.id,
@@ -17,10 +18,11 @@ class ItemEntity extends BaseEntity {
     this.manufacturer,
     this.description,
     this.hsCode,
+    this.attachments,
   });
 
   @override
   String toString() {
-    return '$name $type';
+    return '$type: $name';
   }
 }
