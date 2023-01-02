@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'model/attachment_data.dart';
 import 'model/client_data.dart';
 import 'model/company_data.dart';
 import 'model/environment_data.dart';
@@ -16,12 +17,15 @@ const int companyTableTypeId = 5;
 const String companyTableName = 'companies';
 const int environmentTableTypeId = 6;
 const String environmentTableName = 'environments';
+const int attachmentTableTypeId = 7;
+const String attachmentTableName = 'attachments';
 
 late final Box<ClientData> clientBox;
 late final Box<SupplierData> supplierBox;
 late final Box<ItemData> itemBox;
 late final Box<EnvironmentData> environmentBox;
 late final Box<CompanyData> companyBox;
+late final Box<AttachmentData> attachmentBox;
 
 Future<void> databaseConfiguration() async {
   await Hive.initFlutter();
@@ -35,4 +39,6 @@ Future<void> databaseConfiguration() async {
   environmentBox = await Hive.openBox<EnvironmentData>(environmentTableName);
   Hive.registerAdapter<CompanyData>(CompanyDataAdapter());
   companyBox = await Hive.openBox<CompanyData>(companyTableName);
+  Hive.registerAdapter<AttachmentData>(AttachmentDataAdapter());
+  attachmentBox = await Hive.openBox<AttachmentData>(attachmentTableName);
 }
