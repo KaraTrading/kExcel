@@ -59,7 +59,7 @@ class EnvironmentScreen
                           color: Theme.of(context).colorScheme.background,
                           child: Padding(
                             padding: const EdgeInsets.all(7.0),
-                            child: Text(e.name),
+                            child: Text(e.item.name),
                           ),
                         ))
                     .toList() ??

@@ -63,9 +63,9 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
           await dependencyResolver<GetLatestEnvironmentNumberUseCase>()
               .call(null);
 
-      environment.items = environment.items
-          ?.map((e) => items.firstWhere((element) => element.id == e.id))
-          .toList();
+      environment.items?.forEach((envItems) {
+        envItems.item = items.firstWhere((item) => item.id == envItems.item.id);
+      });
 
       user = (await dependencyResolver<GetUserUseCase>().call(null)) ??
           UserEntity(

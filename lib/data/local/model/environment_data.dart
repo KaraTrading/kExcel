@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:kexcel/data/local/database_configuration.dart';
 import 'package:kexcel/data/local/model/base_data.dart';
 import 'package:kexcel/domain/entity/environment_entity.dart';
-
+import 'package:kexcel/domain/entity/environment_item_entity.dart';
 part 'environment_data.g.dart';
 
 @HiveType(typeId: environmentTableTypeId)
@@ -22,6 +22,12 @@ class EnvironmentData extends BaseData {
   @HiveField(5)
   List<int>? itemsIds;
 
+  @HiveField(9)
+  List<int>? itemsQuantities;
+
+  @HiveField(10)
+  List<String?>? itemsDimensions;
+
   @HiveField(6)
   List<int>? attachmentsIds;
 
@@ -32,6 +38,8 @@ class EnvironmentData extends BaseData {
     required this.clientId,
     this.supplierId,
     this.itemsIds,
+    this.itemsQuantities,
+    this.itemsDimensions,
     this.attachmentsIds,
   });
 }
@@ -55,7 +63,9 @@ extension EntityMapper on EnvironmentEntity {
     name: name,
     clientId: client!.id,
     supplierId: supplier?.id,
-    itemsIds: items?.map((e) => e.id).toList(),
+    itemsIds: items?.map((e) => e.item.id).toList(),
+    itemsQuantities: items?.map((e) => e.quantity).toList(),
+    itemsDimensions: items?.map((e) => e.dimension).toList(),
     attachmentsIds: attachments?.map((e) => e.id).toList(),
   );
 }

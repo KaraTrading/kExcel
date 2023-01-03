@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
+import 'package:kexcel/domain/entity/environment_item_entity.dart';
 import 'package:kexcel/domain/entity/item_entity.dart';
 import 'package:kexcel/domain/entity/environment_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
@@ -7,6 +8,7 @@ import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
 import 'package:kexcel/presenter/feature/home/pdf/pdf_screen.dart';
+import 'package:kexcel/presenter/widget/count_controller.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'environment_add_bloc.dart';
@@ -30,7 +32,6 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
       noDataView: const NoItemWidget(),
       bloc: getBloc,
       builder: (BuildContext context, List<ItemEntity>? entities) {
-
         bool isAdvanceOptionsShowing = false;
 
         final TextEditingController introController = TextEditingController(
@@ -63,7 +64,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
             TextEditingController(text: necessaryItems[7].extraData);
 
         final TextEditingController projectIdController = TextEditingController(
-            text: getBloc.environment.projectId.toString().padLeft(5, '0'),
+          text: getBloc.environment.projectId.toString().padLeft(5, '0'),
         );
 
         return Column(
@@ -190,7 +191,8 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
       padding: const EdgeInsets.only(bottom: 25),
       child: ElevatedButton(
         onPressed: () {
-          getBloc.environment.projectId = int.tryParse(projectIdController.text) ?? -1;
+          getBloc.environment.projectId =
+              int.tryParse(projectIdController.text) ?? -1;
 
           necessaryItems[4].extraData = termsOfDeliveryExtraDataController.text;
           necessaryItems[5].extraData = packingExtraDataController.text;
@@ -202,7 +204,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
               builder: (context) => PDFScreen(
                   intro: introController.text,
                   outro: outroController.text,
-                  project: getBloc.environment,
+                  environment: getBloc.environment,
                   user: getBloc.user,
                   company: getBloc.company,
                   necessaryInformation: necessaryItems
@@ -231,7 +233,10 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
         child: Column(
           children: <Widget>[
             MultiSelectBottomSheetField<ItemEntity?>(
-              initialValue: getBloc.environment.items ?? [],
+              chipDisplay:
+                  MultiSelectChipDisplay<ItemEntity?>.none(disabled: true),
+              initialValue:
+                  getBloc.environment.items?.map((e) => e.item).toList() ?? [],
               initialChildSize: 0.4,
               listType: MultiSelectListType.LIST,
               searchable: true,
@@ -243,7 +248,10 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
               title: Text('items'.translate),
               onSelectionChanged: (values) {
                 setState(() {
-                  getBloc.environment.items = values.cast<ItemEntity>();
+                  getBloc.environment.items = values
+                      .cast<ItemEntity>()
+                      .map((e) => EnvironmentItemEntity(item: e))
+                      .toList();
                 });
               },
               items: getBloc.items
@@ -251,7 +259,10 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                   .toList(),
               onConfirm: (values) {
                 setState(() {
-                  getBloc.environment.items = values.cast<ItemEntity>();
+                  getBloc.environment.items = values
+                      .cast<ItemEntity>()
+                      .map((e) => EnvironmentItemEntity(item: e))
+                      .toList();
                 });
               },
             ),
@@ -262,7 +273,74 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                     alignment: Alignment.centerLeft,
                     child: Text('noneSelected'.translate),
                   )
-                : Container(),
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: getBloc.environment.items!
+                        .map((e) => environmentItemWidget(context, e))
+                        .toList(),
+                  ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget environmentItemWidget(
+    BuildContext context,
+    EnvironmentItemEntity item,
+  ) {
+    final TextEditingController textController = TextEditingController(
+      text: item.dimension,
+    );
+    return Card(
+      color: Theme.of(context).colorScheme.background,
+      child: Padding(
+        padding: const EdgeInsets.all(7.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(item.item.name),
+                StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                  return CountController(
+                    decrementIconBuilder: (enabled) => Icon(
+                      Icons.remove_rounded,
+                      color: enabled
+                          ? Theme.of(context).secondaryHeaderColor
+                          : Theme.of(context).disabledColor,
+                      size: 16,
+                    ),
+                    incrementIconBuilder: (enabled) => Icon(
+                      Icons.add_rounded,
+                      color: enabled
+                          ? Theme.of(context).secondaryHeaderColor
+                          : Theme.of(context).disabledColor,
+                      size: 16,
+                    ),
+                    countBuilder: (count) => Text(
+                      count.toString(),
+                      style: Theme.of(context).primaryTextTheme.titleMedium,
+                    ),
+                    count: item.quantity,
+                    updateCount: (count) => setState(() {
+                      item.quantity = count;
+                    }),
+                    stepSize: 1,
+                    minimum: 1,
+                  );
+                })
+              ],
+            ),
+            TextField(
+              controller: textController,
+              onChanged: (text) => item.dimension = text,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: 'dimension'.translate,
+              ),
+            ),
           ],
         ),
       ),

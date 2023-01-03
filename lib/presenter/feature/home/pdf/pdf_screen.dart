@@ -15,7 +15,7 @@ import 'package:path_provider/path_provider.dart'
 class PDFScreen extends StatelessWidget {
   final String intro;
   final String outro;
-  final EnvironmentEntity project;
+  final EnvironmentEntity environment;
   final UserEntity user;
   final CompanyEntity company;
   final List<String> necessaryInformation;
@@ -23,7 +23,7 @@ class PDFScreen extends StatelessWidget {
   const PDFScreen({
     required this.intro,
     required this.outro,
-    required this.project,
+    required this.environment,
     required this.user,
     required this.company,
     this.necessaryInformation = const [],
@@ -75,9 +75,9 @@ class PDFScreen extends StatelessWidget {
     final invoice = Invoice(
       intro: intro,
       outro: outro,
-      invoiceNumber: project.name,
-      items: project.items?.map((e) =>
-              ItemEntityWithExtraData(sortIndex: index++, item: e, quantity: 1))
+      invoiceNumber: environment.name,
+      items: environment.items?.map((e) =>
+              ItemEntityWithExtraData(sortIndex: index++, item: e.item, quantity: e.quantity, dimension: e.dimension))
           .toList() ?? [],
       necessaryInformation: necessaryInformation,
       user: user,

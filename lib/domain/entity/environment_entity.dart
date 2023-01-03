@@ -1,6 +1,6 @@
 import 'attachment_entity.dart';
 import 'base_entity.dart';
-import 'item_entity.dart';
+import 'environment_item_entity.dart';
 import 'client_entity.dart';
 import 'supplier_entity.dart';
 
@@ -10,7 +10,7 @@ class EnvironmentEntity extends BaseEntity {
   String name;
   ClientEntity? client;
   SupplierEntity? supplier;
-  List<ItemEntity>? items;
+  List<EnvironmentItemEntity>? items;
   List<AttachmentEntity>? attachments;
 
   EnvironmentEntity({

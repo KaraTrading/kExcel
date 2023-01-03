@@ -5,6 +5,7 @@ import 'package:kexcel/data/local/model/environment_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/domain/entity/environment_entity.dart';
+import 'package:kexcel/domain/entity/environment_item_entity.dart';
 import 'environment_local_data_source.dart';
 
 @Injectable(as: EnvironmentLocalDataSource)
@@ -76,7 +77,20 @@ class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
           (await supplierStorage.getById(data.supplierId!))?.mapToEntity;
     }
     if (data.itemsIds != null) {
-      entity.items = (await itemsStorage.getByIds(data.itemsIds!))?.map((e) => e.mapToEntity).toList() ?? [];
+      final items = (await itemsStorage.getByIds(data.itemsIds!))
+              ?.map((e) => e.mapToEntity)
+              .toList() ??
+          [];
+      final itemQuantities = data.itemsQuantities ?? [];
+      final itemDimensions = data.itemsDimensions ?? [];
+      entity.items = [];
+      for (int i = 0; i < items.length; i++) {
+        entity.items!.add(EnvironmentItemEntity(
+          item: items[i],
+          quantity: itemQuantities[i],
+          dimension: itemDimensions[i],
+        ));
+      }
     }
     return entity;
   }
