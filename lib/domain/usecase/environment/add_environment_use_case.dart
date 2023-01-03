@@ -4,16 +4,14 @@ import '../../entity/environment_entity.dart';
 import '../../repository/environment_repository.dart';
 
 @Injectable()
-class AddEnvironmentUseCase extends BaseUseCase<bool, EnvironmentEntity> {
+class AddEnvironmentUseCase extends BaseUseCase<int, EnvironmentEntity> {
 
   final EnvironmentRepository repository;
 
   AddEnvironmentUseCase(this.repository);
 
   @override
-  Future<bool> call(EnvironmentEntity params) async {
-    final bool? response = await repository.addEnvironment(params);
-    return response == true;
+  Future<int> call(EnvironmentEntity params) async {
+    return (await repository.addEnvironment(params)) ?? -1;
   }
-
 }

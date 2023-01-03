@@ -177,7 +177,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
     );
   }
 
-  Padding bottomSaveButtons(
+  Widget bottomSaveButtons(
     TextEditingController projectIdController,
     List<NecessaryItem> necessaryItems,
     TextEditingController termsOfDeliveryExtraDataController,
@@ -188,37 +188,70 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
     TextEditingController outroController,
   ) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 25),
-      child: ElevatedButton(
-        onPressed: () {
-          getBloc.environment.projectId =
-              int.tryParse(projectIdController.text) ?? -1;
-
-          necessaryItems[4].extraData = termsOfDeliveryExtraDataController.text;
-          necessaryItems[5].extraData = packingExtraDataController.text;
-          necessaryItems[7].extraData = termsOfPaymentExtraDataController.text;
-
-          callEvent(EnvironmentAddEventAddingDone());
-
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => PDFScreen(
-                  intro: introController.text,
-                  outro: outroController.text,
-                  environment: getBloc.environment,
-                  user: getBloc.user,
-                  company: getBloc.company,
-                  necessaryInformation: necessaryItems
-                      .where((element) => element.isAvailable)
-                      .map((e) =>
-                          '${e.title}${(e.extraData?.isNotEmpty == true) ? ' (${e.extraData})' : ''}')
-                      .toList())));
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('save'.translate),
-        ),
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Row(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              saveEnvironment(projectId: int.tryParse(projectIdController.text) ?? -1);
+              showPdf(
+                context: context,
+                intro: introController.text,
+                outro: outroController.text,
+                necessaryItems: necessaryItems,
+                termsOfDeliveryExtra: termsOfDeliveryExtraDataController.text,
+                packingExtra: packingExtraDataController.text,
+                termsOfPaymentExtra: termsOfPaymentExtraDataController.text,
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('saveAndShow'.translate),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              saveEnvironment(projectId: int.tryParse(projectIdController.text) ?? -1);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('save'.translate),
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  void saveEnvironment({required int projectId}) {
+    getBloc.environment.projectId = projectId;
+    callEvent(EnvironmentAddEventAddingDone());
+  }
+
+  void showPdf({required BuildContext context,
+      required String intro,
+      required String outro,
+      required List<NecessaryItem> necessaryItems,
+      required String termsOfDeliveryExtra,
+      required String packingExtra,
+      required String termsOfPaymentExtra,
+  }) {
+    necessaryItems[4].extraData = termsOfDeliveryExtra;
+    necessaryItems[5].extraData = packingExtra;
+    necessaryItems[7].extraData = termsOfPaymentExtra;
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => PDFScreen(
+            intro: intro,
+            outro: outro,
+            environment: getBloc.environment,
+            user: getBloc.user,
+            company: getBloc.company,
+            necessaryInformation: necessaryItems
+                .where((element) => element.isAvailable)
+                .map((e) =>
+                    '${e.title}${(e.extraData?.isNotEmpty == true) ? ' (${e.extraData})' : ''}')
+                .toList())));
   }
 
   StatefulBuilder itemsSelector() {
@@ -238,13 +271,14 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
               initialValue:
                   getBloc.environment.items?.map((e) => e.item).toList() ?? [],
               initialChildSize: 0.4,
+              buttonIcon: const Icon(Icons.add),
               listType: MultiSelectListType.LIST,
               searchable: true,
               confirmText: Text('confirm'.translate),
               selectedColor: Theme.of(context).colorScheme.primary,
               unselectedColor: Theme.of(context).disabledColor,
               cancelText: Text('cancel'.translate),
-              buttonText: Text('selectedItems'.translate),
+              buttonText: Text('addNewItem'.translate),
               title: Text('items'.translate),
               onSelectionChanged: (values) {
                 setState(() {
@@ -308,15 +342,15 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                     decrementIconBuilder: (enabled) => Icon(
                       Icons.remove_rounded,
                       color: enabled
-                          ? Theme.of(context).secondaryHeaderColor
-                          : Theme.of(context).disabledColor,
+                          ? Theme.of(context).colorScheme.onBackground
+                          : Theme.of(context).colorScheme.background,
                       size: 16,
                     ),
                     incrementIconBuilder: (enabled) => Icon(
                       Icons.add_rounded,
                       color: enabled
-                          ? Theme.of(context).secondaryHeaderColor
-                          : Theme.of(context).disabledColor,
+                          ? Theme.of(context).colorScheme.onBackground
+                          : Theme.of(context).colorScheme.background,
                       size: 16,
                     ),
                     countBuilder: (count) => Text(

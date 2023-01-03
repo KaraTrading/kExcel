@@ -67,9 +67,7 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
         envItems.item = items.firstWhere((item) => item.id == envItems.item.id);
       });
 
-      user = (await dependencyResolver<GetUserUseCase>().call(null)) ??
-          UserEntity(
-              name: 'name', companyId: 0, title: 'title', email: 'email');
+      user = (await dependencyResolver<GetUserUseCase>().call(null))!;
       company = await dependencyResolver<GetUserCompanyUseCase>().call(null);
 
       emit(ResponseState<List<ItemEntity>>(data: items));
@@ -83,7 +81,7 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
   _addNew(
       EnvironmentAddEventAddingDone event, Emitter<BaseBlocState> emit) async {
     try {
-      if (environment.projectId < 0 || (environment.items?.isEmpty ?? true)) {
+      if (environment.projectId < 0) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
         return;
       }
@@ -93,7 +91,7 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
           '${environment.supplier?.code.substring(1) ?? '000'}-'
           '${environment.projectId.toString().padLeft(5, "0")}';
       if (environment.id < 0) {
-        await dependencyResolver<AddEnvironmentUseCase>().call(environment);
+        environment.id = await dependencyResolver<AddEnvironmentUseCase>().call(environment);
       } else {
         await dependencyResolver<UpdateEnvironmentUseCase>().call(environment);
       }

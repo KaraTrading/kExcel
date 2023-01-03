@@ -11,8 +11,8 @@ class EnvironmentRepositoryImpl extends EnvironmentRepository{
   EnvironmentRepositoryImpl(this.localDataSource);
 
   @override
-  Future<bool?> addEnvironment(EnvironmentEntity entity) async {
-    return localDataSource.saveEnvironment(entity);
+  Future<int> addEnvironment(EnvironmentEntity entity) async {
+    return await localDataSource.saveEnvironment(entity);
   }
 
   @override

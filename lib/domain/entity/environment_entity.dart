@@ -5,7 +5,7 @@ import 'client_entity.dart';
 import 'supplier_entity.dart';
 
 class EnvironmentEntity extends BaseEntity {
-  final int id;
+  int id;
   int projectId;
   String name;
   ClientEntity? client;

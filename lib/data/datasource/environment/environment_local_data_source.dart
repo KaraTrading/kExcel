@@ -5,7 +5,7 @@ import '../../local/model/environment_data.dart';
 
 abstract class EnvironmentLocalDataSource extends BaseLocalDataSource<EnvironmentData> {
 
-  Future<bool?> saveEnvironment(EnvironmentEntity entity);
+  Future<int> saveEnvironment(EnvironmentEntity entity);
 
   Future<bool?> saveEnvironments(List<EnvironmentEntity> entities);
 

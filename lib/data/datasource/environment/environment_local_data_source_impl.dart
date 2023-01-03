@@ -48,9 +48,9 @@ class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
   }
 
   @override
-  Future<bool?> saveEnvironment(EnvironmentEntity entity) async {
+  Future<int> saveEnvironment(EnvironmentEntity entity) async {
     final res = await storage.add(entity.mapToData);
-    return (res?.id ?? 0) > 0;
+    return res?.id ?? -1;
   }
 
   @override
@@ -106,7 +106,7 @@ class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
     bool allAdded = true;
     for (var element in entities) {
       final added = await saveEnvironment(element);
-      if (added!) allAdded = false;
+      if (added < 0) allAdded = false;
     }
     return allAdded;
   }

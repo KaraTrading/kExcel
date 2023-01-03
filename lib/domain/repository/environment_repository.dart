@@ -10,7 +10,7 @@ abstract class EnvironmentRepository extends BaseRepository {
 
   Future<EnvironmentEntity?> getEnvironment(int id);
 
-  Future<bool?> addEnvironment(EnvironmentEntity entity);
+  Future<int> addEnvironment(EnvironmentEntity entity);
 
   Future<bool?> addEnvironments(List<EnvironmentEntity> entities);
 

@@ -10,7 +10,7 @@ import 'package:open_file/open_file.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart'
-    show getApplicationDocumentsDirectory;
+    show getDownloadsDirectory;
 
 class PDFScreen extends StatelessWidget {
   final String intro;
@@ -53,8 +53,8 @@ class PDFScreen extends StatelessWidget {
   ) async {
     final bytes = await build(pageFormat);
 
-    final appDocDir = await getApplicationDocumentsDirectory();
-    final appDocPath = appDocDir.path;
+    final appDocDir = await getDownloadsDirectory();
+    final appDocPath = appDocDir?.path;
     final file = File('$appDocPath/document.pdf');
     debugPrint('Save as file ${file.path} ...');
     await file.writeAsBytes(bytes);
