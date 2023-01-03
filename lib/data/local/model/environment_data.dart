@@ -22,6 +22,9 @@ class EnvironmentData extends BaseData {
   @HiveField(5)
   List<int>? itemsIds;
 
+  @HiveField(6)
+  List<int>? attachmentsIds;
+
   EnvironmentData({
     super.id = 0,
     required this.projectId,
@@ -29,6 +32,7 @@ class EnvironmentData extends BaseData {
     required this.clientId,
     this.supplierId,
     this.itemsIds,
+    this.attachmentsIds,
   });
 }
 
@@ -40,6 +44,7 @@ extension DataMapper on EnvironmentData {
     client: null,
     supplier: null,
     items: null,
+    attachments: null,
   );
 }
 
@@ -51,5 +56,6 @@ extension EntityMapper on EnvironmentEntity {
     clientId: client!.id,
     supplierId: supplier?.id,
     itemsIds: items?.map((e) => e.id).toList(),
+    attachmentsIds: attachments?.map((e) => e.id).toList(),
   );
 }
