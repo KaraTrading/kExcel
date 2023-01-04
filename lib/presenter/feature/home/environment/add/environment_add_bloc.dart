@@ -28,6 +28,7 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
     on<EnvironmentAddEventAddingDone>(_addNew);
   }
 
+  Set<SupplierEntity> selectedSuppliers = {};
   late List<ClientEntity> clients = [];
   late List<SupplierEntity> suppliers = [];
   late List<ItemEntity> items = [];
@@ -67,6 +68,10 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
         envItems.item = items.firstWhere((item) => item.id == envItems.item.id);
       });
 
+      if (environment.supplier != null) {
+        selectedSuppliers.add(environment.supplier!);
+      }
+
       user = (await dependencyResolver<GetUserUseCase>().call(null))!;
       company = await dependencyResolver<GetUserCompanyUseCase>().call(null);
 
@@ -90,10 +95,16 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
           '${(latestEnvironmentNumber + 1).toString().padLeft(3, "0")}-'
           '${environment.supplier?.code.substring(1) ?? '000'}-'
           '${environment.projectId.toString().padLeft(5, "0")}';
+      if (!selectedSuppliers.contains(environment.supplier)) {
+        environment.id = -1;
+      }
       if (environment.id < 0) {
         environment.id = await dependencyResolver<AddEnvironmentUseCase>().call(environment);
       } else {
         await dependencyResolver<UpdateEnvironmentUseCase>().call(environment);
+      }
+      if (environment.supplier != null) {
+        selectedSuppliers.add(environment.supplier!);
       }
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));

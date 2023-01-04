@@ -11,4 +11,9 @@ class EnvironmentItemEntity extends BaseEntity {
     this.dimension,
     this.quantity = 1,
   });
+
+  @override
+  String toString() {
+    return item.toString();
+  }
 }
