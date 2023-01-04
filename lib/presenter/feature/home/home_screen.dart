@@ -42,7 +42,22 @@ class HomeScreen extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('kExcel'),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  backgroundImage: const AssetImage('assets/images/kara_logo.png'),
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                ),
+              ),
+              Text(
+                'Kara Project Manager',
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              )
+            ],
+          ),
           actions: [
             IconButton(
               onPressed: () => _routeProfile(context),
