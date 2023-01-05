@@ -10,8 +10,8 @@ class EnvironmentEntity extends BaseEntity {
   int annualId;
   DateTime date;
   SupplierEntity? supplier;
-  List<ProjectItemEntity>? items;
-  List<AttachmentEntity>? attachments;
+  List<ProjectItemEntity> items = [];
+  List<AttachmentEntity> attachments = [];
 
   EnvironmentEntity({
     required this.project,
@@ -19,7 +19,7 @@ class EnvironmentEntity extends BaseEntity {
     this.annualId = -1,
     required this.date,
     this.supplier,
-    this.items,
-    this.attachments,
+    this.items = const[],
+    this.attachments = const[],
   });
 }

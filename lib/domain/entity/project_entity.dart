@@ -10,26 +10,29 @@ class ProjectEntity extends BaseEntity {
   int annualId;
   ClientEntity client;
   DateTime date;
-  List<SupplierEntity> winners;
-  List<ProjectItemEntity> items;
-  List<AttachmentEntity> attachments;
+  List<SupplierEntity> winners = [];
+  List<ProjectItemEntity> items = [];
+  List<AttachmentEntity> attachments = [];
+  List<int> environmentsIds = [];
 
   ProjectEntity({
     this.id = -1,
-    required this.annualId,
+    this.annualId = -1,
     required this.client,
     required this.date,
     this.winners = const [],
     this.items = const [],
     this.attachments = const [],
+    this.environmentsIds = const [],
   });
 
   ProjectEntity.empty()
       : id = -1,
-        annualId = 0,
+        annualId = -1,
         client = ClientEntity.empty(),
         date = DateTime.now(),
         winners = const [],
         items = const [],
-        attachments = const [];
+        attachments = const [],
+        environmentsIds = const [];
 }

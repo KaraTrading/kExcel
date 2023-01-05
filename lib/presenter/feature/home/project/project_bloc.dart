@@ -3,10 +3,11 @@ import 'package:injectable/injectable.dart';
 import 'package:kexcel/core/di/dependency_injector.dart';
 import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/core/exception/network_exception.dart';
+import 'package:kexcel/domain/entity/company_entity.dart';
 import 'package:kexcel/domain/entity/project_entity.dart';
-import 'package:kexcel/domain/usecase/project/add_project_use_case.dart';
 import 'package:kexcel/domain/usecase/project/delete_project_use_case.dart';
 import 'package:kexcel/domain/usecase/project/get_projects_use_case.dart';
+import 'package:kexcel/domain/usecase/user/get_user_company_usecase.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
 import 'project_bloc_event.dart';
@@ -20,11 +21,13 @@ class ProjectBloc extends BaseBloc<ProjectBlocEvent> {
   }
 
   late List<ProjectEntity> projects = [];
+  late CompanyEntity company;
 
   _getAll(event, emit) async {
     try {
       emit(LoadingState());
 
+      company = await dependencyResolver<GetUserCompanyUseCase>().call(null);
       projects = await dependencyResolver<GetProjectsUseCase>()
           .call(event is ProjectEventSearch ? event.query : null);
       emit(ResponseState<List<ProjectEntity>>(data: projects));

@@ -7,14 +7,11 @@ import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
-import 'package:kexcel/presenter/feature/home/pdf/pdf_screen.dart';
 import 'package:kexcel/presenter/widget/count_controller.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-
 import 'project_add_bloc.dart';
 import 'project_add_bloc_event.dart';
-
 
 class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
   final ProjectEntity? entity;
@@ -22,7 +19,7 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
   const ProjectAddScreen({this.entity, super.key});
 
   @override
-  AppBar? get appBar => AppBar(title: Text('environmentAdd'.translate));
+  AppBar? get appBar => AppBar(title: Text('projectAdd'.translate));
 
   @override
   FloatingActionButton? floatingActionButton(BuildContext context) => null;
@@ -65,10 +62,6 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
         final TextEditingController termsOfPaymentExtraDataController =
             TextEditingController(text: necessaryItems[7].extraData);
 
-        final TextEditingController projectIdController = TextEditingController(
-          text: getBloc.environment.projectId.toString().padLeft(5, '0'),
-        );
-
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -78,14 +71,6 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const SizedBox(height: 25),
-                        TextField(
-                          controller: projectIdController,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            labelText: 'projectId'.translate,
-                          ),
-                        ),
                         const SizedBox(height: 25),
                         InputDecorator(
                             decoration: InputDecoration(
@@ -98,12 +83,12 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                             ),
                             child: Autocomplete(
                               onSelected: (ClientEntity entity) {
-                                getBloc.environment.client = entity;
+                                getBloc.selectedClient = entity;
                               },
                               displayStringForOption: (ClientEntity entity) =>
                                   entity.name,
                               initialValue: TextEditingValue(
-                                text: getBloc.environment.client?.name ?? '',
+                                text: getBloc.selectedClient?.name ?? '',
                               ),
                               optionsBuilder:
                                   (TextEditingValue textEditingValue) {
@@ -121,40 +106,9 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                               },
                             )),
                         const SizedBox(height: 25),
-                        InputDecorator(
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0,
-                              horizontal: 4,
-                            ),
-                            border: const OutlineInputBorder(gapPadding: 1),
-                            labelText: 'supplier'.translate,
-                          ),
-                          child: Autocomplete(
-                            onSelected: (SupplierEntity entity) {
-                              getBloc.environment.supplier = entity;
-                            },
-                            displayStringForOption: (SupplierEntity entity) =>
-                                entity.name,
-                            initialValue: TextEditingValue(
-                              text: getBloc.environment.supplier?.name ?? '',
-                            ),
-                            optionsBuilder:
-                                (TextEditingValue textEditingValue) {
-                              return getBloc.suppliers
-                                  .where(
-                                    (SupplierEntity entity) => (entity.name
-                                        .toLowerCase()
-                                        .contains(
-                                          textEditingValue.text.toLowerCase(),
-                                        )),
-                                  )
-                                  .toList();
-                            },
-                          ),
-                        ),
+                        suppliersSelector(context),
                         const SizedBox(height: 25),
-                        itemsSelector(),
+                        itemsSelector(context),
                         const SizedBox(height: 25),
                         advancedOptions(
                           isAdvanceOptionsShowing,
@@ -170,7 +124,6 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
             bottomSaveButtons(
               context,
               necessaryItems,
-              projectIdController,
               termsOfDeliveryExtraDataController,
               packingExtraDataController,
               termsOfPaymentExtraDataController,
@@ -183,7 +136,26 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
     );
   }
 
-  StatefulBuilder itemsSelector() {
+  Widget suppliersSelector(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        getBloc.selectedSuppliers.isEmpty
+            ? Container(
+          padding: const EdgeInsets.all(10),
+          alignment: Alignment.centerLeft,
+          child: Text('noneSelected'.translate),
+        )
+            : Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: getBloc.selectedSuppliers
+              .map((e) => projectSupplierWidget(context, e))
+              .toList(),
+        ),
+      ],
+    );
+  }
+
+  StatefulBuilder itemsSelector(BuildContext context) {
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter setState) => Container(
         decoration: BoxDecoration(
@@ -198,7 +170,7 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
               chipDisplay:
                   MultiSelectChipDisplay<ItemEntity?>.none(disabled: true),
               initialValue:
-                  getBloc.environment.items?.map((e) => e.item).toList() ?? [],
+                getBloc.selectedProjectItems.map((e) => e.item).toList(),
               initialChildSize: 0.4,
               buttonIcon: const Icon(Icons.add),
               listType: MultiSelectListType.LIST,
@@ -211,10 +183,10 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
               title: Text('items'.translate),
               onSelectionChanged: (values) {
                 setState(() {
-                  getBloc.environment.items = values
+                  getBloc.selectedProjectItems = values
                       .cast<ItemEntity>()
                       .map((e) => ProjectItemEntity(item: e))
-                      .toList();
+                      .toSet();
                 });
               },
               items: getBloc.items
@@ -222,15 +194,14 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                   .toList(),
               onConfirm: (values) {
                 setState(() {
-                  getBloc.environment.items = values
+                  getBloc.selectedProjectItems = values
                       .cast<ItemEntity>()
                       .map((e) => ProjectItemEntity(item: e))
-                      .toList();
+                      .toSet();
                 });
               },
             ),
-            getBloc.environment.items == null ||
-                    getBloc.environment.items!.isEmpty
+            getBloc.selectedProjectItems.isEmpty
                 ? Container(
                     padding: const EdgeInsets.all(10),
                     alignment: Alignment.centerLeft,
@@ -238,8 +209,8 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: getBloc.environment.items!
-                        .map((e) => environmentItemWidget(context, e))
+                    children: getBloc.selectedProjectItems
+                        .map((e) => projectItemWidget(context, e))
                         .toList(),
                   ),
           ],
@@ -248,7 +219,7 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
     );
   }
 
-  Widget environmentItemWidget(
+  Widget projectItemWidget(
     BuildContext context,
     ProjectItemEntity item,
   ) {
@@ -303,6 +274,28 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                 border: const OutlineInputBorder(),
                 labelText: 'dimension'.translate,
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget projectSupplierWidget(
+    BuildContext context,
+    SupplierEntity item,
+  ) {
+    return Card(
+      color: Theme.of(context).colorScheme.background,
+      child: Padding(
+        padding: const EdgeInsets.all(7.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(item.name),
+              ],
             ),
           ],
         ),
@@ -433,7 +426,6 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
   Widget bottomSaveButtons(
     BuildContext context,
     List<NecessaryItem> necessaryItems,
-    TextEditingController projectIdController,
     TextEditingController termsOfDeliveryExtraDataController,
     TextEditingController packingExtraDataController,
     TextEditingController termsOfPaymentExtraDataController,
@@ -460,37 +452,6 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
 
   void saveProject() {
     callEvent(ProjectAddEventAddingDone());
-  }
-
-  void showPdf({
-    required BuildContext context,
-    required String intro,
-    required String outro,
-    required List<NecessaryItem> necessaryItems,
-    required String termsOfDeliveryExtra,
-    required String packingExtra,
-    required String termsOfPaymentExtra,
-  }) {
-    necessaryItems[4].extraData = termsOfDeliveryExtra;
-    necessaryItems[5].extraData = packingExtra;
-    necessaryItems[7].extraData = termsOfPaymentExtra;
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PDFScreen(
-          intro: intro,
-          outro: outro,
-          environment: getBloc.environment,
-          user: getBloc.user,
-          company: getBloc.company,
-          necessaryInformation: necessaryItems
-              .where((element) => element.isAvailable)
-              .map((e) =>
-                  '${e.title}${(e.extraData?.isNotEmpty == true) ? ' (${e.extraData})' : ''}')
-              .toList(),
-        ),
-      ),
-    );
   }
 }
 

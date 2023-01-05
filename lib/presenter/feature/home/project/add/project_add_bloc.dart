@@ -19,7 +19,6 @@ import 'package:kexcel/domain/usecase/user/get_user_company_usecase.dart';
 import 'package:kexcel/domain/usecase/user/get_user_usecase.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
-import 'package:kexcel/presenter/common/environment_name_formatter.dart';
 import 'project_add_bloc_event.dart';
 
 @LazySingleton()
@@ -93,7 +92,6 @@ class ProjectAddBloc extends BaseBloc<ProjectAddBlocEvent> {
         project = ProjectEntity(
           client: selectedClient!,
           date: DateTime.now(),
-          annualId: annualId,
           winners: selectedSuppliers.toList(),
           items: selectedProjectItems.toList(),
         );

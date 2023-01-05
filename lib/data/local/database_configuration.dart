@@ -19,9 +19,9 @@ const String companyTableName = 'companies';
 const int attachmentTableTypeId = 7;
 const String attachmentTableName = 'attachments';
 const int projectTableTypeId = 10;
-const String projectTableName = 'projects';
-const int environmentTableTypeId = 11;
-const String environmentTableName = 'environments';
+const String projectTableName = 'projectTable';
+const int environmentTableTypeId = 12;
+const String environmentTableName = 'environmentTable';
 
 late final Box<ClientData> clientBox;
 late final Box<SupplierData> supplierBox;
@@ -33,18 +33,18 @@ late final Box<AttachmentData> attachmentBox;
 
 Future<void> databaseConfiguration() async {
   await Hive.initFlutter();
+  Hive.registerAdapter<CompanyData>(CompanyDataAdapter());
+  companyBox = await Hive.openBox<CompanyData>(companyTableName);
   Hive.registerAdapter<ClientData>(ClientDataAdapter());
   clientBox = await Hive.openBox<ClientData>(clientTableName);
   Hive.registerAdapter<SupplierData>(SupplierDataAdapter());
   supplierBox = await Hive.openBox<SupplierData>(supplierTableName);
-  Hive.registerAdapter<ItemData>(ItemDataAdapter());
-  itemBox = await Hive.openBox<ItemData>(itemTableName);
-  Hive.registerAdapter<EnvironmentData>(EnvironmentDataAdapter());
-  environmentBox = await Hive.openBox<EnvironmentData>(environmentTableName);
-  Hive.registerAdapter<ProjectData>(ProjectDataAdapter());
-  projectBox = await Hive.openBox<ProjectData>(projectTableName);
-  Hive.registerAdapter<CompanyData>(CompanyDataAdapter());
-  companyBox = await Hive.openBox<CompanyData>(companyTableName);
   Hive.registerAdapter<AttachmentData>(AttachmentDataAdapter());
   attachmentBox = await Hive.openBox<AttachmentData>(attachmentTableName);
+  Hive.registerAdapter<ItemData>(ItemDataAdapter());
+  itemBox = await Hive.openBox<ItemData>(itemTableName);
+  Hive.registerAdapter<ProjectData>(ProjectDataAdapter());
+  projectBox = await Hive.openBox<ProjectData>(projectTableName);
+  Hive.registerAdapter<EnvironmentData>(EnvironmentDataAdapter());
+  environmentBox = await Hive.openBox<EnvironmentData>(environmentTableName);
 }

@@ -5,21 +5,19 @@ import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/core/exception/network_exception.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/domain/entity/company_entity.dart';
-import 'package:kexcel/domain/entity/item_entity.dart';
 import 'package:kexcel/domain/entity/environment_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
+import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/domain/entity/user_entity.dart';
 import 'package:kexcel/domain/usecase/client/get_clients_use_case.dart';
 import 'package:kexcel/domain/usecase/environment/update_environment_use_case.dart';
-import 'package:kexcel/domain/usecase/item/get_items_use_case.dart';
 import 'package:kexcel/domain/usecase/environment/add_environment_use_case.dart';
-import 'package:kexcel/domain/usecase/environment/get_latest_environment_number_use_case.dart';
 import 'package:kexcel/domain/usecase/supplier/get_suppliers_use_case.dart';
 import 'package:kexcel/domain/usecase/user/get_user_company_usecase.dart';
 import 'package:kexcel/domain/usecase/user/get_user_usecase.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
-import 'package:kexcel/presenter/common/environment_name_formatter.dart';
 import 'environment_add_bloc_event.dart';
 
 @LazySingleton()
@@ -32,22 +30,17 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
   Set<SupplierEntity> selectedSuppliers = {};
   late List<ClientEntity> clients = [];
   late List<SupplierEntity> suppliers = [];
-  late List<ItemEntity> items = [];
   late UserEntity user;
   late CompanyEntity company;
   late EnvironmentEntity environment;
   late bool isModify;
-  late int latestEnvironmentNumber;
 
   _getAll(EnvironmentAddEventInit event, emit) async {
     try {
-      if (event.entity != null) {
-        isModify = true;
-        environment = event.entity!;
-      } else {
-        isModify = false;
-        environment = EnvironmentEntity(projectId: 0, id: -1, name: '');
-      }
+      environment = event.entity;
+
+      isModify = event.entity.id >= 0;
+
       emit(LoadingState());
       if (clients.isEmpty) {
         clients = await dependencyResolver<GetClientsUseCase>().call(null);
@@ -57,18 +50,6 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
         suppliers = await dependencyResolver<GetSuppliersUseCase>().call(null);
       }
 
-      if (items.isEmpty) {
-        items = await dependencyResolver<GetItemsUseCase>().call(null);
-      }
-
-      latestEnvironmentNumber =
-          await dependencyResolver<GetLatestEnvironmentNumberUseCase>()
-              .call(null);
-
-      environment.items?.forEach((envItems) {
-        envItems.item = items.firstWhere((item) => item.id == envItems.item.id);
-      });
-
       if (environment.supplier != null) {
         selectedSuppliers.add(environment.supplier!);
       }
@@ -76,7 +57,7 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
       user = (await dependencyResolver<GetUserUseCase>().call(null))!;
       company = await dependencyResolver<GetUserCompanyUseCase>().call(null);
 
-      emit(ResponseState<List<ItemEntity>>(data: items));
+      emit(ResponseState<List<ProjectItemEntity>>(data: environment.project.items));
     } on BaseNetworkException catch (e) {
       emit(ErrorState(error: e));
     } on BaseException catch (e) {
@@ -87,16 +68,10 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
   _addNew(
       EnvironmentAddEventAddingDone event, Emitter<BaseBlocState> emit) async {
     try {
-      if (environment.projectId < 0) {
+      if (environment.project.id < 0) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
         return;
       }
-      environment.name = getEnvironmentName(
-        companyId: company.id,
-        projectId: environment.projectId,
-        environmentId: latestEnvironmentNumber + 1,
-        supplierCode: environment.supplier?.code,
-      );
       if (!selectedSuppliers.contains(environment.supplier)) {
         environment.id = -1;
       }

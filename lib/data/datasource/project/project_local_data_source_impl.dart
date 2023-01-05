@@ -1,41 +1,39 @@
 import 'package:injectable/injectable.dart';
-import 'package:kexcel/data/datasource/project/project_local_data_source.dart';
 import 'package:kexcel/data/local/model/client_data.dart';
 import 'package:kexcel/data/local/model/item_data.dart';
-import 'package:kexcel/data/local/model/environment_data.dart';
+import 'package:kexcel/data/local/model/project_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/database.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
-import 'environment_local_data_source.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
+import 'package:kexcel/domain/entity/project_item_entity.dart';
+import 'project_local_data_source.dart';
 
-@Injectable(as: EnvironmentLocalDataSource)
-class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
+@Injectable(as: ProjectLocalDataSource)
+class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
 
   @override
-  Database<EnvironmentData> storage;
+  Database<ProjectData> storage;
 
   Database<ClientData> clientStorage;
   Database<SupplierData> supplierStorage;
   Database<ItemData> itemsStorage;
-  ProjectLocalDataSource projectsLocalDataSource;
 
   ProjectLocalDataSourceImpl({
     required this.storage,
     required this.clientStorage,
     required this.supplierStorage,
     required this.itemsStorage,
-    required this.projectsLocalDataSource,
   });
 
   @override
-  Future<List<EnvironmentEntity>?> getEnvironments(String? search) async {
-    final List<EnvironmentData>? data;
+  Future<List<ProjectEntity>?> getProjects(String? search) async {
+    final List<ProjectData>? data;
     if (search == null || search.isEmpty) {
       data = await storage.getAll();
     } else {
       data = await storage.findAll(search);
     }
-    final List<EnvironmentEntity> all = [];
+    final List<ProjectEntity> all = [];
 
     if (data?.isEmpty ?? true) {
       return [];
@@ -50,9 +48,9 @@ class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
   }
 
   @override
-  Future<int> saveEnvironment(EnvironmentEntity entity) async {
-    final all = await getEnvironments(null);
-    final List<EnvironmentEntity> allInYear = [];
+  Future<int> saveProject(ProjectEntity entity) async {
+    final all = await getProjects(null);
+    final List<ProjectEntity> allInYear = [];
     all?.forEach((element) {
       if (element.date.year == DateTime.now().year) {
         allInYear.add(element);
@@ -65,22 +63,17 @@ class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
       entity.annualId = allInYear.last.annualId + 1;
     }
     final res = await storage.add(entity.mapToData);
-    if (res == null) {
-      return -1;
-    }
-    entity.project.environmentsIds.add(res.id);
-    projectsLocalDataSource.updateProject(entity.project);
-    return res.id;
+    return res?.id ?? -1;
   }
 
   @override
-  Future<bool?> updateEnvironment(EnvironmentEntity entity) async {
+  Future<bool?> updateProject(ProjectEntity entity) async {
     final res = await storage.put(entity.mapToData);
     return (res?.id ?? 0) > 0;
   }
 
   @override
-  Future<EnvironmentEntity?> getEnvironment(int id) async {
+  Future<ProjectEntity?> getProject(int id) async {
     final data = await storage.getById(id);
     if (data != null) {
       return dataToEntity(data);
@@ -89,45 +82,53 @@ class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
     }
   }
 
-  Future<EnvironmentEntity?> dataToEntity(EnvironmentData data) async {
+  Future<ProjectEntity?> dataToEntity(ProjectData data) async {
     final entity = data.mapToEntity;
 
-    final project = (await projectsLocalDataSource.getProject(data.projectId));
-    if (project == null) {
-      deleteEnvironment(entity);
-      return null;
-    }
-    entity.project = project;
-
-    if (data.supplierId != null) {
-      entity.supplier = (await supplierStorage.getById(data.supplierId!))?.mapToEntity;
-    }
-
-    entity.items = [];
-    for (var itemId in data.itemsIds) {
-      for (var pItem in entity.project.items) {
-        if (pItem.item.id == itemId) {
-          entity.items.add(pItem);
-          break;
+    if (data.winnersIds.isNotEmpty) {
+      for (var winnerId in data.winnersIds) {
+        final winner = (await supplierStorage.getById(winnerId))?.mapToEntity;
+        if (winner != null) {
+          entity.winners.add(winner);
         }
       }
+    }
+
+    final items = (await itemsStorage.getByIds(data.itemsIds))
+        ?.map((e) => e.mapToEntity)
+        .toList() ??
+        [];
+    final itemQuantities = data.itemsQuantities;
+    final itemDimensions = data.itemsDimensions;
+    entity.items = [];
+    for (int i = 0; i < items.length; i++) {
+      entity.items.add(ProjectItemEntity(
+        item: items[i],
+        quantity: itemQuantities[i],
+        dimension: itemDimensions[i],
+      ));
     }
     return entity;
   }
 
   @override
-  Future<bool?> deleteEnvironment(EnvironmentEntity entity) async {
+  Future<bool?> deleteProject(ProjectEntity entity) async {
     return await storage.delete(entity.mapToData);
   }
 
   @override
-  Future<bool?> saveEnvironments(List<EnvironmentEntity> entities) async {
+  Future<bool?> saveProjects(List<ProjectEntity> entities) async {
     await storage.deleteAll();
     bool allAdded = true;
     for (var element in entities) {
-      final added = await saveEnvironment(element);
+      final added = await saveProject(element);
       if (added < 0) allAdded = false;
     }
     return allAdded;
+  }
+
+  @override
+  Future<int?> getLatestProjectAnnualId() async {
+    return storage.lastKey();
   }
 }

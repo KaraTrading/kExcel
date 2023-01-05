@@ -17,6 +17,4 @@ abstract class EnvironmentRepository extends BaseRepository {
   Future<bool?> deleteEnvironment(EnvironmentEntity entity);
 
   Future<bool?> updateEnvironment(EnvironmentEntity entity);
-
-  Future<int?> getLatestEnvironmentNumber();
 }

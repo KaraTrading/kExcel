@@ -4,7 +4,7 @@ import 'package:kexcel/presenter/base_bloc_event.dart';
 abstract class EnvironmentAddBlocEvent extends BaseBlocEvent {}
 
 class EnvironmentAddEventInit extends EnvironmentAddBlocEvent {
-  EnvironmentEntity? entity;
+  EnvironmentEntity entity;
   EnvironmentAddEventInit(this.entity);
 }
 class EnvironmentAddEventAddingDone extends EnvironmentAddBlocEvent {}

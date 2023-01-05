@@ -18,5 +18,4 @@ abstract class ProjectRepository extends BaseRepository {
 
   Future<bool?> updateProject(ProjectEntity entity);
 
-  Future<int?> getLatestProjectNumber();
 }

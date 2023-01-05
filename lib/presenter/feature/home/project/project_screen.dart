@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:kexcel/domain/entity/environment_entity.dart';
 import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/common/localization.dart';
+import 'package:kexcel/presenter/common/project_name_formatter.dart';
+import 'package:kexcel/presenter/feature/home/environment/add/environment_add_screen.dart';
 import 'package:kexcel/presenter/feature/home/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
+import 'package:kexcel/presenter/widget/app_button_widget.dart';
 import 'add/project_add_screen.dart';
 import 'project_bloc.dart';
 import 'project_bloc_event.dart';
@@ -26,7 +30,7 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
       );
 
   @override
-  String get title => 'environmentManagement'.translate;
+  String get title => 'projectManagement'.translate;
 
   @override
   BaseBlocEvent get initEvent => ProjectEventInit();
@@ -44,7 +48,7 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('${entity.date.year.toString().substring(2)}${entity.id}'),
+            Text(getProjectName(company: getBloc.company, project: entity)),
             Text('${'client'.translate}: ${entity.client.name}'),
           ],
         ),
@@ -82,6 +86,12 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
             ],
           ),
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            AppButtonWidget('environmentNewAdd'.translate, () => _routeEnvironment(context, entity))
+          ],
+        )
       ],
     );
   }
@@ -132,4 +142,10 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
 
   @override
   void import() {}
+
+  _routeEnvironment(BuildContext context, ProjectEntity project) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => EnvironmentAddScreen(entity: EnvironmentEntity(project: project, date: DateTime.now()),),
+    ));
+  }
 }

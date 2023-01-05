@@ -20,10 +20,10 @@ class EnvironmentData extends BaseData {
   int? supplierId;
 
   @HiveField(5)
-  List<int>? itemsIds;
+  List<int> itemsIds;
 
   @HiveField(6)
-  List<int>? attachmentsIds;
+  List<int> attachmentsIds;
 
   EnvironmentData({
     super.id = 0,
@@ -31,8 +31,8 @@ class EnvironmentData extends BaseData {
     required this.annualId,
     required this.date,
     this.supplierId,
-    this.itemsIds,
-    this.attachmentsIds,
+    this.itemsIds = const [],
+    this.attachmentsIds = const [],
   });
 }
 
@@ -42,7 +42,7 @@ extension DataMapper on EnvironmentData {
     id: id,
     annualId: annualId,
     date: date,
-    attachments: null,
+    attachments: [],
   );
 }
 
@@ -53,7 +53,7 @@ extension EntityMapper on EnvironmentEntity {
     annualId: annualId,
     date: date,
     supplierId: supplier?.id,
-    itemsIds: items?.map((e) => e.item.id).toList(),
-    attachmentsIds: attachments?.map((e) => e.id).toList(),
+    itemsIds: items.map((e) => e.item.id).toList(),
+    attachmentsIds: attachments.map((e) => e.id).toList(),
   );
 }
