@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'package:kexcel/domain/entity/item_entity.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/common/localization.dart';
@@ -11,13 +11,15 @@ import 'package:kexcel/presenter/feature/home/pdf/pdf_screen.dart';
 import 'package:kexcel/presenter/widget/count_controller.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'environment_add_bloc.dart';
-import 'environment_add_bloc_event.dart';
 
-class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
-  final EnvironmentEntity? entity;
+import 'project_add_bloc.dart';
+import 'project_add_bloc_event.dart';
 
-  const EnvironmentAddScreen({this.entity, super.key});
+
+class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
+  final ProjectEntity? entity;
+
+  const ProjectAddScreen({this.entity, super.key});
 
   @override
   AppBar? get appBar => AppBar(title: Text('environmentAdd'.translate));
@@ -27,8 +29,8 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
 
   @override
   Widget screenBody(BuildContext context) {
-    callEvent(EnvironmentAddEventInit(entity));
-    return DataLoadBlocBuilder<EnvironmentAddBloc, List<ItemEntity>?>(
+    callEvent(ProjectAddEventInit(entity));
+    return DataLoadBlocBuilder<ProjectAddBloc, List<ItemEntity>?>(
       noDataView: const NoItemWidget(),
       bloc: getBloc,
       builder: (BuildContext context, List<ItemEntity>? entities) {
@@ -211,7 +213,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                 setState(() {
                   getBloc.environment.items = values
                       .cast<ItemEntity>()
-                      .map((e) => EnvironmentItemEntity(item: e))
+                      .map((e) => ProjectItemEntity(item: e))
                       .toList();
                 });
               },
@@ -222,7 +224,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                 setState(() {
                   getBloc.environment.items = values
                       .cast<ItemEntity>()
-                      .map((e) => EnvironmentItemEntity(item: e))
+                      .map((e) => ProjectItemEntity(item: e))
                       .toList();
                 });
               },
@@ -248,7 +250,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
 
   Widget environmentItemWidget(
     BuildContext context,
-    EnvironmentItemEntity item,
+    ProjectItemEntity item,
   ) {
     final TextEditingController textController = TextEditingController(
       text: item.dimension,
@@ -445,34 +447,10 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
-            onPressed: () {
-              saveEnvironment(
-                projectId: int.tryParse(projectIdController.text) ?? -1,
-              );
-            },
+            onPressed: () => saveProject(),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text('save'.translate),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              saveEnvironment(
-                projectId: int.tryParse(projectIdController.text) ?? -1,
-              );
-              showPdf(
-                context: context,
-                intro: introController.text,
-                outro: outroController.text,
-                necessaryItems: necessaryItems,
-                termsOfDeliveryExtra: termsOfDeliveryExtraDataController.text,
-                packingExtra: packingExtraDataController.text,
-                termsOfPaymentExtra: termsOfPaymentExtraDataController.text,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('saveAndShow'.translate),
             ),
           ),
         ],
@@ -480,9 +458,8 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
     );
   }
 
-  void saveEnvironment({required int projectId}) {
-    getBloc.environment.projectId = projectId;
-    callEvent(EnvironmentAddEventAddingDone());
+  void saveProject() {
+    callEvent(ProjectAddEventAddingDone());
   }
 
   void showPdf({

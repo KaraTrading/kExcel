@@ -26,4 +26,17 @@ class ClientEntity extends BaseEntity {
     this.contact,
     this.bank,
   });
+
+  ClientEntity.empty()
+      : id = -1,
+        name = '',
+        code = '',
+        address = '',
+        nationalId = '',
+        symbol = '',
+        bafaId = '',
+        bafaEmail = '',
+        bafaSite = '',
+        contact = '',
+        bank = '';
 }

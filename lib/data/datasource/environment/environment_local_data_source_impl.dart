@@ -5,7 +5,7 @@ import 'package:kexcel/data/local/model/environment_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/database.dart';
 import 'package:kexcel/domain/entity/environment_entity.dart';
-import 'package:kexcel/domain/entity/environment_item_entity.dart';
+import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'environment_local_data_source.dart';
 
 @Injectable(as: EnvironmentLocalDataSource)
