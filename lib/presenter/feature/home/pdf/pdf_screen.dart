@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/company_entity.dart';
 import 'package:kexcel/domain/entity/environment_entity.dart';
 import 'package:kexcel/domain/entity/user_entity.dart';
+import 'package:kexcel/presenter/common/environment_name_formatter.dart';
 import 'package:kexcel/presenter/utils/pdf_utils.dart';
 import 'package:open_file/open_file.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
-import 'package:path_provider/path_provider.dart'
-    show getDownloadsDirectory;
+import 'package:path_provider/path_provider.dart' show getDownloadsDirectory;
 
 class PDFScreen extends StatelessWidget {
   final String intro;
@@ -75,10 +75,14 @@ class PDFScreen extends StatelessWidget {
     final invoice = Invoice(
       intro: intro,
       outro: outro,
-      invoiceNumber: environment.name,
-      items: environment.items?.map((e) =>
-              ItemEntityWithExtraData(sortIndex: index++, item: e.item, quantity: e.quantity, dimension: e.dimension))
-          .toList() ?? [],
+      code: getEnvironmentName(company: company, environment: environment),
+      items: environment.items
+          .map((e) => ItemEntityWithExtraData(
+              sortIndex: index++,
+              item: e.item,
+              quantity: e.quantity,
+              dimension: e.dimension))
+          .toList(),
       necessaryInformation: necessaryInformation,
       user: user,
       company: company,

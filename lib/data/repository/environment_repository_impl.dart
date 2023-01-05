@@ -40,9 +40,4 @@ class EnvironmentRepositoryImpl extends EnvironmentRepository{
     return localDataSource.deleteEnvironment(entity);
   }
 
-  @override
-  Future<int?> getLatestEnvironmentNumber() {
-    return localDataSource.getLatestEnvironmentNumber();
-  }
-
 }

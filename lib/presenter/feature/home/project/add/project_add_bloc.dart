@@ -5,42 +5,52 @@ import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/core/exception/network_exception.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/domain/entity/company_entity.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
+import 'package:kexcel/domain/entity/item_entity.dart';
 import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/domain/entity/user_entity.dart';
 import 'package:kexcel/domain/usecase/client/get_clients_use_case.dart';
-import 'package:kexcel/domain/usecase/environment/update_environment_use_case.dart';
-import 'package:kexcel/domain/usecase/environment/add_environment_use_case.dart';
+import 'package:kexcel/domain/usecase/item/get_items_use_case.dart';
+import 'package:kexcel/domain/usecase/project/add_project_use_case.dart';
+import 'package:kexcel/domain/usecase/project/update_project_use_case.dart';
 import 'package:kexcel/domain/usecase/supplier/get_suppliers_use_case.dart';
 import 'package:kexcel/domain/usecase/user/get_user_company_usecase.dart';
 import 'package:kexcel/domain/usecase/user/get_user_usecase.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
-import 'environment_add_bloc_event.dart';
+import 'project_add_bloc_event.dart';
 
 @LazySingleton()
-class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
-  EnvironmentAddBloc() {
-    on<EnvironmentAddEventInit>(_getAll);
-    on<EnvironmentAddEventAddingDone>(_addNew);
+class ProjectAddBloc extends BaseBloc<ProjectAddBlocEvent> {
+  ProjectAddBloc() {
+    on<ProjectAddEventInit>(_getAll);
+    on<ProjectAddEventAddingDone>(_addNew);
   }
 
+  ProjectEntity? project;
+
+  ClientEntity? selectedClient;
+  Set<ProjectItemEntity> selectedProjectItems = {};
   Set<SupplierEntity> selectedSuppliers = {};
+
   late List<ClientEntity> clients = [];
   late List<SupplierEntity> suppliers = [];
+  late List<ItemEntity> items = [];
+
   late UserEntity user;
   late CompanyEntity company;
-  late EnvironmentEntity environment;
   late bool isModify;
+  late int latestProjectNumber;
 
-  _getAll(EnvironmentAddEventInit event, emit) async {
+  _getAll(ProjectAddEventInit event, emit) async {
     try {
-      environment = event.entity;
-
-      isModify = event.entity.id >= 0;
-
+      if (event.entity != null) {
+        isModify = true;
+        project = event.entity!;
+      } else {
+        isModify = false;
+      }
       emit(LoadingState());
       if (clients.isEmpty) {
         clients = await dependencyResolver<GetClientsUseCase>().call(null);
@@ -50,14 +60,25 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
         suppliers = await dependencyResolver<GetSuppliersUseCase>().call(null);
       }
 
-      if (environment.supplier != null) {
-        selectedSuppliers.add(environment.supplier!);
+      if (items.isEmpty) {
+        items = await dependencyResolver<GetItemsUseCase>().call(null);
+      }
+
+      if (project != null) {
+        for (var projectItems in project!.items) {
+          projectItems.item =
+              items.firstWhere((item) => item.id == projectItems.item.id);
+        }
+
+        for (var winners in project!.winners) {
+          winners = suppliers.firstWhere((item) => item.id == winners.id);
+        }
       }
 
       user = (await dependencyResolver<GetUserUseCase>().call(null))!;
       company = await dependencyResolver<GetUserCompanyUseCase>().call(null);
 
-      emit(ResponseState<List<ProjectItemEntity>>(data: environment.project.items));
+      emit(ResponseState<List<ItemEntity>>(data: items));
     } on BaseNetworkException catch (e) {
       emit(ErrorState(error: e));
     } on BaseException catch (e) {
@@ -65,23 +86,19 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
     }
   }
 
-  _addNew(
-      EnvironmentAddEventAddingDone event, Emitter<BaseBlocState> emit) async {
+  _addNew(ProjectAddEventAddingDone event, Emitter<BaseBlocState> emit) async {
     try {
-      if (environment.project.id < 0) {
-        emit.call(ErrorState(error: 'Invalid Inputs'));
-        return;
-      }
-      if (!selectedSuppliers.contains(environment.supplier)) {
-        environment.id = -1;
-      }
-      if (environment.id < 0) {
-        environment.id = await dependencyResolver<AddEnvironmentUseCase>().call(environment);
+      if ((project?.id ?? -1) < 0) {
+        project = ProjectEntity(
+          client: selectedClient!,
+          date: DateTime.now(),
+          winners: selectedSuppliers.toList(),
+          items: selectedProjectItems.toList(),
+        );
+        project!.id =
+            await dependencyResolver<AddProjectUseCase>().call(project!);
       } else {
-        await dependencyResolver<UpdateEnvironmentUseCase>().call(environment);
-      }
-      if (environment.supplier != null) {
-        selectedSuppliers.add(environment.supplier!);
+        await dependencyResolver<UpdateProjectUseCase>().call(project!);
       }
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));

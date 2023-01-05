@@ -17,6 +17,4 @@ abstract class EnvironmentLocalDataSource extends BaseLocalDataSource<Environmen
 
   Future<EnvironmentEntity?> getEnvironment(int id);
 
-  Future<int?> getLatestEnvironmentNumber();
-
 }

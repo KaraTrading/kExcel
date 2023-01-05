@@ -1,35 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:kexcel/domain/entity/client_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'package:kexcel/domain/entity/item_entity.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/data_load_bloc_builder.dart';
-import 'package:kexcel/presenter/feature/home/pdf/pdf_screen.dart';
 import 'package:kexcel/presenter/widget/count_controller.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'environment_add_bloc.dart';
-import 'environment_add_bloc_event.dart';
+import 'project_add_bloc.dart';
+import 'project_add_bloc_event.dart';
 
-class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
-  final EnvironmentEntity entity;
-  const EnvironmentAddScreen({required this.entity, super.key});
+class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
+  final ProjectEntity? entity;
+
+  const ProjectAddScreen({this.entity, super.key});
 
   @override
-  AppBar? get appBar => AppBar(title: Text('environmentAdd'.translate));
+  AppBar? get appBar => AppBar(title: Text('projectAdd'.translate));
 
   @override
   FloatingActionButton? floatingActionButton(BuildContext context) => null;
 
   @override
   Widget screenBody(BuildContext context) {
-    callEvent(EnvironmentAddEventInit(entity));
-    return DataLoadBlocBuilder<EnvironmentAddBloc, List<ProjectItemEntity>?>(
+    callEvent(ProjectAddEventInit(entity));
+    return DataLoadBlocBuilder<ProjectAddBloc, List<ItemEntity>?>(
       noDataView: const NoItemWidget(),
       bloc: getBloc,
-      builder: (BuildContext context, List<ProjectItemEntity>? entities) {
+      builder: (BuildContext context, List<ItemEntity>? entities) {
         bool isAdvanceOptionsShowing = false;
 
         final TextEditingController introController = TextEditingController(
@@ -72,39 +73,42 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                       children: [
                         const SizedBox(height: 25),
                         InputDecorator(
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0,
-                              horizontal: 4,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 0,
+                                horizontal: 4,
+                              ),
+                              border: const OutlineInputBorder(gapPadding: 1),
+                              labelText: 'client'.translate,
                             ),
-                            border: const OutlineInputBorder(gapPadding: 1),
-                            labelText: 'supplier'.translate,
-                          ),
-                          child: Autocomplete(
-                            onSelected: (SupplierEntity entity) {
-                              getBloc.environment.supplier = entity;
-                            },
-                            displayStringForOption: (SupplierEntity entity) =>
-                                entity.name,
-                            initialValue: TextEditingValue(
-                              text: getBloc.environment.supplier?.name ?? '',
-                            ),
-                            optionsBuilder:
-                                (TextEditingValue textEditingValue) {
-                              return getBloc.suppliers
-                                  .where(
-                                    (SupplierEntity entity) => (entity.name
-                                        .toLowerCase()
-                                        .contains(
-                                          textEditingValue.text.toLowerCase(),
-                                        )),
-                                  )
-                                  .toList();
-                            },
-                          ),
-                        ),
+                            child: Autocomplete(
+                              onSelected: (ClientEntity entity) {
+                                getBloc.selectedClient = entity;
+                              },
+                              displayStringForOption: (ClientEntity entity) =>
+                                  entity.name,
+                              initialValue: TextEditingValue(
+                                text: getBloc.selectedClient?.name ?? '',
+                              ),
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                return getBloc.clients
+                                    .where((ClientEntity entity) =>
+                                        (entity.name.toLowerCase().contains(
+                                                  textEditingValue.text
+                                                      .toLowerCase(),
+                                                ) ||
+                                            entity.code.toLowerCase().contains(
+                                                  textEditingValue.text
+                                                      .toLowerCase(),
+                                                )))
+                                    .toList();
+                              },
+                            )),
                         const SizedBox(height: 25),
-                        itemsSelector(),
+                        suppliersSelector(context),
+                        const SizedBox(height: 25),
+                        itemsSelector(context),
                         const SizedBox(height: 25),
                         advancedOptions(
                           isAdvanceOptionsShowing,
@@ -132,7 +136,26 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
     );
   }
 
-  StatefulBuilder itemsSelector() {
+  Widget suppliersSelector(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        getBloc.selectedSuppliers.isEmpty
+            ? Container(
+          padding: const EdgeInsets.all(10),
+          alignment: Alignment.centerLeft,
+          child: Text('noneSelected'.translate),
+        )
+            : Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: getBloc.selectedSuppliers
+              .map((e) => projectSupplierWidget(context, e))
+              .toList(),
+        ),
+      ],
+    );
+  }
+
+  StatefulBuilder itemsSelector(BuildContext context) {
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter setState) => Container(
         decoration: BoxDecoration(
@@ -143,10 +166,11 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
             )),
         child: Column(
           children: <Widget>[
-            MultiSelectBottomSheetField<ProjectItemEntity?>(
+            MultiSelectBottomSheetField<ItemEntity?>(
               chipDisplay:
-                  MultiSelectChipDisplay<ProjectItemEntity?>.none(disabled: true),
-              initialValue: getBloc.environment.items,
+                  MultiSelectChipDisplay<ItemEntity?>.none(disabled: true),
+              initialValue:
+                getBloc.selectedProjectItems.map((e) => e.item).toList(),
               initialChildSize: 0.4,
               buttonIcon: const Icon(Icons.add),
               listType: MultiSelectListType.LIST,
@@ -159,23 +183,25 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
               title: Text('items'.translate),
               onSelectionChanged: (values) {
                 setState(() {
-                  getBloc.environment.items = values
-                      .cast<ProjectItemEntity>()
-                      .toList();
+                  getBloc.selectedProjectItems = values
+                      .cast<ItemEntity>()
+                      .map((e) => ProjectItemEntity(item: e))
+                      .toSet();
                 });
               },
-              items: getBloc.environment.project.items
-                  .map((e) => MultiSelectItem(e, multiSelectText(e.item, context)))
+              items: getBloc.items
+                  .map((e) => MultiSelectItem(e, multiSelectText(e, context)))
                   .toList(),
               onConfirm: (values) {
                 setState(() {
-                  getBloc.environment.items = values
-                      .cast<ProjectItemEntity>()
-                      .toList();
+                  getBloc.selectedProjectItems = values
+                      .cast<ItemEntity>()
+                      .map((e) => ProjectItemEntity(item: e))
+                      .toSet();
                 });
               },
             ),
-            getBloc.environment.items.isEmpty
+            getBloc.selectedProjectItems.isEmpty
                 ? Container(
                     padding: const EdgeInsets.all(10),
                     alignment: Alignment.centerLeft,
@@ -183,8 +209,8 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: getBloc.environment.items
-                        .map((e) => environmentItemWidget(context, e))
+                    children: getBloc.selectedProjectItems
+                        .map((e) => projectItemWidget(context, e))
                         .toList(),
                   ),
           ],
@@ -193,7 +219,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
     );
   }
 
-  Widget environmentItemWidget(
+  Widget projectItemWidget(
     BuildContext context,
     ProjectItemEntity item,
   ) {
@@ -248,6 +274,28 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                 border: const OutlineInputBorder(),
                 labelText: 'dimension'.translate,
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget projectSupplierWidget(
+    BuildContext context,
+    SupplierEntity item,
+  ) {
+    return Card(
+      color: Theme.of(context).colorScheme.background,
+      child: Padding(
+        padding: const EdgeInsets.all(7.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(item.name),
+              ],
             ),
           ],
         ),
@@ -391,30 +439,10 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
-            onPressed: () {
-              saveEnvironment();
-            },
+            onPressed: () => saveProject(),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text('save'.translate),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              saveEnvironment();
-              showPdf(
-                context: context,
-                intro: introController.text,
-                outro: outroController.text,
-                necessaryItems: necessaryItems,
-                termsOfDeliveryExtra: termsOfDeliveryExtraDataController.text,
-                packingExtra: packingExtraDataController.text,
-                termsOfPaymentExtra: termsOfPaymentExtraDataController.text,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('saveAndShow'.translate),
             ),
           ),
         ],
@@ -422,39 +450,8 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
     );
   }
 
-  void saveEnvironment() {
-    callEvent(EnvironmentAddEventAddingDone());
-  }
-
-  void showPdf({
-    required BuildContext context,
-    required String intro,
-    required String outro,
-    required List<NecessaryItem> necessaryItems,
-    required String termsOfDeliveryExtra,
-    required String packingExtra,
-    required String termsOfPaymentExtra,
-  }) {
-    necessaryItems[4].extraData = termsOfDeliveryExtra;
-    necessaryItems[5].extraData = packingExtra;
-    necessaryItems[7].extraData = termsOfPaymentExtra;
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PDFScreen(
-          intro: intro,
-          outro: outro,
-          environment: getBloc.environment,
-          user: getBloc.user,
-          company: getBloc.company,
-          necessaryInformation: necessaryItems
-              .where((element) => element.isAvailable)
-              .map((e) =>
-                  '${e.title}${(e.extraData?.isNotEmpty == true) ? ' (${e.extraData})' : ''}')
-              .toList(),
-        ),
-      ),
-    );
+  void saveProject() {
+    callEvent(ProjectAddEventAddingDone());
   }
 }
 

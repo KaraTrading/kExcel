@@ -3,18 +3,16 @@ import 'package:injectable/injectable.dart';
 import 'package:kexcel/core/di/dependency_injector.dart';
 import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/core/exception/network_exception.dart';
-import 'package:kexcel/domain/entity/client_entity.dart';
-import 'package:kexcel/domain/entity/item_entity.dart';
+import 'package:kexcel/domain/entity/company_entity.dart';
 import 'package:kexcel/domain/entity/environment_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
-import 'package:kexcel/domain/usecase/client/get_clients_use_case.dart';
-import 'package:kexcel/domain/usecase/item/get_items_use_case.dart';
 import 'package:kexcel/domain/usecase/environment/add_environment_use_case.dart';
 import 'package:kexcel/domain/usecase/environment/add_environments_use_case.dart';
 import 'package:kexcel/domain/usecase/environment/delete_environment_use_case.dart';
 import 'package:kexcel/domain/usecase/environment/get_environments_use_case.dart';
 import 'package:kexcel/domain/usecase/environment/update_environment_use_case.dart';
 import 'package:kexcel/domain/usecase/supplier/get_suppliers_use_case.dart';
+import 'package:kexcel/domain/usecase/user/get_user_company_usecase.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
 import 'environment_bloc_event.dart';
@@ -30,25 +28,18 @@ class EnvironmentBloc extends BaseBloc<EnvironmentBlocEvent> {
     on<EnvironmentEventDelete>(_delete);
   }
 
-  late List<ClientEntity> clients = [];
+  late CompanyEntity company;
   late List<SupplierEntity> suppliers = [];
-  late List<ItemEntity> items = [];
   late List<EnvironmentEntity> environments = [];
 
   _getAll(event, emit) async {
     try {
       emit(LoadingState());
 
-      if (clients.isEmpty) {
-        clients = await dependencyResolver<GetClientsUseCase>().call(null);
-      }
+      company = await dependencyResolver<GetUserCompanyUseCase>().call(null);
 
       if (suppliers.isEmpty) {
         suppliers = await dependencyResolver<GetSuppliersUseCase>().call(null);
-      }
-
-      if (items.isEmpty) {
-        items = await dependencyResolver<GetItemsUseCase>().call(null);
       }
 
       environments = await dependencyResolver<GetEnvironmentsUseCase>()
@@ -63,10 +54,6 @@ class EnvironmentBloc extends BaseBloc<EnvironmentBlocEvent> {
 
   _addNew(EnvironmentEventAddingDone event, Emitter<BaseBlocState> emit) async {
     try {
-      if (event.entity.name.isEmpty) {
-        emit.call(ErrorState(error: 'Invalid Inputs'));
-        return;
-      }
       emit(LoadingState());
       await dependencyResolver<AddEnvironmentUseCase>().call(event.entity);
       return _getAll(event, emit);
@@ -80,7 +67,7 @@ class EnvironmentBloc extends BaseBloc<EnvironmentBlocEvent> {
   _update(
       EnvironmentEventEditingDone event, Emitter<BaseBlocState> emit) async {
     try {
-      if (event.entity.id < 0 || event.entity.name.isEmpty) {
+      if (event.entity.id < 0) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
         return;
       }

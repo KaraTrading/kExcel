@@ -33,7 +33,7 @@ class Invoice {
   final List<String> necessaryInformation;
   final UserEntity user;
   final CompanyEntity company;
-  final String invoiceNumber;
+  final String code;
   final String intro;
   final String outro;
   final PdfColor baseColor;
@@ -59,7 +59,7 @@ class Invoice {
     this.necessaryInformation = const [],
     required this.user,
     required this.company,
-    required this.invoiceNumber,
+    required this.code,
     required this.baseColor,
     required this.accentColor,
     required this.intro,
@@ -126,7 +126,7 @@ class Invoice {
             pw.Flexible(
               flex: 1,
               child: pw.Text(
-                'Enquiry NO.:\n$invoiceNumber',
+                'Enquiry NO.:\n$code',
                 style: pw.TextStyle(
                   color: _baseTextColor,
                   font: _fontTitle,
@@ -403,7 +403,7 @@ class Invoice {
             width: 100,
             child: pw.BarcodeWidget(
               barcode: pw.Barcode.pdf417(),
-              data: 'Invoice# $invoiceNumber',
+              data: 'Invoice# $code',
               drawText: false,
             ),
           ),
