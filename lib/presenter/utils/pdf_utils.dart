@@ -255,8 +255,8 @@ class Invoice {
       border: null,
       columnWidths: {
         0: const pw.IntrinsicColumnWidth(flex: 0.75),
-        1: const pw.IntrinsicColumnWidth(flex: 11),
-        2: const pw.IntrinsicColumnWidth(flex: 5),
+        1: const pw.IntrinsicColumnWidth(flex: 9),
+        2: const pw.IntrinsicColumnWidth(flex: 7),
         3: const pw.IntrinsicColumnWidth(flex: 1),
       },
       cellAlignment: pw.Alignment.centerLeft,
@@ -271,7 +271,7 @@ class Invoice {
       cellAlignments: {
         0: pw.Alignment.centerLeft,
         1: pw.Alignment.centerLeft,
-        2: pw.Alignment.center,
+        2: pw.Alignment.centerLeft,
         3: pw.Alignment.center,
       },
       headerStyle: pw.TextStyle(
