@@ -149,6 +149,7 @@ class ItemScreen extends BaseInformationScreen<ItemBloc, ItemEntity> {
               final newEntity = ItemEntity(
                 id: entity?.id ?? -1,
                 name: nameController.text,
+                type: typeController.text,
                 manufacturer: manufacturer,
                 description: descriptionController.text,
                 hsCode: hsCodeController.text,
