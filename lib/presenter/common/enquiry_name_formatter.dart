@@ -15,5 +15,5 @@ String getEnquiryName({
 
   return '${enquiry.project.date.year.toString().substring(2)}'
       'P${enquiry.project.annualId.toString().padLeft(3, "0")}'
-      '-${(enquiry.items.length == enquiry.project.items.length) ? 'AL' : enquiry.project.enquiries.indexWhere((element) => element.id == enquiry.id)}';
+      '-${(enquiry.items.length == enquiry.project.items.length) ? 'AL' : (enquiry.project.enquiries.indexWhere((element) => element.id == enquiry.id) + 1)}';
 }
