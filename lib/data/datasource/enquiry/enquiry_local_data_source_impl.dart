@@ -2,17 +2,17 @@ import 'package:injectable/injectable.dart';
 import 'package:kexcel/data/datasource/project/project_local_data_source.dart';
 import 'package:kexcel/data/local/model/client_data.dart';
 import 'package:kexcel/data/local/model/item_data.dart';
-import 'package:kexcel/data/local/model/environment_data.dart';
+import 'package:kexcel/data/local/model/enquiry_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/database.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
-import 'environment_local_data_source.dart';
+import 'package:kexcel/domain/entity/enquiry_entity.dart';
+import 'enquiry_local_data_source.dart';
 
-@Injectable(as: EnvironmentLocalDataSource)
-class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
+@Injectable(as: EnquiryLocalDataSource)
+class ProjectLocalDataSourceImpl extends EnquiryLocalDataSource {
 
   @override
-  Database<EnvironmentData> storage;
+  Database<EnquiryData> storage;
 
   Database<ClientData> clientStorage;
   Database<SupplierData> supplierStorage;
@@ -28,14 +28,14 @@ class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
   });
 
   @override
-  Future<List<EnvironmentEntity>?> getEnvironments(String? search) async {
-    final List<EnvironmentData>? data;
+  Future<List<EnquiryEntity>?> getEnquiries(String? search) async {
+    final List<EnquiryData>? data;
     if (search == null || search.isEmpty) {
       data = await storage.getAll();
     } else {
       data = await storage.findAll(search);
     }
-    final List<EnvironmentEntity> all = [];
+    final List<EnquiryEntity> all = [];
 
     if (data?.isEmpty ?? true) {
       return [];
@@ -50,9 +50,9 @@ class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
   }
 
   @override
-  Future<int> saveEnvironment(EnvironmentEntity entity) async {
-    final all = await getEnvironments(null);
-    final List<EnvironmentEntity> allInYear = [];
+  Future<int> saveEnquiry(EnquiryEntity entity) async {
+    final all = await getEnquiries(null);
+    final List<EnquiryEntity> allInYear = [];
     all?.forEach((element) {
       if (element.date.year == DateTime.now().year) {
         allInYear.add(element);
@@ -68,19 +68,19 @@ class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
     if (res == null) {
       return -1;
     }
-    entity.project.environmentsIds.add(res.id);
+    entity.project.enquiriesIds.add(res.id);
     projectsLocalDataSource.updateProject(entity.project);
     return res.id;
   }
 
   @override
-  Future<bool?> updateEnvironment(EnvironmentEntity entity) async {
+  Future<bool?> updateEnquiry(EnquiryEntity entity) async {
     final res = await storage.put(entity.mapToData);
     return (res?.id ?? 0) > 0;
   }
 
   @override
-  Future<EnvironmentEntity?> getEnvironment(int id) async {
+  Future<EnquiryEntity?> getEnquiry(int id) async {
     final data = await storage.getById(id);
     if (data != null) {
       return dataToEntity(data);
@@ -89,12 +89,12 @@ class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
     }
   }
 
-  Future<EnvironmentEntity?> dataToEntity(EnvironmentData data) async {
+  Future<EnquiryEntity?> dataToEntity(EnquiryData data) async {
     final entity = data.mapToEntity;
 
     final project = (await projectsLocalDataSource.getProject(data.projectId));
     if (project == null) {
-      deleteEnvironment(entity);
+      deleteEnquiry(entity);
       return null;
     }
     entity.project = project;
@@ -116,16 +116,16 @@ class ProjectLocalDataSourceImpl extends EnvironmentLocalDataSource {
   }
 
   @override
-  Future<bool?> deleteEnvironment(EnvironmentEntity entity) async {
+  Future<bool?> deleteEnquiry(EnquiryEntity entity) async {
     return await storage.delete(entity.mapToData);
   }
 
   @override
-  Future<bool?> saveEnvironments(List<EnvironmentEntity> entities) async {
+  Future<bool?> saveEnquiries(List<EnquiryEntity> entities) async {
     await storage.deleteAll();
     bool allAdded = true;
     for (var element in entities) {
-      final added = await saveEnvironment(element);
+      final added = await saveEnquiry(element);
       if (added < 0) allAdded = false;
     }
     return allAdded;

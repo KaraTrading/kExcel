@@ -1,9 +1,9 @@
 import 'package:injectable/injectable.dart';
-import 'package:kexcel/data/datasource/environment/environment_local_data_source.dart';
+import 'package:kexcel/data/datasource/enquiry/enquiry_local_data_source.dart';
 import 'package:kexcel/data/datasource/project/project_local_data_source.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
+import 'package:kexcel/domain/entity/enquiry_entity.dart';
 import 'package:kexcel/domain/entity/project_entity.dart';
-import 'package:kexcel/domain/repository/environment_repository.dart';
+import 'package:kexcel/domain/repository/enquiry_repository.dart';
 import 'package:kexcel/domain/repository/project_repository.dart';
 
 

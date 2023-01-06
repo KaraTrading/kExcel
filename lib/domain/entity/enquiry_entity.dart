@@ -4,7 +4,7 @@ import 'project_entity.dart';
 import 'project_item_entity.dart';
 import 'supplier_entity.dart';
 
-class EnvironmentEntity extends BaseEntity {
+class EnquiryEntity extends BaseEntity {
   ProjectEntity project;
   int id;
   int annualId;
@@ -13,7 +13,7 @@ class EnvironmentEntity extends BaseEntity {
   List<ProjectItemEntity> items = [];
   List<AttachmentEntity> attachments = [];
 
-  EnvironmentEntity({
+  EnquiryEntity({
     required this.project,
     this.id = -1,
     this.annualId = -1,

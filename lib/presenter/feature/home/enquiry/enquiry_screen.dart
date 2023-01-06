@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
+import 'package:kexcel/domain/entity/enquiry_entity.dart';
 import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/presenter/base_bloc_event.dart';
-import 'package:kexcel/presenter/common/environment_name_formatter.dart';
+import 'package:kexcel/presenter/common/enquiry_name_formatter.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/feature/home/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
-import 'add/environment_add_screen.dart';
-import 'environment_bloc.dart';
-import 'environment_bloc_event.dart';
+import 'add/enquiry_add_screen.dart';
+import 'enquiry_bloc.dart';
+import 'enquiry_bloc_event.dart';
 
-class EnvironmentScreen
-    extends BaseInformationScreen<EnvironmentBloc, EnvironmentEntity> {
+class EnquiryScreen
+    extends BaseInformationScreen<EnquiryBloc, EnquiryEntity> {
   final ProjectEntity? project;
 
-  const EnvironmentScreen({this.project, super.key});
+  const EnquiryScreen({this.project, super.key});
 
   @override
   AppBar? get appBar => AppBar(
@@ -31,17 +31,17 @@ class EnvironmentScreen
       );
 
   @override
-  String get title => 'environmentManagement'.translate;
+  String get title => 'enquiryManagement'.translate;
 
   @override
-  BaseBlocEvent get initEvent => EnvironmentEventInit();
+  BaseBlocEvent get initEvent => EnquiryEventInit();
 
   @override
-  BaseBlocEvent deleteEvent(EnvironmentEntity entity) =>
-      EnvironmentEventDelete(entity);
+  BaseBlocEvent deleteEvent(EnquiryEntity entity) =>
+      EnquiryEventDelete(entity);
 
   @override
-  Widget itemDetails(BuildContext context, EnvironmentEntity entity) {
+  Widget itemDetails(BuildContext context, EnquiryEntity entity) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -50,8 +50,8 @@ class EnvironmentScreen
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(getEnvironmentName(
-                company: getBloc.company, environment: entity)),
+            Text(getEnquiryName(
+                company: getBloc.company, enquiry: entity)),
             Text('${'supplier'.translate}: ${entity.supplier?.name}'),
           ],
         ),
@@ -75,13 +75,13 @@ class EnvironmentScreen
   }
 
   @override
-  void editItemDetails(BuildContext context, {EnvironmentEntity? entity}) {
+  void editItemDetails(BuildContext context, {EnquiryEntity? entity}) {
     if (entity?.project != null || project != null) {
       Navigator.of(context)
           .push(MaterialPageRoute(
-        builder: (context) => EnvironmentAddScreen(
+        builder: (context) => EnquiryAddScreen(
             entity: entity ??
-                EnvironmentEntity(project: project!, date: DateTime.now())),
+                EnquiryEntity(project: project!, date: DateTime.now())),
       ))
           .then((val) {
         callEvent(initEvent);
@@ -103,22 +103,22 @@ class EnvironmentScreen
     ];
     exportListToFile(
         titles,
-        getBloc.environments.map((e) {
+        getBloc.enquiries.map((e) {
           String itemsIds = '';
-          for (var element in getBloc.environments) {
+          for (var element in getBloc.enquiries) {
             if (itemsIds.isNotEmpty) itemsIds += ', ';
             itemsIds += element.id.toString();
           }
           return [
             e.project.id.toString(),
             e.id.toString(),
-            getEnvironmentName(company: getBloc.company, environment: e),
+            getEnquiryName(company: getBloc.company, enquiry: e),
             e.supplier?.id.toString(),
             e.supplier?.name,
             itemsIds,
           ];
         }).toList(),
-        'exported_environments.xlsx');
+        'exported_enquiries.xlsx');
   }
 
   @override

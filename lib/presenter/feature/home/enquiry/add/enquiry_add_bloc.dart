@@ -5,26 +5,26 @@ import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/core/exception/network_exception.dart';
 import 'package:kexcel/domain/entity/client_entity.dart';
 import 'package:kexcel/domain/entity/company_entity.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
+import 'package:kexcel/domain/entity/enquiry_entity.dart';
 import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/domain/entity/user_entity.dart';
 import 'package:kexcel/domain/usecase/client/get_clients_use_case.dart';
-import 'package:kexcel/domain/usecase/environment/update_environment_use_case.dart';
-import 'package:kexcel/domain/usecase/environment/add_environment_use_case.dart';
+import 'package:kexcel/domain/usecase/enquiry/update_enquiry_use_case.dart';
+import 'package:kexcel/domain/usecase/enquiry/add_enquiry_use_case.dart';
 import 'package:kexcel/domain/usecase/supplier/get_suppliers_use_case.dart';
 import 'package:kexcel/domain/usecase/user/get_user_company_usecase.dart';
 import 'package:kexcel/domain/usecase/user/get_user_usecase.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
-import 'environment_add_bloc_event.dart';
+import 'enquiry_add_bloc_event.dart';
 
 @LazySingleton()
-class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
-  EnvironmentAddBloc() {
-    on<EnvironmentAddEventInit>(_getAll);
-    on<EnvironmentAddEventAddingDone>(_addNew);
+class EnquiryAddBloc extends BaseBloc<EnquiryAddBlocEvent> {
+  EnquiryAddBloc() {
+    on<EnquiryAddEventInit>(_getAll);
+    on<EnquiryAddEventAddingDone>(_addNew);
   }
 
   Set<SupplierEntity> selectedSuppliers = {};
@@ -32,12 +32,12 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
   late List<SupplierEntity> suppliers = [];
   late UserEntity user;
   late CompanyEntity company;
-  late EnvironmentEntity environment;
+  late EnquiryEntity enquiry;
   late bool isModify;
 
-  _getAll(EnvironmentAddEventInit event, emit) async {
+  _getAll(EnquiryAddEventInit event, emit) async {
     try {
-      environment = event.entity;
+      enquiry = event.entity;
 
       isModify = event.entity.id >= 0;
 
@@ -50,14 +50,14 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
         suppliers = await dependencyResolver<GetSuppliersUseCase>().call(null);
       }
 
-      if (environment.supplier != null) {
-        selectedSuppliers.add(environment.supplier!);
+      if (enquiry.supplier != null) {
+        selectedSuppliers.add(enquiry.supplier!);
       }
 
       user = (await dependencyResolver<GetUserUseCase>().call(null))!;
       company = await dependencyResolver<GetUserCompanyUseCase>().call(null);
 
-      emit(ResponseState<List<ProjectItemEntity>>(data: environment.project.items));
+      emit(ResponseState<List<ProjectItemEntity>>(data: enquiry.project.items));
     } on BaseNetworkException catch (e) {
       emit(ErrorState(error: e));
     } on BaseException catch (e) {
@@ -66,22 +66,22 @@ class EnvironmentAddBloc extends BaseBloc<EnvironmentAddBlocEvent> {
   }
 
   _addNew(
-      EnvironmentAddEventAddingDone event, Emitter<BaseBlocState> emit) async {
+      EnquiryAddEventAddingDone event, Emitter<BaseBlocState> emit) async {
     try {
-      if (environment.project.id < 0) {
+      if (enquiry.project.id < 0) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
         return;
       }
-      if (!selectedSuppliers.contains(environment.supplier)) {
-        environment.id = -1;
+      if (!selectedSuppliers.contains(enquiry.supplier)) {
+        enquiry.id = -1;
       }
-      if (environment.id < 0) {
-        environment.id = await dependencyResolver<AddEnvironmentUseCase>().call(environment);
+      if (enquiry.id < 0) {
+        enquiry.id = await dependencyResolver<AddEnquiryUseCase>().call(enquiry);
       } else {
-        await dependencyResolver<UpdateEnvironmentUseCase>().call(environment);
+        await dependencyResolver<UpdateEnquiryUseCase>().call(enquiry);
       }
-      if (environment.supplier != null) {
-        selectedSuppliers.add(environment.supplier!);
+      if (enquiry.supplier != null) {
+        selectedSuppliers.add(enquiry.supplier!);
       }
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));

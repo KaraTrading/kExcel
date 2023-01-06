@@ -1,5 +1,5 @@
 import 'package:kexcel/domain/entity/company_entity.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
+import 'package:kexcel/domain/entity/enquiry_entity.dart';
 import 'package:kexcel/domain/entity/project_entity.dart';
 
 String getProjectName({

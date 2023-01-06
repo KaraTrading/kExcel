@@ -2,7 +2,7 @@ import 'package:kexcel/presenter/common/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:kexcel/presenter/feature/home/profile/profile_screen.dart';
 import 'package:kexcel/presenter/feature/home/project/project_screen.dart';
-import 'environment/environment_screen.dart';
+import 'enquiry/enquiry_screen.dart';
 import 'information/client/client_screen.dart';
 import 'information/item/item_screen.dart';
 import 'information/supplier/supplier_screen.dart';
@@ -38,8 +38,8 @@ class HomeScreen extends StatelessWidget {
         // color: Colors.black,
       ),
       featureItem(
-        onPressed: () => _routeEnvironment(context),
-        title: 'environmentManagement'.translate,
+        onPressed: () => _routeEnquiry(context),
+        title: 'enquiryManagement'.translate,
         icon: Icons.picture_as_pdf,
         // color: Colors.black,
       ),
@@ -140,9 +140,9 @@ class HomeScreen extends StatelessWidget {
     ));
   }
 
-  _routeEnvironment(BuildContext context) {
+  _routeEnquiry(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const EnvironmentScreen(),
+      builder: (context) => const EnquiryScreen(),
     ));
   }
 }

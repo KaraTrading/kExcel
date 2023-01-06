@@ -13,7 +13,7 @@ class ProjectEntity extends BaseEntity {
   List<SupplierEntity> winners = [];
   List<ProjectItemEntity> items = [];
   List<AttachmentEntity> attachments = [];
-  List<int> environmentsIds = [];
+  List<int> enquiriesIds = [];
 
   ProjectEntity({
     this.id = -1,
@@ -23,7 +23,7 @@ class ProjectEntity extends BaseEntity {
     this.winners = const [],
     this.items = const [],
     this.attachments = const [],
-    this.environmentsIds = const [],
+    this.enquiriesIds = const [],
   });
 
   ProjectEntity.empty()
@@ -34,5 +34,5 @@ class ProjectEntity extends BaseEntity {
         winners = const [],
         items = const [],
         attachments = const [],
-        environmentsIds = const [];
+        enquiriesIds = const [];
 }

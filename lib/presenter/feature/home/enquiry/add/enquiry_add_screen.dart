@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'package:kexcel/domain/entity/item_entity.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
+import 'package:kexcel/domain/entity/enquiry_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/presenter/base_screen.dart';
 import 'package:kexcel/presenter/common/localization.dart';
@@ -10,34 +10,34 @@ import 'package:kexcel/presenter/feature/home/pdf/pdf_screen.dart';
 import 'package:kexcel/presenter/widget/count_controller.dart';
 import 'package:kexcel/presenter/widget/no_item_widget.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'environment_add_bloc.dart';
-import 'environment_add_bloc_event.dart';
+import 'enquiry_add_bloc.dart';
+import 'enquiry_add_bloc_event.dart';
 
-class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
-  final EnvironmentEntity entity;
-  const EnvironmentAddScreen({required this.entity, super.key});
+class EnquiryAddScreen extends BaseScreen<EnquiryAddBloc> {
+  final EnquiryEntity entity;
+  const EnquiryAddScreen({required this.entity, super.key});
 
   @override
-  AppBar? get appBar => AppBar(title: Text('environmentAdd'.translate));
+  AppBar? get appBar => AppBar(title: Text('enquiryAdd'.translate));
 
   @override
   FloatingActionButton? floatingActionButton(BuildContext context) => null;
 
   @override
   Widget screenBody(BuildContext context) {
-    callEvent(EnvironmentAddEventInit(entity));
-    return DataLoadBlocBuilder<EnvironmentAddBloc, List<ProjectItemEntity>?>(
+    callEvent(EnquiryAddEventInit(entity));
+    return DataLoadBlocBuilder<EnquiryAddBloc, List<ProjectItemEntity>?>(
       noDataView: const NoItemWidget(),
       bloc: getBloc,
       builder: (BuildContext context, List<ProjectItemEntity>? entities) {
         bool isAdvanceOptionsShowing = false;
 
         final TextEditingController introController = TextEditingController(
-          text: 'environmentIntro'.translate,
+          text: 'enquiryIntro'.translate,
         );
 
         final TextEditingController outroController = TextEditingController(
-          text: 'environmentOutro'.translate,
+          text: 'enquiryOutro'.translate,
         );
 
         final necessaryItems = [
@@ -82,12 +82,12 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                           ),
                           child: Autocomplete(
                             onSelected: (SupplierEntity entity) {
-                              getBloc.environment.supplier = entity;
+                              getBloc.enquiry.supplier = entity;
                             },
                             displayStringForOption: (SupplierEntity entity) =>
                                 entity.name,
                             initialValue: TextEditingValue(
-                              text: getBloc.environment.supplier?.name ?? '',
+                              text: getBloc.enquiry.supplier?.name ?? '',
                             ),
                             optionsBuilder:
                                 (TextEditingValue textEditingValue) {
@@ -146,7 +146,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
             MultiSelectBottomSheetField<ProjectItemEntity?>(
               chipDisplay:
                   MultiSelectChipDisplay<ProjectItemEntity?>.none(disabled: true),
-              initialValue: getBloc.environment.items,
+              initialValue: getBloc.enquiry.items,
               initialChildSize: 0.4,
               buttonIcon: const Icon(Icons.add),
               listType: MultiSelectListType.LIST,
@@ -159,23 +159,23 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
               title: Text('items'.translate),
               onSelectionChanged: (values) {
                 setState(() {
-                  getBloc.environment.items = values
+                  getBloc.enquiry.items = values
                       .cast<ProjectItemEntity>()
                       .toList();
                 });
               },
-              items: getBloc.environment.project.items
+              items: getBloc.enquiry.project.items
                   .map((e) => MultiSelectItem(e, multiSelectText(e.item, context)))
                   .toList(),
               onConfirm: (values) {
                 setState(() {
-                  getBloc.environment.items = values
+                  getBloc.enquiry.items = values
                       .cast<ProjectItemEntity>()
                       .toList();
                 });
               },
             ),
-            getBloc.environment.items.isEmpty
+            getBloc.enquiry.items.isEmpty
                 ? Container(
                     padding: const EdgeInsets.all(10),
                     alignment: Alignment.centerLeft,
@@ -183,8 +183,8 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: getBloc.environment.items
-                        .map((e) => environmentItemWidget(context, e))
+                    children: getBloc.enquiry.items
+                        .map((e) => enquiryItemWidget(context, e))
                         .toList(),
                   ),
           ],
@@ -193,7 +193,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
     );
   }
 
-  Widget environmentItemWidget(
+  Widget enquiryItemWidget(
     BuildContext context,
     ProjectItemEntity item,
   ) {
@@ -392,7 +392,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
         children: [
           ElevatedButton(
             onPressed: () {
-              saveEnvironment();
+              saveEnquiry();
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -401,7 +401,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
           ),
           ElevatedButton(
             onPressed: () {
-              saveEnvironment();
+              saveEnquiry();
               showPdf(
                 context: context,
                 intro: introController.text,
@@ -422,8 +422,8 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
     );
   }
 
-  void saveEnvironment() {
-    callEvent(EnvironmentAddEventAddingDone());
+  void saveEnquiry() {
+    callEvent(EnquiryAddEventAddingDone());
   }
 
   void showPdf({
@@ -444,7 +444,7 @@ class EnvironmentAddScreen extends BaseScreen<EnvironmentAddBloc> {
         builder: (context) => PDFScreen(
           intro: intro,
           outro: outro,
-          environment: getBloc.environment,
+          enquiry: getBloc.enquiry,
           user: getBloc.user,
           company: getBloc.company,
           necessaryInformation: necessaryItems
