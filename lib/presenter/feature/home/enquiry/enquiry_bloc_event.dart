@@ -1,9 +1,12 @@
 import 'package:kexcel/domain/entity/enquiry_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/presenter/base_bloc_event.dart';
 
 abstract class EnquiryBlocEvent extends BaseBlocEvent {}
 
 class EnquiryEventInit extends EnquiryBlocEvent {
+  final ProjectEntity? project;
+  EnquiryEventInit(this.project);
 }
 class EnquiryEventSearch extends EnquiryBlocEvent {
   final String? query;

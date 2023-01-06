@@ -1,4 +1,5 @@
 import 'package:kexcel/domain/entity/attachment_entity.dart';
+import 'package:kexcel/domain/entity/enquiry_entity.dart';
 
 import 'base_entity.dart';
 import 'project_item_entity.dart';
@@ -13,7 +14,7 @@ class ProjectEntity extends BaseEntity {
   List<SupplierEntity> winners = [];
   List<ProjectItemEntity> items = [];
   List<AttachmentEntity> attachments = [];
-  List<int> enquiriesIds = [];
+  List<EnquiryEntity> enquiries = [];
 
   ProjectEntity({
     this.id = -1,
@@ -23,7 +24,7 @@ class ProjectEntity extends BaseEntity {
     this.winners = const [],
     this.items = const [],
     this.attachments = const [],
-    this.enquiriesIds = const [],
+    this.enquiries = const [],
   });
 
   ProjectEntity.empty()
@@ -34,5 +35,5 @@ class ProjectEntity extends BaseEntity {
         winners = const [],
         items = const [],
         attachments = const [],
-        enquiriesIds = const [];
+        enquiries = const [];
 }

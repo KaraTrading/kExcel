@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:kexcel/data/local/model/client_data.dart';
+import 'package:kexcel/data/local/model/enquiry_data.dart';
 import 'package:kexcel/data/local/model/item_data.dart';
 import 'package:kexcel/data/local/model/project_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
@@ -17,12 +18,14 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
   Database<ClientData> clientStorage;
   Database<SupplierData> supplierStorage;
   Database<ItemData> itemsStorage;
+  Database<EnquiryData> enquiryStorage;
 
   ProjectLocalDataSourceImpl({
     required this.storage,
     required this.clientStorage,
     required this.supplierStorage,
     required this.itemsStorage,
+    required this.enquiryStorage,
   });
 
   @override
@@ -85,11 +88,26 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
   Future<ProjectEntity?> dataToEntity(ProjectData data) async {
     final entity = data.mapToEntity;
 
+    final client = (await clientStorage.getById(data.clientId))?.mapToEntity;
+    if (client != null) {
+      entity.client = client;
+    }
+
     if (data.winnersIds.isNotEmpty) {
       for (var winnerId in data.winnersIds) {
         final winner = (await supplierStorage.getById(winnerId))?.mapToEntity;
         if (winner != null) {
           entity.winners.add(winner);
+        }
+      }
+    }
+
+    if (data.enquiriesIds.isNotEmpty) {
+      for (var enquiryId in data.enquiriesIds) {
+        final enquiry = (await enquiryStorage.getById(enquiryId))?.mapToEntity;
+        if (enquiry != null) {
+
+          entity.enquiries.add(enquiry);
         }
       }
     }

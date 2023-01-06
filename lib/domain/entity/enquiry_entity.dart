@@ -22,4 +22,9 @@ class EnquiryEntity extends BaseEntity {
     this.items = const[],
     this.attachments = const[],
   });
+
+  @override
+  String toString() {
+    return '${supplier?.name ?? ''} ${items.length + 1} item(s)';
+  }
 }

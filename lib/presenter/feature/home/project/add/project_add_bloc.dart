@@ -32,7 +32,6 @@ class ProjectAddBloc extends BaseBloc<ProjectAddBlocEvent> {
 
   ClientEntity? selectedClient;
   Set<ProjectItemEntity> selectedProjectItems = {};
-  Set<SupplierEntity> selectedSuppliers = {};
 
   late List<ClientEntity> clients = [];
   late List<SupplierEntity> suppliers = [];
@@ -48,8 +47,13 @@ class ProjectAddBloc extends BaseBloc<ProjectAddBlocEvent> {
       if (event.entity != null) {
         isModify = true;
         project = event.entity!;
+        selectedClient = project!.client;
+        selectedProjectItems = project!.items.toSet();
       } else {
         isModify = false;
+        project = null;
+        selectedClient = null;
+        selectedProjectItems = {};
       }
       emit(LoadingState());
       if (clients.isEmpty) {
@@ -66,8 +70,12 @@ class ProjectAddBloc extends BaseBloc<ProjectAddBlocEvent> {
 
       if (project != null) {
         for (var projectItems in project!.items) {
-          projectItems.item =
-              items.firstWhere((item) => item.id == projectItems.item.id);
+          projectItems.item ;
+          for (var element in items) {
+            if (element.id == projectItems.item.id) {
+              projectItems.item = element;
+            }
+          }
         }
 
         for (var winners in project!.winners) {
@@ -88,15 +96,18 @@ class ProjectAddBloc extends BaseBloc<ProjectAddBlocEvent> {
 
   _addNew(ProjectAddEventAddingDone event, Emitter<BaseBlocState> emit) async {
     try {
-      if ((project?.id ?? -1) < 0) {
+      if (project == null) {
         project = ProjectEntity(
           client: selectedClient!,
           date: DateTime.now(),
-          winners: selectedSuppliers.toList(),
           items: selectedProjectItems.toList(),
         );
-        project!.id =
-            await dependencyResolver<AddProjectUseCase>().call(project!);
+      } else {
+        project!.client = selectedClient!;
+        project!.items = selectedProjectItems.toList();
+      }
+      if ((project?.id ?? -1) < 0) {
+        project!.id = await dependencyResolver<AddProjectUseCase>().call(project!);
       } else {
         await dependencyResolver<UpdateProjectUseCase>().call(project!);
       }

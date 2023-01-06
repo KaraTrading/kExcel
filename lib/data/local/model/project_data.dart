@@ -58,7 +58,7 @@ extension DataMapper on ProjectData {
     winners: [],
     items: [],
     attachments: [],
-    enquiriesIds: enquiriesIds,
+    enquiries: [],
   );
 }
 
@@ -72,7 +72,7 @@ extension EntityMapper on ProjectEntity {
     itemsIds: items.map((e) => e.item.id).toList(),
     itemsQuantities: items.map((e) => e.quantity).toList(),
     itemsDimensions: items.map((e) => e.dimension).toList(),
-    enquiriesIds: enquiriesIds,
+    enquiriesIds: enquiries.map((e) => e.id).toList(),
     attachmentsIds: attachments.map((e) => e.id).toList(),
   );
 }

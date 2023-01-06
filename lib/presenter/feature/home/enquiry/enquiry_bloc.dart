@@ -5,10 +5,12 @@ import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/core/exception/network_exception.dart';
 import 'package:kexcel/domain/entity/company_entity.dart';
 import 'package:kexcel/domain/entity/enquiry_entity.dart';
+import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
 import 'package:kexcel/domain/usecase/enquiry/add_enquiry_use_case.dart';
 import 'package:kexcel/domain/usecase/enquiry/add_enquiries_use_case.dart';
 import 'package:kexcel/domain/usecase/enquiry/delete_enquiry_use_case.dart';
+import 'package:kexcel/domain/usecase/enquiry/get_enquiries_by_project_use_case.dart';
 import 'package:kexcel/domain/usecase/enquiry/get_enquiries_use_case.dart';
 import 'package:kexcel/domain/usecase/enquiry/update_enquiry_use_case.dart';
 import 'package:kexcel/domain/usecase/supplier/get_suppliers_use_case.dart';
@@ -28,6 +30,7 @@ class EnquiryBloc extends BaseBloc<EnquiryBlocEvent> {
     on<EnquiryEventDelete>(_delete);
   }
 
+  ProjectEntity? project;
   late CompanyEntity company;
   late List<SupplierEntity> suppliers = [];
   late List<EnquiryEntity> enquiries = [];
@@ -42,8 +45,18 @@ class EnquiryBloc extends BaseBloc<EnquiryBlocEvent> {
         suppliers = await dependencyResolver<GetSuppliersUseCase>().call(null);
       }
 
-      enquiries = await dependencyResolver<GetEnquiriesUseCase>()
-          .call(event is EnquiryEventSearch ? event.query : null);
+      if (event is EnquiryEventInit) {
+        project = event.project;
+      }
+
+      if (project != null) {
+        enquiries = await dependencyResolver<GetEnquiriesByProjectUseCase>()
+            .call(project!.id);
+      } else {
+        enquiries = await dependencyResolver<GetEnquiriesUseCase>().call(
+          event is EnquiryEventSearch ? event.query : null,
+        );
+      }
       emit(ResponseState<List<EnquiryEntity>>(data: enquiries));
     } on BaseNetworkException catch (e) {
       emit(ErrorState(error: e));
@@ -64,8 +77,7 @@ class EnquiryBloc extends BaseBloc<EnquiryBlocEvent> {
     }
   }
 
-  _update(
-      EnquiryEventEditingDone event, Emitter<BaseBlocState> emit) async {
+  _update(EnquiryEventEditingDone event, Emitter<BaseBlocState> emit) async {
     try {
       if (event.entity.id < 0) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
@@ -81,8 +93,7 @@ class EnquiryBloc extends BaseBloc<EnquiryBlocEvent> {
     }
   }
 
-  _importNewItems(
-      EnquiryEventImport event, Emitter<BaseBlocState> emit) async {
+  _importNewItems(EnquiryEventImport event, Emitter<BaseBlocState> emit) async {
     try {
       emit(LoadingState());
       await dependencyResolver<AddEnquiriesUseCase>().call(event.entities);
@@ -93,7 +104,6 @@ class EnquiryBloc extends BaseBloc<EnquiryBlocEvent> {
       emit.call(ErrorState(error: e));
     }
   }
-
 
   _delete(EnquiryEventDelete event, Emitter<BaseBlocState> emit) async {
     try {

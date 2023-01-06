@@ -31,37 +31,6 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
       noDataView: const NoItemWidget(),
       bloc: getBloc,
       builder: (BuildContext context, List<ItemEntity>? entities) {
-        bool isAdvanceOptionsShowing = false;
-
-        final TextEditingController introController = TextEditingController(
-          text: 'enquiryIntro'.translate,
-        );
-
-        final TextEditingController outroController = TextEditingController(
-          text: 'enquiryOutro'.translate,
-        );
-
-        final necessaryItems = [
-          NecessaryItem(title: 'ourReference'.translate, isAvailable: true),
-          NecessaryItem(title: 'scopeOfSupply'.translate, isAvailable: true),
-          NecessaryItem(title: 'prices'.translate, isAvailable: true),
-          NecessaryItem(title: 'timeOfDelivery'.translate, isAvailable: true),
-          NecessaryItem(title: 'termsOfDelivery'.translate, isAvailable: true),
-          NecessaryItem(title: 'packing'.translate, isAvailable: true),
-          NecessaryItem(title: 'weights'.translate, isAvailable: true),
-          NecessaryItem(title: 'termsOfPayment'.translate, isAvailable: true),
-          NecessaryItem(title: 'countryOfOrigin'.translate, isAvailable: true),
-          NecessaryItem(title: 'customsTariff'.translate, isAvailable: true),
-          NecessaryItem(title: 'validityOfOffer'.translate, isAvailable: true),
-        ];
-
-        final TextEditingController termsOfDeliveryExtraDataController =
-            TextEditingController(text: necessaryItems[4].extraData);
-        final TextEditingController packingExtraDataController =
-            TextEditingController(text: necessaryItems[5].extraData);
-        final TextEditingController termsOfPaymentExtraDataController =
-            TextEditingController(text: necessaryItems[7].extraData);
-
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -106,52 +75,14 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
                               },
                             )),
                         const SizedBox(height: 25),
-                        suppliersSelector(context),
-                        const SizedBox(height: 25),
                         itemsSelector(context),
                         const SizedBox(height: 25),
-                        advancedOptions(
-                          isAdvanceOptionsShowing,
-                          introController,
-                          necessaryItems,
-                          termsOfDeliveryExtraDataController,
-                          packingExtraDataController,
-                          termsOfPaymentExtraDataController,
-                          outroController,
-                        ),
                       ],
                     ))),
-            bottomSaveButtons(
-              context,
-              necessaryItems,
-              termsOfDeliveryExtraDataController,
-              packingExtraDataController,
-              termsOfPaymentExtraDataController,
-              introController,
-              outroController,
-            ),
+            bottomSaveButtons(context),
           ],
         );
       },
-    );
-  }
-
-  Widget suppliersSelector(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        getBloc.selectedSuppliers.isEmpty
-            ? Container(
-          padding: const EdgeInsets.all(10),
-          alignment: Alignment.centerLeft,
-          child: Text('noneSelected'.translate),
-        )
-            : Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: getBloc.selectedSuppliers
-              .map((e) => projectSupplierWidget(context, e))
-              .toList(),
-        ),
-      ],
     );
   }
 
@@ -423,15 +354,7 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
     );
   }
 
-  Widget bottomSaveButtons(
-    BuildContext context,
-    List<NecessaryItem> necessaryItems,
-    TextEditingController termsOfDeliveryExtraDataController,
-    TextEditingController packingExtraDataController,
-    TextEditingController termsOfPaymentExtraDataController,
-    TextEditingController introController,
-    TextEditingController outroController,
-  ) {
+  Widget bottomSaveButtons(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.surfaceVariant,
       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -439,7 +362,10 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
-            onPressed: () => saveProject(),
+            onPressed: () {
+              saveProject();
+              Navigator.of(context).pop();
+            },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text('save'.translate),
