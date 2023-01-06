@@ -30,7 +30,7 @@ class ProjectData extends BaseData {
   List<String?> itemsDimensions;
 
   @HiveField(8)
-  List<int> environmentsIds;
+  List<int> enquiriesIds;
 
   @HiveField(9)
   List<int> attachmentsIds;
@@ -44,7 +44,7 @@ class ProjectData extends BaseData {
     this.itemsIds = const[],
     this.itemsQuantities = const[],
     this.itemsDimensions = const[],
-    this.environmentsIds = const[],
+    this.enquiriesIds = const[],
     this.attachmentsIds = const[],
   });
 }
@@ -58,7 +58,7 @@ extension DataMapper on ProjectData {
     winners: [],
     items: [],
     attachments: [],
-    environmentsIds: environmentsIds,
+    enquiriesIds: enquiriesIds,
   );
 }
 
@@ -72,7 +72,7 @@ extension EntityMapper on ProjectEntity {
     itemsIds: items.map((e) => e.item.id).toList(),
     itemsQuantities: items.map((e) => e.quantity).toList(),
     itemsDimensions: items.map((e) => e.dimension).toList(),
-    environmentsIds: environmentsIds,
+    enquiriesIds: enquiriesIds,
     attachmentsIds: attachments.map((e) => e.id).toList(),
   );
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
+import 'package:kexcel/domain/entity/enquiry_entity.dart';
 import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/common/project_name_formatter.dart';
-import 'package:kexcel/presenter/feature/home/environment/add/environment_add_screen.dart';
+import 'package:kexcel/presenter/feature/home/enquiry/add/enquiry_add_screen.dart';
 import 'package:kexcel/presenter/feature/home/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
 import 'package:kexcel/presenter/widget/app_button_widget.dart';
@@ -89,7 +89,7 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            AppButtonWidget('environmentNewAdd'.translate, () => _routeEnvironment(context, entity))
+            AppButtonWidget('enquiryNewAdd'.translate, () => _routeEnquiry(context, entity))
           ],
         )
       ],
@@ -143,9 +143,9 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
   @override
   void import() {}
 
-  _routeEnvironment(BuildContext context, ProjectEntity project) {
+  _routeEnquiry(BuildContext context, ProjectEntity project) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => EnvironmentAddScreen(entity: EnvironmentEntity(project: project, date: DateTime.now()),),
+      builder: (context) => EnquiryAddScreen(entity: EnquiryEntity(project: project, date: DateTime.now()),),
     ));
   }
 }

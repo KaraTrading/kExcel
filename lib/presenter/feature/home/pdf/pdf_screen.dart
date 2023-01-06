@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kexcel/domain/entity/company_entity.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
+import 'package:kexcel/domain/entity/enquiry_entity.dart';
 import 'package:kexcel/domain/entity/user_entity.dart';
-import 'package:kexcel/presenter/common/environment_name_formatter.dart';
+import 'package:kexcel/presenter/common/enquiry_name_formatter.dart';
 import 'package:kexcel/presenter/utils/pdf_utils.dart';
 import 'package:open_file/open_file.dart';
 import 'package:pdf/pdf.dart';
@@ -15,7 +15,7 @@ import 'package:path_provider/path_provider.dart' show getDownloadsDirectory;
 class PDFScreen extends StatelessWidget {
   final String intro;
   final String outro;
-  final EnvironmentEntity environment;
+  final EnquiryEntity enquiry;
   final UserEntity user;
   final CompanyEntity company;
   final List<String> necessaryInformation;
@@ -23,7 +23,7 @@ class PDFScreen extends StatelessWidget {
   const PDFScreen({
     required this.intro,
     required this.outro,
-    required this.environment,
+    required this.enquiry,
     required this.user,
     required this.company,
     this.necessaryInformation = const [],
@@ -75,8 +75,8 @@ class PDFScreen extends StatelessWidget {
     final invoice = Invoice(
       intro: intro,
       outro: outro,
-      code: getEnvironmentName(company: company, environment: environment),
-      items: environment.items
+      code: getEnquiryName(company: company, enquiry: enquiry),
+      items: enquiry.items
           .map((e) => ItemEntityWithExtraData(
               sortIndex: index++,
               item: e.item,

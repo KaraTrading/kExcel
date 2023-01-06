@@ -4,33 +4,33 @@ import 'package:kexcel/core/di/dependency_injector.dart';
 import 'package:kexcel/core/exception/base_exception.dart';
 import 'package:kexcel/core/exception/network_exception.dart';
 import 'package:kexcel/domain/entity/company_entity.dart';
-import 'package:kexcel/domain/entity/environment_entity.dart';
+import 'package:kexcel/domain/entity/enquiry_entity.dart';
 import 'package:kexcel/domain/entity/supplier_entity.dart';
-import 'package:kexcel/domain/usecase/environment/add_environment_use_case.dart';
-import 'package:kexcel/domain/usecase/environment/add_environments_use_case.dart';
-import 'package:kexcel/domain/usecase/environment/delete_environment_use_case.dart';
-import 'package:kexcel/domain/usecase/environment/get_environments_use_case.dart';
-import 'package:kexcel/domain/usecase/environment/update_environment_use_case.dart';
+import 'package:kexcel/domain/usecase/enquiry/add_enquiry_use_case.dart';
+import 'package:kexcel/domain/usecase/enquiry/add_enquiries_use_case.dart';
+import 'package:kexcel/domain/usecase/enquiry/delete_enquiry_use_case.dart';
+import 'package:kexcel/domain/usecase/enquiry/get_enquiries_use_case.dart';
+import 'package:kexcel/domain/usecase/enquiry/update_enquiry_use_case.dart';
 import 'package:kexcel/domain/usecase/supplier/get_suppliers_use_case.dart';
 import 'package:kexcel/domain/usecase/user/get_user_company_usecase.dart';
 import 'package:kexcel/presenter/base_bloc.dart';
 import 'package:kexcel/presenter/base_bloc_state.dart';
-import 'environment_bloc_event.dart';
+import 'enquiry_bloc_event.dart';
 
 @Singleton()
-class EnvironmentBloc extends BaseBloc<EnvironmentBlocEvent> {
-  EnvironmentBloc() {
-    on<EnvironmentEventInit>(_getAll);
-    on<EnvironmentEventSearch>(_getAll);
-    on<EnvironmentEventAddingDone>(_addNew);
-    on<EnvironmentEventEditingDone>(_update);
-    on<EnvironmentEventImport>(_importNewItems);
-    on<EnvironmentEventDelete>(_delete);
+class EnquiryBloc extends BaseBloc<EnquiryBlocEvent> {
+  EnquiryBloc() {
+    on<EnquiryEventInit>(_getAll);
+    on<EnquiryEventSearch>(_getAll);
+    on<EnquiryEventAddingDone>(_addNew);
+    on<EnquiryEventEditingDone>(_update);
+    on<EnquiryEventImport>(_importNewItems);
+    on<EnquiryEventDelete>(_delete);
   }
 
   late CompanyEntity company;
   late List<SupplierEntity> suppliers = [];
-  late List<EnvironmentEntity> environments = [];
+  late List<EnquiryEntity> enquiries = [];
 
   _getAll(event, emit) async {
     try {
@@ -42,9 +42,9 @@ class EnvironmentBloc extends BaseBloc<EnvironmentBlocEvent> {
         suppliers = await dependencyResolver<GetSuppliersUseCase>().call(null);
       }
 
-      environments = await dependencyResolver<GetEnvironmentsUseCase>()
-          .call(event is EnvironmentEventSearch ? event.query : null);
-      emit(ResponseState<List<EnvironmentEntity>>(data: environments));
+      enquiries = await dependencyResolver<GetEnquiriesUseCase>()
+          .call(event is EnquiryEventSearch ? event.query : null);
+      emit(ResponseState<List<EnquiryEntity>>(data: enquiries));
     } on BaseNetworkException catch (e) {
       emit(ErrorState(error: e));
     } on BaseException catch (e) {
@@ -52,10 +52,10 @@ class EnvironmentBloc extends BaseBloc<EnvironmentBlocEvent> {
     }
   }
 
-  _addNew(EnvironmentEventAddingDone event, Emitter<BaseBlocState> emit) async {
+  _addNew(EnquiryEventAddingDone event, Emitter<BaseBlocState> emit) async {
     try {
       emit(LoadingState());
-      await dependencyResolver<AddEnvironmentUseCase>().call(event.entity);
+      await dependencyResolver<AddEnquiryUseCase>().call(event.entity);
       return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
@@ -65,14 +65,14 @@ class EnvironmentBloc extends BaseBloc<EnvironmentBlocEvent> {
   }
 
   _update(
-      EnvironmentEventEditingDone event, Emitter<BaseBlocState> emit) async {
+      EnquiryEventEditingDone event, Emitter<BaseBlocState> emit) async {
     try {
       if (event.entity.id < 0) {
         emit.call(ErrorState(error: 'Invalid Inputs'));
         return;
       }
       emit(LoadingState());
-      await dependencyResolver<UpdateEnvironmentUseCase>().call(event.entity);
+      await dependencyResolver<UpdateEnquiryUseCase>().call(event.entity);
       return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
@@ -82,10 +82,10 @@ class EnvironmentBloc extends BaseBloc<EnvironmentBlocEvent> {
   }
 
   _importNewItems(
-      EnvironmentEventImport event, Emitter<BaseBlocState> emit) async {
+      EnquiryEventImport event, Emitter<BaseBlocState> emit) async {
     try {
       emit(LoadingState());
-      await dependencyResolver<AddEnvironmentsUseCase>().call(event.entities);
+      await dependencyResolver<AddEnquiriesUseCase>().call(event.entities);
       return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));
@@ -95,10 +95,10 @@ class EnvironmentBloc extends BaseBloc<EnvironmentBlocEvent> {
   }
 
 
-  _delete(EnvironmentEventDelete event, Emitter<BaseBlocState> emit) async {
+  _delete(EnquiryEventDelete event, Emitter<BaseBlocState> emit) async {
     try {
       emit(LoadingState());
-      await dependencyResolver<DeleteEnvironmentUseCase>().call(event.entity);
+      await dependencyResolver<DeleteEnquiryUseCase>().call(event.entity);
       return _getAll(event, emit);
     } on BaseNetworkException catch (e) {
       emit.call(ErrorState(error: e));

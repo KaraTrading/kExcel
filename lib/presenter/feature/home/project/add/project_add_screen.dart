@@ -34,11 +34,11 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
         bool isAdvanceOptionsShowing = false;
 
         final TextEditingController introController = TextEditingController(
-          text: 'environmentIntro'.translate,
+          text: 'enquiryIntro'.translate,
         );
 
         final TextEditingController outroController = TextEditingController(
-          text: 'environmentOutro'.translate,
+          text: 'enquiryOutro'.translate,
         );
 
         final necessaryItems = [
