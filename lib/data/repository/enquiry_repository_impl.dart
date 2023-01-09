@@ -27,7 +27,7 @@ class EnquiryRepositoryImpl extends EnquiryRepository{
 
   @override
   Future<List<EnquiryEntity>?> getEnquiries({int? projectId, String? search}) async {
-    return await localDataSource.getEnquiries(search);
+    return await localDataSource.getEnquiries(projectId: projectId, search: search);
   }
 
   @override

@@ -13,7 +13,7 @@ abstract class EnquiryLocalDataSource extends BaseLocalDataSource<EnquiryData> {
 
   Future<bool?> updateEnquiry(EnquiryEntity entity);
 
-  Future<List<EnquiryEntity>?> getEnquiries(String? search);
+  Future<List<EnquiryEntity>?> getEnquiries({int? projectId, String? search});
 
   Future<EnquiryEntity?> getEnquiry(int id);
 

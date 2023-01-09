@@ -23,6 +23,6 @@ class ItemEntity extends BaseEntity {
 
   @override
   String toString() {
-    return '$type: $name';
+    return '$name\n$manufacturer: $type - $hsCode';
   }
 }

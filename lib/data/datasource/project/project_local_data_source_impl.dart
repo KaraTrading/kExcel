@@ -1,9 +1,11 @@
 import 'package:injectable/injectable.dart';
+import 'package:kexcel/data/datasource/item/item_local_data_source.dart';
 import 'package:kexcel/data/local/model/client_data.dart';
-import 'package:kexcel/data/local/model/item_data.dart';
+import 'package:kexcel/data/local/model/enquiry_data.dart';
 import 'package:kexcel/data/local/model/project_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/database.dart';
+import 'package:kexcel/domain/entity/item_entity.dart';
 import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'project_local_data_source.dart';
@@ -16,13 +18,15 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
 
   Database<ClientData> clientStorage;
   Database<SupplierData> supplierStorage;
-  Database<ItemData> itemsStorage;
+  Database<EnquiryData> enquiryStorage;
+  ItemLocalDataSource itemLocalDataSource;
 
   ProjectLocalDataSourceImpl({
     required this.storage,
     required this.clientStorage,
     required this.supplierStorage,
-    required this.itemsStorage,
+    required this.itemLocalDataSource,
+    required this.enquiryStorage,
   });
 
   @override
@@ -85,6 +89,11 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
   Future<ProjectEntity?> dataToEntity(ProjectData data) async {
     final entity = data.mapToEntity;
 
+    final client = (await clientStorage.getById(data.clientId))?.mapToEntity;
+    if (client != null) {
+      entity.client = client;
+    }
+
     if (data.winnersIds.isNotEmpty) {
       for (var winnerId in data.winnersIds) {
         final winner = (await supplierStorage.getById(winnerId))?.mapToEntity;
@@ -94,16 +103,24 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
       }
     }
 
-    final items = (await itemsStorage.getByIds(data.itemsIds))
-        ?.map((e) => e.mapToEntity)
-        .toList() ??
-        [];
+    if (data.enquiriesIds.isNotEmpty) {
+      for (var enquiryId in data.enquiriesIds) {
+        final enquiry = (await enquiryStorage.getById(enquiryId))?.mapToEntity;
+        if (enquiry != null) {
+
+          entity.enquiries.add(enquiry);
+        }
+      }
+    }
+
+    final List<ItemEntity> items = [];
+
     final itemQuantities = data.itemsQuantities;
     final itemDimensions = data.itemsDimensions;
     entity.items = [];
-    for (int i = 0; i < items.length; i++) {
+    for (int i = 0; i < data.itemsIds.length; i++) {
       entity.items.add(ProjectItemEntity(
-        item: items[i],
+        item: (await itemLocalDataSource.getItemById(data.itemsIds[i]))!,
         quantity: itemQuantities[i],
         dimension: itemDimensions[i],
       ));

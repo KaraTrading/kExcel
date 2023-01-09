@@ -24,8 +24,16 @@ dependencies:
   open_file: ^3.2.1
   file_picker:
   easy_localization: ^3.0.1
-  pdf: ^3.8.4
-  printing: ^5.9.3
+  printing:
+    git:
+      url: https://github.com/Shahriyar13/dart_pdf.git
+      path: printing
+      version: ^5.9.3
+  pdf:
+    git:
+      url: https://github.com/Shahriyar13/dart_pdf.git
+      path: pdf
+      version: ^3.8.4
   flutter_secure_storage: ^7.0.1
   multi_select_flutter:
     git: https://github.com/Shahriyar13/multi_select_flutter.git

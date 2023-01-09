@@ -130,6 +130,8 @@ class ItemScreen extends BaseInformationScreen<ItemBloc, ItemEntity> {
           const SizedBox(height: 25),
           TextField(
             controller: descriptionController,
+            minLines: 1,
+            maxLines: 20,
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
               labelText: 'description'.translate,

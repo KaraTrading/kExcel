@@ -242,6 +242,8 @@ class EnquiryAddScreen extends BaseScreen<EnquiryAddBloc> {
               ],
             ),
             TextField(
+              minLines: 1,
+              maxLines: 20,
               controller: textController,
               onChanged: (text) => item.dimension = text,
               decoration: InputDecoration(

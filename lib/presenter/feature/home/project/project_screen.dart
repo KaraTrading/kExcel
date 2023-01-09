@@ -5,6 +5,7 @@ import 'package:kexcel/presenter/base_bloc_event.dart';
 import 'package:kexcel/presenter/common/localization.dart';
 import 'package:kexcel/presenter/common/project_name_formatter.dart';
 import 'package:kexcel/presenter/feature/home/enquiry/add/enquiry_add_screen.dart';
+import 'package:kexcel/presenter/feature/home/enquiry/enquiry_screen.dart';
 import 'package:kexcel/presenter/feature/home/information/base_information_screen.dart';
 import 'package:kexcel/presenter/utils/excel_utils.dart';
 import 'package:kexcel/presenter/widget/app_button_widget.dart';
@@ -52,23 +53,24 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
             Text('${'client'.translate}: ${entity.client.name}'),
           ],
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              Text('${'winners'.translate}: '),
-              ...entity.winners
-                  .map((e) => Card(
-                        color: Theme.of(context).colorScheme.background,
-                        child: Padding(
-                          padding: const EdgeInsets.all(7.0),
-                          child: Text(e.toString()),
-                        ),
-                      ))
-                  .toList()
-            ],
+        if (entity.winners.isNotEmpty)
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Text('${'winners'.translate}: '),
+                ...entity.winners
+                    .map((e) => Card(
+                          color: Theme.of(context).colorScheme.background,
+                          child: Padding(
+                            padding: const EdgeInsets.all(7.0),
+                            child: Text(e.toString()),
+                          ),
+                        ))
+                    .toList()
+              ],
+            ),
           ),
-        ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -89,7 +91,14 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            AppButtonWidget('enquiryNewAdd'.translate, () => _routeEnquiry(context, entity))
+            AppButtonWidget(
+              '${entity.enquiries.length} ${'enquiries'.translate}',
+                  () => _routeEnquiry(context, entity),
+            ),
+            AppButtonWidget(
+              'enquiryNewAdd'.translate,
+              () => _routeAddEnquiry(context, entity),
+            ),
           ],
         )
       ],
@@ -145,7 +154,17 @@ class ProjectScreen extends BaseInformationScreen<ProjectBloc, ProjectEntity> {
 
   _routeEnquiry(BuildContext context, ProjectEntity project) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => EnquiryAddScreen(entity: EnquiryEntity(project: project, date: DateTime.now()),),
+      builder: (context) => EnquiryScreen(
+        project: project
+      ),
+    ));
+  }
+
+  _routeAddEnquiry(BuildContext context, ProjectEntity project) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => EnquiryAddScreen(
+        entity: EnquiryEntity(project: project, date: DateTime.now()),
+      ),
     ));
   }
 }

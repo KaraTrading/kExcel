@@ -10,7 +10,6 @@ import 'enquiry_local_data_source.dart';
 
 @Injectable(as: EnquiryLocalDataSource)
 class ProjectLocalDataSourceImpl extends EnquiryLocalDataSource {
-
   @override
   Database<EnquiryData> storage;
 
@@ -28,12 +27,22 @@ class ProjectLocalDataSourceImpl extends EnquiryLocalDataSource {
   });
 
   @override
-  Future<List<EnquiryEntity>?> getEnquiries(String? search) async {
+  Future<List<EnquiryEntity>?> getEnquiries(
+      {int? projectId, String? search}) async {
     final List<EnquiryData>? data;
-    if (search == null || search.isEmpty) {
-      data = await storage.getAll();
+    if (projectId != null) {
+      data = [];
+      (await storage.getAll())?.forEach((element) {
+        if (element.projectId == projectId) {
+          data!.add(element);
+        }
+      });
     } else {
-      data = await storage.findAll(search);
+      if (search == null || search.isEmpty) {
+        data = await storage.getAll();
+      } else {
+        data = await storage.findAll(search);
+      }
     }
     final List<EnquiryEntity> all = [];
 
@@ -51,7 +60,7 @@ class ProjectLocalDataSourceImpl extends EnquiryLocalDataSource {
 
   @override
   Future<int> saveEnquiry(EnquiryEntity entity) async {
-    final all = await getEnquiries(null);
+    final all = await getEnquiries();
     final List<EnquiryEntity> allInYear = [];
     all?.forEach((element) {
       if (element.date.year == DateTime.now().year) {
@@ -68,7 +77,7 @@ class ProjectLocalDataSourceImpl extends EnquiryLocalDataSource {
     if (res == null) {
       return -1;
     }
-    entity.project.enquiriesIds.add(res.id);
+    entity.project.enquiries.add(res.mapToEntity);
     projectsLocalDataSource.updateProject(entity.project);
     return res.id;
   }

@@ -34,7 +34,7 @@ class EnquiryScreen
   String get title => 'enquiryManagement'.translate;
 
   @override
-  BaseBlocEvent get initEvent => EnquiryEventInit();
+  BaseBlocEvent get initEvent => EnquiryEventInit(project);
 
   @override
   BaseBlocEvent deleteEvent(EnquiryEntity entity) =>

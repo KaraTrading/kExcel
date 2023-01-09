@@ -18,4 +18,9 @@ class SupplierEntity extends BaseEntity {
     this.vatId,
     this.isManufacturer,
   });
+
+  @override
+  String toString() {
+    return name;
+  }
 }
