@@ -43,7 +43,7 @@ SPEC CHECKSUMS:
   FlutterMacOS: ae6af50a8ea7d6103d888583d46bd8328a7e9811
   package_info_plus_macos: 653b96af562fabb349a88935164864b5f16b5b2c
   path_provider_macos: 7f02d5d549750547369e9c68223f954ef3539e72
-  printing: 2b88cb4ae59cc01aea755e40dae0f4a0df14296a
+  printing: e4b7e232ff3d5d50a70b20d959aa71035a5c31f9
   shared_preferences_macos: 33a283075a27b1bb86af262383983fc22dad33af
   url_launcher_macos: eac8bc4a91d00018e866205960559d73736b08dc
 

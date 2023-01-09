@@ -331,23 +331,22 @@ class ProjectAddScreen extends BaseScreen<ProjectAddBloc> {
       TextSpan(
         children: <TextSpan>[
           TextSpan(
-            text: '${e.type}: ${e.name}\n',
+            text: '${e.name}\n',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           TextSpan(
-            text: e.description,
-            style: Theme.of(context).textTheme.caption,
-          ),
-          TextSpan(
             text: (e.manufacturer != null)
-                ? '\n${'manufacturer'.translate}: ${e.manufacturer}'
-                : '\n',
+                ? '${e.manufacturer}: ${e.type}'
+                : '${e.type}',
             style: Theme.of(context).textTheme.caption,
           ),
           TextSpan(
-            text:
-                (e.hsCode != null) ? '${'hsCode'.translate}: ${e.hsCode}' : '',
+            text: (e.hsCode != null) ? ' ${'hsCode'.translate}: ${e.hsCode}' : '',
             style: Theme.of(context).textTheme.caption,
+          ),
+          TextSpan(
+            text: '\n${e.description}',
+            style: Theme.of(context).textTheme.displaySmall,
           ),
         ],
       ),

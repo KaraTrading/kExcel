@@ -43,6 +43,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.3"
+  bidi:
+    dependency: transitive
+    description:
+      name: bidi
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.6"
   bloc:
     dependency: transitive
     description:
@@ -663,10 +670,12 @@ packages:
   pdf:
     dependency: "direct main"
     description:
-      name: pdf
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.8.4"
+      path: pdf
+      ref: HEAD
+      resolved-ref: a732bf7547e5d5603737cbb1f9079734964e4d18
+      url: "https://github.com/Shahriyar13/dart_pdf.git"
+    source: git
+    version: "3.8.5"
   petitparser:
     dependency: transitive
     description:
@@ -719,10 +728,12 @@ packages:
   printing:
     dependency: "direct main"
     description:
-      name: printing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.9.3"
+      path: printing
+      ref: HEAD
+      resolved-ref: "4911315bab109d41a88305f5727c17dbabb5a5cc"
+      url: "https://github.com/Shahriyar13/dart_pdf.git"
+    source: git
+    version: "5.10.0"
   process:
     dependency: transitive
     description:

@@ -84,6 +84,7 @@ class PDFScreen extends StatelessWidget {
               dimension: e.dimension))
           .toList(),
       necessaryInformation: necessaryInformation,
+      date: enquiry.date,
       user: user,
       company: company,
       baseColor: PdfColors.grey800,

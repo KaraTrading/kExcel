@@ -31,6 +31,7 @@ Future<Uint8List> generateInvoice(
 class Invoice {
   final List<ItemEntityWithExtraData> items;
   final List<String> necessaryInformation;
+  final DateTime date;
   final UserEntity user;
   final CompanyEntity company;
   final String code;
@@ -57,6 +58,7 @@ class Invoice {
   Invoice({
     required this.items,
     this.necessaryInformation = const [],
+    required this.date,
     required this.user,
     required this.company,
     required this.code,
@@ -121,17 +123,37 @@ class Invoice {
         pw.Flex(
           direction: pw.Axis.horizontal,
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
             pw.Flexible(
               flex: 1,
-              child: pw.Text(
-                'Enquiry NO.:\n$code',
-                style: pw.TextStyle(
-                  color: _baseTextColor,
-                  font: _fontTitle,
-                  fontSize: 10,
-                ),
+              child: pw.Column(
+                mainAxisSize: pw.MainAxisSize.max,
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.FittedBox(
+                    child: pw.Text(
+                      'Enquiry NO.: $code',
+                      softWrap: true,
+                      style: pw.TextStyle(
+                        color: _baseTextColor,
+                        font: _fontTitle,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                  pw.SizedBox(height: 8),
+                  pw.Text(
+                    '${date.day.toString().padLeft(2, '0')}'
+                    '.${date.month.toString().padLeft(2, '0')}'
+                    '.${date.year}',
+                    softWrap: false,
+                    style: pw.TextStyle(
+                      color: _baseTextColor,
+                      font: _fontTitle,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
               ),
             ),
             pw.Flexible(
@@ -140,33 +162,30 @@ class Invoice {
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.center,
                   children: [
-                    pw.Row(
-                      crossAxisAlignment: pw.CrossAxisAlignment.center,
-                      mainAxisAlignment: pw.MainAxisAlignment.center,
-                      children: [
-                        pw.Text(
-                          company.name,
+                    pw.RichText(
+                        text: pw.TextSpan(children: [
+                      pw.TextSpan(
+                        text: company.name,
+                        style: pw.TextStyle(
+                          color: accentColor,
+                          font: _fontTitle,
+                          fontSize: 25,
+                        ),
+                      ),
+                      if (company.nameExtension?.isNotEmpty == true)
+                        const pw.TextSpan(text: ' '),
+                      if (company.nameExtension?.isNotEmpty == true)
+                        pw.TextSpan(
+                          text: company.nameExtension,
                           style: pw.TextStyle(
-                            color: accentColor,
+                            color: PdfColors.grey,
                             font: _fontTitle,
                             fontSize: 25,
                           ),
                         ),
-                        if (company.nameExtension?.isNotEmpty == true)
-                          pw.SizedBox(width: 8),
-                        if (company.nameExtension?.isNotEmpty == true)
-                          pw.Text(
-                            company.nameExtension!,
-                            style: pw.TextStyle(
-                              color: PdfColors.grey,
-                              font: _fontTitle,
-                              fontSize: 25,
-                            ),
-                          ),
-                      ],
-                    ),
+                    ])),
                     pw.Container(
-                      padding: const pw.EdgeInsets.only(top: 10),
+                      padding: const pw.EdgeInsets.only(top: 4),
                       alignment: pw.Alignment.center,
                       child: pw.Text(
                         company.address,
@@ -183,13 +202,21 @@ class Invoice {
             ),
             pw.Flexible(
               flex: 1,
-              child: pw.Image(pw.MemoryImage(_logo!.buffer.asUint8List()),
-                  width: 60, height: 60),
+              child: pw.Column(
+                children: [
+                  pw.Image(
+                    pw.MemoryImage(_logo!.buffer.asUint8List()),
+                    width: 60,
+                    height: 60,
+                  ),
+                  pw.Container(width: double.infinity)
+                ],
+              ),
             ),
           ],
         ),
         pw.Container(
-            margin: const pw.EdgeInsets.only(bottom: 8),
+            margin: const pw.EdgeInsets.only(bottom: 8, top: 8),
             height: 1,
             color: baseColor),
         if (context.pageNumber > 1) pw.SizedBox(height: 20)
@@ -295,9 +322,9 @@ class Invoice {
         tableHeaders.length,
         (col) => tableHeaders[col],
       ),
-      data: List<List<String>>.generate(
+      data: List<List<pw.RichText>>.generate(
         items.length,
-        (row) => List<String>.generate(
+        (row) => List<pw.RichText>.generate(
           tableHeaders.length,
           (col) => items[row].getIndex(col),
         ),
@@ -435,17 +462,46 @@ class ItemEntityWithExtraData {
     this.dimension,
   });
 
-  String getIndex(int index) {
+  pw.RichText getIndex(int index) {
     switch (index) {
       case 0:
-        return sortIndex.toString();
+        return pw.RichText(text: pw.TextSpan(text: sortIndex.toString()));
       case 1:
-        return '${item.name}\n${item.description}';
+        return pw.RichText(
+          text: pw.TextSpan(
+            children: [
+              pw.TextSpan(
+                text: '${item.name}\n',
+                style: pw.TextStyle(
+                  fontSize: 10,
+                  fontWeight: pw.FontWeight.bold,
+                  font: pw.Font.helvetica(),
+                ),
+              ),
+              pw.TextSpan(
+                text: '${item.manufacturer != null ? '${item.manufacturer!.name}: ' : ''}${item.type}\n',
+                style: pw.TextStyle(
+                  fontSize: 10,
+                  fontWeight: pw.FontWeight.bold,
+                  font: pw.Font.helvetica(),
+                ),
+              ),
+              if (item.description?.isNotEmpty ?? false)
+                pw.TextSpan(
+                  text: '.\n${item.description}',
+                  style: pw.TextStyle(
+                    fontSize: 10,
+                    fontWeight: pw.FontWeight.normal,
+                  ),
+                ),
+            ],
+          ),
+        );
       case 2:
-        return dimension ?? '';
+        return pw.RichText(text: pw.TextSpan(text: dimension ?? ''));
       case 3:
-        return quantity.toString();
+        return pw.RichText(text: pw.TextSpan(text: quantity.toString()));
     }
-    return '';
+    return pw.RichText(text: const pw.TextSpan(text: ''));
   }
 }
