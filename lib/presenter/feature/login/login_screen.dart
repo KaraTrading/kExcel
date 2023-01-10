@@ -39,6 +39,8 @@ class LoginScreen extends BaseScreen<LoginBloc> {
               TextEditingController(text: getBloc.user?.title);
           final TextEditingController emailController =
               TextEditingController(text: getBloc.user?.email);
+          final TextEditingController mobileController =
+              TextEditingController(text: getBloc.user?.mobile);
           CompanyEntity? company;
           if (getBloc.user != null) {
             company = getBloc.companies
@@ -74,6 +76,15 @@ class LoginScreen extends BaseScreen<LoginBloc> {
                     ),
                   ),
                   const SizedBox(height: 25),
+                  TextField(
+                    controller: mobileController,
+                    decoration: InputDecoration(
+                      helperText: 'justIfYouWantToShow'.translate,
+                      border: const OutlineInputBorder(),
+                      labelText: 'mobile'.translate,
+                    ),
+                  ),
+                  const SizedBox(height: 25),
                   InputDecorator(
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
@@ -106,6 +117,7 @@ class LoginScreen extends BaseScreen<LoginBloc> {
                           id: 0,
                           name: nameController.text,
                           email: emailController.text,
+                          mobile: mobileController.text,
                           title: titleController.text,
                           companyId: company!.id,
                         );

@@ -16,6 +16,7 @@ class UserLocalDataSourceImpl extends UserLocalDataSource {
     final userName = await secureStorage.get(userNameKey);
     final userTitle = await secureStorage.get(userTitleKey);
     final userEmail = await secureStorage.get(userEmailKey);
+    final userMobile = await secureStorage.get(userMobileKey);
     final userCompanyId = await secureStorage.get(userCompanyIdKey);
 
     if (userId != null &&
@@ -28,6 +29,7 @@ class UserLocalDataSourceImpl extends UserLocalDataSource {
         name: userName,
         title: userTitle,
         email: userEmail,
+        mobile: userMobile,
         companyId: int.tryParse(userCompanyId) ?? 0,
       );
     }
@@ -40,6 +42,7 @@ class UserLocalDataSourceImpl extends UserLocalDataSource {
     await secureStorage.add(userNameKey, entity.name);
     await secureStorage.add(userTitleKey, entity.title);
     await secureStorage.add(userEmailKey, entity.email);
+    await secureStorage.add(userMobileKey, entity.mobile ?? '');
     await secureStorage.add(userCompanyIdKey, entity.companyId.toString());
     return true;
   }
@@ -50,6 +53,7 @@ class UserLocalDataSourceImpl extends UserLocalDataSource {
     await secureStorage.put(userNameKey, entity.name);
     await secureStorage.put(userTitleKey, entity.title);
     await secureStorage.put(userEmailKey, entity.email);
+    await secureStorage.put(userMobileKey, entity.mobile ?? '');
     await secureStorage.put(userCompanyIdKey, entity.companyId.toString());
     return true;
   }
@@ -60,6 +64,7 @@ class UserLocalDataSourceImpl extends UserLocalDataSource {
     await secureStorage.delete(userNameKey);
     await secureStorage.delete(userTitleKey);
     await secureStorage.delete(userEmailKey);
+    await secureStorage.delete(userMobileKey);
     await secureStorage.delete(userCompanyIdKey);
     return Future(() => null);
   }

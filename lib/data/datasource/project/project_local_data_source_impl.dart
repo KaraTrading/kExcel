@@ -5,7 +5,6 @@ import 'package:kexcel/data/local/model/enquiry_data.dart';
 import 'package:kexcel/data/local/model/project_data.dart';
 import 'package:kexcel/data/local/model/supplier_data.dart';
 import 'package:kexcel/data/local/database.dart';
-import 'package:kexcel/domain/entity/item_entity.dart';
 import 'package:kexcel/domain/entity/project_entity.dart';
 import 'package:kexcel/domain/entity/project_item_entity.dart';
 import 'project_local_data_source.dart';
@@ -112,8 +111,6 @@ class ProjectLocalDataSourceImpl extends ProjectLocalDataSource {
         }
       }
     }
-
-    final List<ItemEntity> items = [];
 
     final itemQuantities = data.itemsQuantities;
     final itemDimensions = data.itemsDimensions;

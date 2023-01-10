@@ -6,6 +6,7 @@ class UserEntity extends BaseEntity {
   final int companyId;
   final String title;
   final String email;
+  final String? mobile;
 
   UserEntity({
     this.id,
@@ -13,5 +14,6 @@ class UserEntity extends BaseEntity {
     required this.companyId,
     required this.title,
     required this.email,
+    this.mobile,
   });
 }

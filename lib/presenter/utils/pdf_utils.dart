@@ -19,16 +19,17 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:kexcel/domain/entity/company_entity.dart';
 import 'package:kexcel/domain/entity/item_entity.dart';
 import 'package:kexcel/domain/entity/user_entity.dart';
+import 'package:kexcel/presenter/common/localization.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-Future<Uint8List> generateInvoice(
-    Invoice invoice, PdfPageFormat pageFormat) async {
-  return await invoice.buildPdf(pageFormat);
+Future<Uint8List> generateEnquiry(
+    EnquiryData enquiry, PdfPageFormat pageFormat) async {
+  return await enquiry.buildPdf(pageFormat);
 }
 
-class Invoice {
+class EnquiryData {
   final List<ItemEntityWithExtraData> items;
   final List<String> necessaryInformation;
   final DateTime date;
@@ -55,7 +56,7 @@ class Invoice {
   pw.Font? _fontLight;
   pw.Font? _fontBold;
 
-  Invoice({
+  EnquiryData({
     required this.items,
     this.necessaryInformation = const [],
     required this.date,
@@ -229,7 +230,9 @@ class Invoice {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Container(
-          margin: const pw.EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+          margin: const pw.EdgeInsets.only(
+            bottom: 15
+          ),
           child: pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -244,7 +247,7 @@ class Invoice {
               pw.Container(
                 margin: const pw.EdgeInsets.only(top: 5, left: 5),
                 child: pw.Text(
-                  '${user.name}\n${user.title}\n${user.email}',
+                  '${user.name}\n${user.title}\n${user.email}${user.mobile?.isNotEmpty ?? false ? '\n${user.mobile}' : ''}',
                   style: const pw.TextStyle(
                     fontSize: 8,
                     lineSpacing: 3,
@@ -313,7 +316,7 @@ class Invoice {
       rowDecoration: pw.BoxDecoration(
         border: pw.Border(
           bottom: pw.BorderSide(
-            color: accentColor,
+            color: baseColor,
             width: .5,
           ),
         ),
@@ -345,7 +348,7 @@ class Invoice {
                 pw.Container(
                   padding: const pw.EdgeInsets.only(bottom: 4),
                   child: pw.Text(
-                    'Please be reminded, that is necessary us to have the following information included in your Quotation:',
+                    'necessaryInformationTitle'.translate,
                     style: pw.TextStyle(
                       fontSize: 8,
                       color: baseColor,
@@ -361,14 +364,15 @@ class Invoice {
                     children: [
                       ...necessaryInformation.map(
                         (e) => pw.Container(
-                          padding: const pw.EdgeInsets.only(bottom: 4),
+                          padding: const pw.EdgeInsets.only(bottom: 2),
                           child: pw.Bullet(
                               text: e,
                               bulletSize: 4,
                               bulletMargin: const pw.EdgeInsets.only(
-                                  top: 1 * PdfPageFormat.mm,
-                                  left: 5 * PdfPageFormat.mm,
-                                  right: 5 * PdfPageFormat.mm),
+                                top: 1 * PdfPageFormat.mm,
+                                left: 5 * PdfPageFormat.mm,
+                                right: 5 * PdfPageFormat.mm,
+                              ),
                               style: const pw.TextStyle(
                                 fontSize: 8,
                                 lineSpacing: 2,
@@ -380,7 +384,7 @@ class Invoice {
                   ),
                 ),
               pw.Container(
-                padding: const pw.EdgeInsets.only(bottom: 4),
+                padding: const pw.EdgeInsets.only(bottom: 3),
                 child: pw.Text(
                   outro,
                   style: pw.TextStyle(
@@ -390,17 +394,39 @@ class Invoice {
                   ),
                 ),
               ),
-              pw.Container(
-                padding: const pw.EdgeInsets.only(bottom: 4, top: 60, left: 20),
-                child: pw.Text(
-                  'Abdalla Sarsour\nExecutive Director',
-                  style: pw.TextStyle(
-                    fontSize: 8,
-                    color: baseColor,
-                    fontWeight: pw.FontWeight.normal,
+              if (items.any(
+                  (element) => (element.item.attachments?.isNotEmpty ?? false)))
+                pw.Container(
+                  padding: const pw.EdgeInsets.only(bottom: 4, top: 4),
+                  child: pw.Text(
+                    'findAttachments'.translate,
+                    style: pw.TextStyle(
+                      fontSize: 8,
+                      color: baseColor,
+                      fontWeight: pw.FontWeight.normal,
+                    ),
                   ),
                 ),
-              ),
+              pw.Row(
+                  crossAxisAlignment: pw.CrossAxisAlignment.end,
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Container(
+                      padding: const pw.EdgeInsets.only(
+                        bottom: 4,
+                        top: 40,
+                        left: 20,
+                      ),
+                      child: pw.Text(
+                        'enquirySignature'.translate,
+                        style: pw.TextStyle(
+                          fontSize: 8,
+                          color: baseColor,
+                          fontWeight: pw.FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ]),
             ],
           ),
         ),
@@ -420,30 +446,81 @@ class Invoice {
   }
 
   pw.Widget _buildFooter(pw.Context context) {
-    return pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: pw.CrossAxisAlignment.end,
+    const footerTextStyle = pw.TextStyle(
+      fontSize: 8,
+      color: PdfColors.black,
+    );
+    return pw.Column(
       children: [
-        pw.Column(children: [
-          pw.Container(
-            height: 20,
-            width: 100,
-            child: pw.BarcodeWidget(
-              barcode: pw.Barcode.pdf417(),
-              data: 'Invoice# $code',
-              drawText: false,
-            ),
-          ),
-          pw.Container(
-            child: pw.Text(
-              'Page ${context.pageNumber}/${context.pagesCount}',
-              style: const pw.TextStyle(
-                fontSize: 12,
-                color: PdfColors.black,
+        pw.Container(
+            margin: const pw.EdgeInsets.only(bottom: 8, top: 8),
+            height: 1,
+            color: baseColor),
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: pw.CrossAxisAlignment.end,
+          children: [
+            pw.Column(children: [
+              pw.Container(
+                height: 20,
+                width: 100,
+                child: pw.BarcodeWidget(
+                  barcode: pw.Barcode.pdf417(),
+                  data: 'Invoice# $code',
+                  drawText: false,
+                ),
               ),
-            ),
-          )
-        ])
+              pw.Container(
+                child: pw.Text(
+                  'Page ${context.pageNumber}/${context.pagesCount}',
+                  style: footerTextStyle,
+                ),
+              )
+            ]),
+            pw.Column(children: [
+              pw.Text(
+                '${'ceo'.translate}: ${company.ceoName}',
+                style: footerTextStyle,
+              ),
+              pw.Text(
+                '${'tel'.translate}: ${company.telephone}',
+                style: footerTextStyle,
+              ),
+              pw.Text(
+                '${'email'.translate}: ${company.email}',
+                style: footerTextStyle,
+              ),
+            ]),
+            pw.Column(children: [
+              pw.Text(
+                '${'handelsRegister'.translate}: ${company.registerNumber}',
+                style: footerTextStyle,
+              ),
+              pw.Text(
+                '${'steuer'.translate}: ${company.taxNumber}',
+                style: footerTextStyle,
+              ),
+              pw.Text(
+                '${'ustId'.translate}: ${company.ustIdNumber}',
+                style: footerTextStyle,
+              ),
+            ]),
+            pw.Column(children: [
+              pw.Text(
+                '${'bank'.translate}: ${company.bankName}',
+                style: footerTextStyle,
+              ),
+              pw.Text(
+                '${'iban'.translate}: ${company.bankIban}',
+                style: footerTextStyle,
+              ),
+              pw.Text(
+                '${'bic'.translate}: ${company.bankBic}',
+                style: footerTextStyle,
+              ),
+            ]),
+          ],
+        ),
       ],
     );
   }
@@ -471,7 +548,8 @@ class ItemEntityWithExtraData {
           text: pw.TextSpan(
             children: [
               pw.TextSpan(
-                text: '${item.name}\n',
+                text:
+                    '${item.name}${item.attachments?.isNotEmpty ?? false ? ' **' : ''}\n',
                 style: pw.TextStyle(
                   fontSize: 10,
                   fontWeight: pw.FontWeight.bold,
@@ -479,7 +557,8 @@ class ItemEntityWithExtraData {
                 ),
               ),
               pw.TextSpan(
-                text: '${item.manufacturer != null ? '${item.manufacturer!.name}: ' : ''}${item.type}\n',
+                text:
+                    '${item.manufacturer != null ? '${item.manufacturer!.name}: ' : ''}${item.type}\n',
                 style: pw.TextStyle(
                   fontSize: 10,
                   fontWeight: pw.FontWeight.bold,
@@ -490,7 +569,7 @@ class ItemEntityWithExtraData {
                 pw.TextSpan(
                   text: '.\n${item.description}',
                   style: pw.TextStyle(
-                    fontSize: 10,
+                    fontSize: 8,
                     fontWeight: pw.FontWeight.normal,
                   ),
                 ),

@@ -72,7 +72,7 @@ class PDFScreen extends StatelessWidget {
     ];
 
     int index = 1;
-    final invoice = Invoice(
+    final invoice = EnquiryData(
       intro: intro,
       outro: outro,
       code: getEnquiryName(company: company, enquiry: enquiry),
@@ -96,7 +96,7 @@ class PDFScreen extends StatelessWidget {
         title: const Text('PDF'),
       ),
       body: PdfPreview(
-        build: (format) => generateInvoice(invoice, format),
+        build: (format) => generateEnquiry(invoice, format),
         actions: actions,
         onPrinted: _showPrintedToast,
         onShared: _showSharedToast,
